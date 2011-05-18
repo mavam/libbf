@@ -1,0 +1,10 @@
+                             __________  ___  ____ 
+                            /_  __/ __ \/ _ \/ __ \
+                             / / / /_/ / // / /_/ /
+                            /_/  \____/____/\____/ 
+
+- The type of the hash value in the the partition policies is currently fixed
+  as the return type of functions from boost::hash, namely, std::size_t. Other
+  hashers may use a different type, so it it necessary to provide that type
+  information, or even consider integrating the partition policy into the hash
+  policy.

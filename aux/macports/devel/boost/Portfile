@@ -1,0 +1,314 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:filetype=tcl:et:sw=4:ts=4:sts=4
+# $Id: Portfile 78181 2011-04-27 16:35:03Z adfernandes@macports.org $
+
+PortSystem      1.0
+
+name            boost
+version         1.46.1
+license         Boost-1.0
+categories      devel
+platforms       darwin
+maintainers     adfernandes
+description     Collection of portable C++ source libraries
+
+long_description \
+    Boost provides free portable peer-reviewed C++ \
+    libraries. The emphasis is on portable libraries \
+    which work well with the C++ Standard Library.
+
+homepage        http://www.boost.org
+master_sites    sourceforge
+set distver     [join [split ${version} .] _]
+distname        ${name}_${distver}
+use_bzip2       yes
+
+checksums           md5     7375679575f4c8db605d426fc721d506 \
+                    sha1    3ca6e173ec805e5126868d8a03618e587aa26aef \
+                    rmd160  bb43b39f7c4b683b80bafa3042b95e65a242d9c3
+
+depends_lib     port:zlib \
+                port:expat \
+                port:bzip2 \
+                port:icu
+
+patchfiles      patch-tools_build_v2_engine_src_build.sh.diff \
+                patch-tools_build_v2_engine_src_build.jam.diff \
+                patch-bootstrap.sh.diff
+
+post-patch {
+    reinplace "s|%%CONFIGURE.CC%%|${configure.cc}|g" ${worksrcpath}/tools/build/v2/engine/src/build.sh
+    reinplace "s|%%CONFIGURE.CC%%|${configure.cc}|g" ${worksrcpath}/tools/build/v2/engine/src/build.jam
+}
+
+proc write_jam s {
+    global worksrcpath
+    set config [open ${worksrcpath}/user-config.jam a]
+    puts ${config} ${s}
+    close ${config}
+}
+
+proc user_config_jam {toolset version compiler flags} {
+    set config "using ${toolset} : ${version} : ${compiler} : ${flags} ;"
+    write_jam config
+}
+
+configure.cmd       ./bootstrap.sh
+configure.args      --without-libraries=python \
+                    --without-libraries=mpi \
+                    --with-icu=${prefix}
+
+configure.universal_args
+
+post-configure {
+    reinplace -E "s|-install_name \"|&${prefix}/lib/|" \
+        ${worksrcpath}/tools/build/v2/tools/darwin.jam
+
+    # Modified from 'portconfigure.tcl':
+    # set pre-compiler filter to use (ccache/distcc), if any.
+    if {[tbool configure.ccache] && [tbool configure.distcc]} {
+        set filter "ccache "
+        ui_msg "Warning: boost does not support distcc with ccache"
+    } elseif {[tbool configure.ccache]} {
+        set filter "ccache "
+    } elseif {[tbool configure.distcc]} {
+        set filter "distcc "
+    } else {
+        set filter ""
+    }
+
+    user_config_jam darwin "" ${filter}${configure.cxx} ""
+}
+
+# Although bjam can supposedly use parallel builds, it has random failures. See #28878 and #23531.
+# To re-enable it, comment out the below and add '-j${build.jobs}' to 'build.args', also below.
+#
+use_parallel_build  no
+
+build.cmd       ${worksrcpath}/bjam
+build.target
+build.args      -d2 \
+                --layout=tagged \
+                --debug-configuration \
+                --user-config=user-config.jam \
+                -sBZIP2_INCLUDE=${prefix}/include \
+                -sBZIP2_LIBPATH=${prefix}/lib \
+                -sEXPAT_INCLUDE=${prefix}/include \
+                -sEXPAT_LIBPATH=${prefix}/lib \
+                -sZLIB_INCLUDE=${prefix}/include \
+                -sZLIB_LIBPATH=${prefix}/lib \
+                variant=release \
+                threading=single,multi \
+                link=static,shared
+
+destroot.cmd            ${worksrcpath}/bjam
+destroot.post_args
+#
+pre-destroot {
+    eval destroot.args ${build.args} --prefix=${destroot}${prefix}
+    system "find ${worksrcpath} -type f -name '*.gch' -exec rm {} \\;"
+}
+
+post-destroot {
+    set docdir ${prefix}/share/doc/${name}
+    xinstall -d ${destroot}${docdir}
+    set l [expr [string length ${worksrcpath}] + 1]
+    fs-traverse f [glob -directory ${worksrcpath} *] {
+        set dest ${destroot}${docdir}/[string range ${f} ${l} end]
+        if {[file isdirectory ${f}]} {
+            if {[file tail ${f}] eq "example"} {
+                copy ${f} ${dest}
+                continue
+            }
+            xinstall -d ${dest}
+        } elseif {[lsearch -exact {css htm html png svg} [string range [file extension ${f}] 1 end]] != -1} {
+            xinstall -m 644 ${f} ${dest}
+        }
+    }
+}
+
+set pythons_suffixes {24 25 26 27 31 32}
+
+set pythons_ports {}
+foreach s ${pythons_suffixes} {
+    lappend pythons_ports python${s}
+}
+
+proc python_dir {} {
+    global pythons_suffixes
+    foreach s ${pythons_suffixes} {
+        if {[variant_isset python${s}]} {
+            set p python[string index ${s} 0].[string index ${s} 1]
+            return [file normalize [exec ${p} -c "import sys; print(sys.prefix)"]/lib/${p}/site-packages]
+        }
+    }
+    error "Python support not enabled."
+}
+
+foreach s ${pythons_suffixes} {
+    set p python${s}
+    set v [string index ${s} 0].[string index ${s} 1]
+    set i [lsearch -exact ${pythons_ports} ${p}]
+    set c [lreplace ${pythons_ports} ${i} ${i}]
+    eval [subst {
+        variant ${p} description "Build Boost.Python for Python ${v}" conflicts ${c} {
+            
+            # There is a conflict with python and debug support, so we should really change the 'variant' line above
+            # to end with "conflicts ${c} debug" above. However, we leave it enabled for those who want to try it.
+            # The issue has been reported to both the MacPorts team and the boost team, as per:
+            # <http://trac.macports.org/ticket/23667> and <https://svn.boost.org/trac/boost/ticket/4461>
+            
+            depends_lib-append      port:${p}
+            configure.args-delete   --without-libraries=python
+            configure.args-append   --with-python=${prefix}/bin/python${v}
+            
+            patchfiles-append   patch-tools-build-v2-tools-python.jam.diff \
+                                patch-tools-build-v2-tools-python-2.jam.diff
+            
+            # As per https://trac.macports.org/ticket/29097 and https://svn.boost.org/trac/boost/ticket/4994,
+            # apply https://svn.boost.org/trac/boost/changeset/71050 to boost-1.46.1
+            #
+            patchfiles-append   patch-libs-python-src-converter-builtin_converters.cpp
+            
+            post-patch {
+                reinplace s|@PREFIX@|${prefix}| ${worksrcpath}/tools/build/v2/tools/python.jam
+            }
+            
+        }
+    }]
+}
+
+variant debug description {Builds debug versions of the libraries as well} {
+    build.args-delete   variant=release
+    build.args-append   variant=debug,release
+}
+
+variant no_static description {Disable building static libraries} {
+    build.args-delete   link=shared,static
+    build.args-append   link=shared
+}
+
+variant no_single description {Disable building single-threaded libraries} {
+    build.args-delete   threading=single,multi
+    build.args-append   threading=multi
+}
+
+variant std0x conflicts openmpi universal description {Build with C++0x support} {
+    configure.compiler  macports-gcc-4.6
+    depends_lib-append  port:gcc46
+
+    post-configure {
+        user_config_jam darwin "" ${configure.cxx} "<cxxflags>-std=gnu++0x"
+    }
+
+    patchfiles-append patch-tools-build-v2-tools-darwin.jam.diff
+}
+
+variant openmpi description {Build Boost.MPI} {
+    
+    # There is a conflict with python and debug support, so we should really change the 'variant' line above
+    # to end with "conflicts debug" above. However, we leave it enabled for those who want to try it.
+    # The issue has been reported to both the MacPorts team and the boost team, as per:
+    # <http://trac.macports.org/ticket/23667> and <https://svn.boost.org/trac/boost/ticket/4461>
+
+    depends_lib-append      port:openmpi
+    configure.args-delete   --without-libraries=mpi
+
+    post-configure {
+        user_config_jam mpi ${prefix}/bin/openmpic++ "" \
+            ${prefix}/bin/openmpirun
+    }
+
+    if {![catch python_dir]} {
+        
+        patchfiles-append patch-libs-mpi-build-Jamfile.v2.diff
+    
+        post-destroot {
+            set site_packages [python_dir]
+            xinstall -d ${destroot}${site_packages}/boost
+            xinstall -m 644 ${worksrcpath}/libs/mpi/build/__init__.py \
+                ${destroot}${site_packages}/boost
+    
+            set l ${site_packages}/boost/mpi.so
+            move ${destroot}${prefix}/lib/mpi.so ${destroot}${l}
+            system "install_name_tool -id ${l} ${destroot}${l}"
+        }
+
+    }
+    
+}
+
+variant regex_match_extra description \
+        "Enable access to extended capture information of submatches in Boost.Regex" {
+    notes \
+        You enabled +regex_match_extra variant, see the following page for an \
+        exhaustive list of the consequences of this feature:\n\t \
+        http://www.boost.org/doc/libs/${distver}/libs/regex/doc/html/boost_regex/ref/sub_match.html
+
+    post-patch {
+        reinplace {/#define BOOST_REGEX_MATCH_EXTRA/s:^// ::} \
+            ${worksrcpath}/boost/regex/user.hpp
+    }
+}
+
+if {! ([variant_isset universal] || [variant_isset std0x])} {
+    # Honour 'build_arch', if not universal as per #28327
+    if {[lsearch ${build_arch} ppc*] != -1} {
+        build.args-append   architecture=power
+        if {${os.arch} != "powerpc"} {
+            build.args-append   --disable-long-double
+        }
+    } else {
+        if {[lsearch ${build_arch} *86*] != -1} {
+            build.args-append   architecture=x86
+        } else {
+            error "Current value of 'build_arch' is not supported."
+        }
+    }
+    if {[lsearch ${build_arch} *64] != -1} {
+        build.args-append   address-model=64
+    } else {
+        build.args-append   address-model=32
+    }
+}
+
+variant universal {
+    build.args-append   pch=off
+
+    if {[lsearch ${universal_archs} ppc*] != -1} {
+        if {[lsearch ${universal_archs} *86*] != -1} {
+            build.args-append   architecture=combined
+        } else {
+            build.args-append   architecture=power
+        }
+
+        if {${os.arch} != "powerpc"} {
+            build.args-append   --disable-long-double
+        }
+    } else {
+        build.args-append   architecture=x86
+    }
+
+    if {[lsearch ${universal_archs} *64] != -1} {
+        if {[lsearch ${universal_archs} i386] != -1 || [lsearch ${universal_archs} ppc] != -1} {
+            build.args-append   address-model=32_64
+        } else {
+            build.args-append   address-model=64
+        }
+    } else {
+        build.args-append   address-model=32
+    }
+}
+
+platform powerpc {
+    build.args-append   --disable-long-double
+}
+
+platform darwin 8 powerpc {
+    if {[variant_isset universal]} {
+        build.args-append   macosx-version=10.4
+    }
+}
+
+livecheck.type  regex
+livecheck.url   ${homepage}
+livecheck.regex "Version (\\d+\\.\\d+\\.\\d+)"

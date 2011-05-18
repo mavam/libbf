@@ -1,0 +1,9 @@
+Add the line
+
+    file:///path/to/this/directory
+
+to /opt/local/etc/macports/sources.conf *before* the rsync source and run
+
+    sudo portindex
+
+in the same directory where this README is located.
