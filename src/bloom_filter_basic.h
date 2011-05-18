@@ -25,15 +25,14 @@ public:
         return std::floor(- (std::log(f) / std::log(2)));
     }
 
-    /// Compute the capacity of a Bloom filter of size \f$m\f$ with respect to
-    /// a given false positive rate \f$f\f$. The capacity is defined as the
-    /// maximum number of items the Bloom filter can hold before \f$f\f$ can no
-    /// longer be guaranteed.
-    /// \param f The false positive rate.
+    /// Compute the capacity of a Bloom filter with respect to a given number
+    /// of hash functions and number of cells in the store. The capacity is
+    /// defined as the maximum number of items the Bloom filter can hold before
+    /// the FP rate can no longer be guaranteed.
     /// \param k The number of hash functions.
     /// \param m The number of cells in the Bloom filter
     /// \return The maximum number of items the Bloom filter can hold.
-    static double capacity(double f, unsigned k, unsigned m)
+    static double capacity(unsigned k, unsigned m)
     {
         return std::floor(m / k * std::log(2));
     }
