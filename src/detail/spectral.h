@@ -134,16 +134,7 @@ void recurring_minimum_add(const T& x, Core1& core1, Core2& core2)
         return;
 
     pos = core2.positions(x);
-    typename Core2::store_type::size_type i = 0;
-    while (i < pos.size())
-    {
-        if (core2.store.count(i) == 0)
-            break;
-
-        ++i;
-    }
-
-    if (i == pos.size())
+    if (minimum(pos, core2.store))
         for (auto i : pos)
             core2.store.increment(i);
     else
