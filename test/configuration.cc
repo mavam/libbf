@@ -24,7 +24,7 @@ configuration::configuration(int argc, char *argv[])
     bloom_filter.add_options()
         ("type,t", po::value<std::string>()->default_value("basic"),
          "bloom filter type, supported values:\n"
-         "- basic\n- bitwise\n- spectral-mi\n- spectral-rm")
+         "- basic\n- bitwise\n- spectral-mi\n- spectral-rm\n- a2")
     ;
 
     typedef std::vector<unsigned> uvec;

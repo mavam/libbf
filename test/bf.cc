@@ -91,10 +91,13 @@ void run(BloomFilter&& bf, const configuration& config)
         const auto& w = config.get<std::vector<unsigned>>("width");
         const auto& p = config.get<std::vector<unsigned>>("partitions");
 
+        std::cerr << config.get<std::string>("type") << ' ';
+        std::cerr << "core1 ";
         std::cerr << s.front() << ' ';
         std::cerr << k.front() << ' ';
         std::cerr << w.front() << ' ';
         std::cerr << p.front() << ' ';
+        std::cerr << "core2 ";
         std::cerr << s.back() << ' ';
         std::cerr << k.back() << ' ';
         std::cerr << w.back() << ' ';
