@@ -20,10 +20,13 @@ public:
     /// Create a spectral Bloom filter.
     /// \param core An rvalue reference to a core.
     /// \param generator An lvalue reference to a randomness generator.
-    stable(core_type&& core, const generator_type& generator)
+    /// \param d The number of cells to decrement at each insert
+    stable(core_type&& core, const generator_type& generator, unsigned d)
       : base(std::forward<core_type>(core))
       , generator_(generator)
+      , d_(d)
     {
+        assert(d > 0);
     }
 
     /// Add an item to the stable Bloom filter. This invovles 
@@ -32,10 +35,8 @@ public:
     template <typename T>
     void add(const T& x)
     {
-        detail::evict::random(base::core_, generator_);
-
-        auto beyond = 1 << base::core_.store.width();
-        detail::basic::add(x, beyond, base::core_);
+        detail::evict::random(base::core_, generator_, d_);
+        detail::basic::add(x, base::core_.store.max(), base::core_);
     }
 
     // Spectral bloom filters do not support deletion of items.
@@ -43,8 +44,8 @@ public:
     void remove(const T& x) = delete;
 
 private:
-    /// Generates randomness out of thin air.
-    generator_type generator_;
+    generator_type generator_;  ///< Generates randomness out of thin air.
+    unsigned d_;                ///< Number of cells to decrement at add.
 };
 
 } // namespace bf

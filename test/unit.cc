@@ -152,7 +152,7 @@ BOOST_AUTO_TEST_CASE(basic_bloom_filter_counting)
 BOOST_AUTO_TEST_CASE(stable_bloom_filter)
 {
     std::mt19937 rand;
-    bf::stable<> b({ 5, 3, 2 }, rand);
+    bf::stable<> b({ 5, 3, 2 }, rand, 3);
 
     b.add("one fish");
     b.add("two fish");

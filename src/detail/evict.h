@@ -6,10 +6,9 @@ namespace detail {
 namespace evict {
 
 template <typename Core, typename Generator>
-void random(Core& core, Generator& generator)
+void random(Core& core, Generator& generator, unsigned d)
 {
-    auto i = core.hash.k();
-    while (i--)
+    while (d--)
     {
         std::uniform_int_distribution<> pdf(0, core.store.size() - 1);
         core.store.decrement(pdf(generator));
