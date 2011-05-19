@@ -135,70 +135,7 @@ void dispatch2(unsigned s1, unsigned k1, unsigned w1, unsigned p1,
             run(BF4({ s1, k1, w1, p1 }, { s2, k2, w2, p2 }), config);
     }
 }
-template <typename BF1, typename BF2, typename BF3, typename BF4>
-void dispatch2(const configuration& config)
-{
-    bool double_hash = config.check("double-hashing");
-    bool extended_double_hash = config.check("extended-double-hashing");
-    bool default_hash = ! (double_hash || extended_double_hash);
 
-    const auto& p = config.get<std::vector<unsigned>>("partitions");
-    const auto& s = config.get<std::vector<unsigned>>("size");
-    const auto& w = config.get<std::vector<unsigned>>("width");
-    const auto& k = config.get<std::vector<unsigned>>("hash-functions");
-
-    unsigned cores = 1;
-    for (const auto& v : { p, s, w, k })
-        if (v.size() > cores)
-            cores = v.size();
-
-    switch (cores)
-    {
-        case 1:
-            if (default_hash)
-            {
-                if (p[0] == 1)
-                    run(BF1({ s[0], k[0], w[0] }), config);
-                else 
-                    run(BF2({ s[0], k[0], w[0], p[0] }), config);
-            }
-            else if (double_hash)
-            {
-                if (p[0] == 1)
-                    run(BF3({ s[0], k[0], w[0] }), config);
-                else
-                    run(BF4({ s[0], k[0], w[0], p[0] }), config);
-            }
-            break;
-
-        case 2:
-            if (default_hash)
-            {
-                if (p[0] == 1)
-                    run(BF1({ s[0], k[0], w[0] },
-                            { s.back(), k.back(), w.back() }), config);
-                else 
-                    run(BF2({ s[0], k[0], w[0], p[0] },
-                            { s.back(), k.back(), w.back(), p.back() }),
-                            config);
-            }
-            else if (double_hash)
-            {
-                if (p[0] == 1)
-                    run(BF3({ s[0], k[0], w[0] },
-                            { s.back(), k.back(), w.back() }), config);
-                else
-                    run(BF4({ s[0], k[0], w[0], p[0] },
-                            { s.back(), k.back(), w.back(), p.back() }),
-                            config);
-            }
-            break;
-
-        default:
-            throw "should not happen";
-    }
-
-}
 int main(int argc, char* argv[])
 {
     try
