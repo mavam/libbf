@@ -81,9 +81,25 @@ void run(BloomFilter&& bf, const configuration& config)
 
     if (evaluate)
     {
-        std::cerr << "stream: " << stream.to_string() << std::endl;
+        const auto& s = config.get<std::vector<unsigned>>("size");
+        const auto& k = config.get<std::vector<unsigned>>("hash-functions");
+        const auto& w = config.get<std::vector<unsigned>>("width");
+        const auto& p = config.get<std::vector<unsigned>>("partitions");
+
+        std::cerr << s.front() << ' ';
+        std::cerr << k.front() << ' ';
+        std::cerr << w.front() << ' ';
+        std::cerr << p.front() << ' ';
+        std::cerr << s.back() << ' ';
+        std::cerr << k.back() << ' ';
+        std::cerr << w.back() << ' ';
+        std::cerr << p.back() << ' ';
+
+        std::cerr << "stream " << stream.to_string();
         if (config.check("query") || config.check("query-file"))
-            std::cerr << "query:  " << query.to_string() << std::endl;
+            std::cerr << " query " << query.to_string();
+
+        std::cerr << std::endl;
     }
 }
 
@@ -146,11 +162,6 @@ int main(int argc, char* argv[])
         const auto& k = config.get<std::vector<unsigned>>("hash-functions");
         const auto& w = config.get<std::vector<unsigned>>("width");
         const auto& p = config.get<std::vector<unsigned>>("partitions");
-
-        unsigned cores = 1;
-        for (const auto& v : { s, k, w, p })
-            if (v.size() > cores)
-                cores = v.size();
 
         const auto& type = config.get<std::string>("type");
         if (type == "a2")
