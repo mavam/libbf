@@ -25,6 +25,7 @@ void run(BloomFilter&& bf, const configuration& config)
     std::cin >> std::noskipws;
     std::string line;
 
+    bool verbose = config.check("verbose");
     bool evaluate = config.check("evaluate");
     metrics stream;
     metrics query;
@@ -41,6 +42,10 @@ void run(BloomFilter&& bf, const configuration& config)
                 count = bf.count(line);
                 true_count = ++history[line];
                 stream.update(count, true_count);
+
+                if (verbose && count != true_count)
+                    std::cerr << line << ' ' << true_count << ' ' << count
+                        << std::endl;
             }
         }
 
