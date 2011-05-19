@@ -1,6 +1,7 @@
 #ifndef STORE_H
 #define STORE_H
 
+#include <cstdint>
 #include <stdexcept>
 #include <vector>
 #include <boost/dynamic_bitset.hpp>
@@ -42,7 +43,7 @@ public:
     typedef boost::dynamic_bitset<Block, Allocator> bitset;
     typedef typename bitset::size_type size_type;
     typedef std::vector<size_type> pos_vector;
-    typedef unsigned count_type;
+    typedef uint64_t count_type;
 
 public:
     /// Construct a bit vector of size \f$O(mw)\f$ where \f$m\f$ is the
@@ -59,7 +60,8 @@ public:
         if (width == 0)
             throw std::invalid_argument("zero width");
 
-        if (width > 64)
+        auto max = std::numeric_limits<count_type>::digits;
+        if (width > static_cast<decltype(width)>(max))
             throw std::invalid_argument("width too large");
     }
 
@@ -93,7 +95,7 @@ public:
     }
 
     /// Increment a cell counter by a given value. If the value is larger 
-    /// than or equal to <code>1 << width_</code>, All bits are set to 1.
+    /// than or equal to max(), All bits are set to 1.
     /// \param cell The cell index.
     /// \param value The value that is added to the current cell value.
     /// \return - \c true if the increment succeeded, \c false if all bits in
@@ -104,7 +106,7 @@ public:
 
         size_type lsb = cell * width_;
 
-        if (value >= (1UL << width_))
+        if (value >= max())
         {
             bool r = false;
             for (auto i = lsb; i < lsb + width_; ++i)
@@ -181,7 +183,7 @@ public:
         return false;
     }
 
-    /// Get the count of a cell
+    /// Get the count of a cell.
     /// \param cell The cell index.
     /// \return \c true if the decrement succeeded, \c false if all bits in the
     ///     cell were already 0.
@@ -273,7 +275,8 @@ public:
     /// \return The maximum counter value.
     count_type max() const
     {
-        return (1 << width()) - 1;
+        return std::numeric_limits<count_type>::max() >>
+            (std::numeric_limits<count_type>::digits - width());
     }
 
     /// Test whether all bits are 0.
@@ -338,7 +341,7 @@ public:
     std::string to_string() const
     {
         std::string str(bits_.size(), '0');
-        for (unsigned i = 0; i < bits_.size(); ++i)
+        for (size_type i = 0; i < bits_.size(); ++i)
             if (bits_[i])
                 str[i] = '1';
 
@@ -351,7 +354,7 @@ public:
     template <typename F>
     void each(F f) const
     {
-        for (unsigned cell = 0; cell < bits_.size() / width_; ++cell)
+        for (size_type cell = 0; cell < bits_.size() / width_; ++cell)
             f(count(cell));
     }
 

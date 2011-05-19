@@ -1,5 +1,6 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE "Bloom filter unit test"
+#include <boost/lexical_cast.hpp>
 #include <boost/test/unit_test.hpp>
 #include "bloom_filter_a2.h"
 #include "bloom_filter_basic.h"
@@ -26,6 +27,30 @@ BOOST_AUTO_TEST_CASE(store_fixed_width)
     BOOST_REQUIRE(! s.increment(0));
     BOOST_REQUIRE(s.to_string() == "110000");
     BOOST_REQUIRE(s.count(0) == 3);
+
+    s = bf::core<>::store_type(3, 32);
+    auto max = std::numeric_limits<uint32_t>::max();
+    BOOST_REQUIRE(s.max() == max);
+
+    char value[64];
+    decltype(max) step = 1 << 15;
+    decltype(max) last = 0;
+    for (decltype(max) i = 0; i < max && last <= i; i += step)
+    {
+        last = i;
+        snprintf(value, sizeof(value), "%u", i);
+        BOOST_REQUIRE_MESSAGE(s.count(0) == i, value);
+        s.increment(0, step);
+    }
+
+    /* Too darn expensive, uncomment when something is really off..
+    for (decltype(max) i = 0; i < max; ++i)
+    {
+        snprintf(value, sizeof(value), "%u", i);
+        BOOST_REQUIRE_MESSAGE(s.count(0) == i, value);
+        s.increment(0);
+    }
+    */
 }
 
 BOOST_AUTO_TEST_CASE(store_fixed_width_increment)
