@@ -6,10 +6,18 @@
                          /_/_/_.___/_____/_/ 
   
 
-libBf is a header-only C++0x library of various types of Bloom filters. Its
-policy-based design not only makes it very flexible to customize but also
-allows for creating new combinations of storage, hashing, and partition
-properties.
+libBf is a header-only C++0x library of a garden variety of of Bloom filters.
+Its policy-based design makes it very flexible to customize and allows for
+creating new combinations of storage, hashing, and partition properties. libBf
+currently supports the follwing types of Bloom filters:
+
+    - Basic (fixed-width)
+    - Bitwise
+    - Spectral MI
+    - Spectral RM
+    - A^2
+    - Stable
+
 
 =============
 Prerequisites
@@ -20,6 +28,7 @@ Prerequisites
     * CMake 2.8 or greater
 
     * Boost 1.46 or greater
+
 
 Note that it is important to Boost with the same compiler as the tests in
 libBF. Unfortunately this can take quite some effort because C++0x support is
@@ -71,6 +80,7 @@ After installing the overlay, you can install Boost with
 
     sudo port install boost +debug +std0x -universal
 
+
 ============
 Installation
 ============
@@ -83,20 +93,49 @@ evaluation tools using the following steps:
     cmake ..
     make -j 4
 
+    ./test/unit
+    ./test/bf -h
+
+
 =====
 Usage
 =====
 
-libBf ships with a unit test suite and a little Bloom filter test tool "bf".
-This command-line program allows you to select one of the Bloom filter
+The following steps show how to use libBf with your own application. All Bloom
+filters have (at least) one core. The core is combination of store, hash, and
+partition policy. For example, to define a core with fixed-width storage,
+double hashing, and partitioning, one would use:
+
+    typedef core<
+        fixed_width<uint8_t, std::allocator<uint8_t>
+      , double_hashing<default_hasher, 42, 4711>
+      , no_partitioning
+    > my_core;
+
+Next, we plug the core into the Bloom filter:
+
+      typedef basic<my_core> my_bloom_filter;
+
+Now we can instantiate the Bloom filter. The constructor takes an rvalue
+reference to a core:
+
+    my_bloom_filter bf({ 1 << 10, 5, 4 });
+
+That's it, now we can use the Bloom filter as follows:
+
+    bf.add("foo")
+    bf.add("foo")
+    bf.add('z')
+    bf.add(3.14159)
+    std::cout << bf.count("foo") << std::endl;  // returns 2
+
+libBf laso ships with a unit test suite and a little Bloom filter test tool
+"bf".  This command-line program allows you to select one of the Bloom filter
 implementations, feed it with data via stdin, and finally execute queries after
 the set has been populated.
-
-TODO: describe how to use bf.
-
 
 ==========
 References
 ==========
-[1] http://lists.macosforge.org/pipermail/macports-changes/2010-September/054217.html
+[1] http://trac.macports.org/changeset/71487
 [2] http://guide.macports.org/#development.local-repositories
