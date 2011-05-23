@@ -6,7 +6,7 @@
                          /_/_/_.___/_____/_/ 
   
 
-libBf is a header-only C++0x library of a garden variety of of Bloom filters.
+libBf is a header-only C++11 library of a garden variety of of Bloom filters.
 Its policy-based design makes it very flexible to customize and allows for
 creating new combinations of storage, hashing, and partition properties. libBf
 currently supports the follwing types of Bloom filters:
@@ -31,11 +31,11 @@ Prerequisites
 
 
 Note that it is important to Boost with the same compiler as the tests in
-libBF. Unfortunately this can take quite some effort because C++0x support is
+libBF. Unfortunately this can take quite some effort because C++11 support is
 not yet widely available. Because it can be tricky to setup the build
 environment, we'll walk through an example below.
 
-We begin with installing the Boost distribution in C++0x mode. If you are using
+We begin with installing the Boost distribution in C++11 mode. If you are using
 Mac OS X, you can skip this step and simply install Boost by creating a
 MacPorts overlay with the provided Portfile (see below). For everyone else,
 here we go:
@@ -134,8 +134,13 @@ libBf laso ships with a unit test suite and a little Bloom filter test tool
 implementations, feed it with data via stdin, and finally execute queries after
 the set has been populated.
 
+For more details, please consult the main documentation at 
+
+    http://www.icir.org/matthias/libbf
+
 ==========
 References
 ==========
+
 [1] http://trac.macports.org/changeset/71487
 [2] http://guide.macports.org/#development.local-repositories
