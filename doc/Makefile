@@ -1,7 +1,7 @@
-BASE=.
-DOXYFILE=$(BASE)/Doxyfile
-DOC=$(BASE)/html/
-WEB=www.icir.org:matthias/libbf
+BASE := .
+DOXYFILE := $(BASE)/Doxyfile
+DOC := $(BASE)/html/
+WEB := www.icir.org:matthias/libbf
 
 doc: FORCE
 	doxygen $(DOXYFILE)

@@ -1,0 +1,363 @@
+/**
+
+\mainpage libBf
+
+libBf is a header-only C++11 library of a garden variety of of Bloom filters.
+
+This manual is organized as follows:
+-# \ref bfs
+    -# \ref bf_term
+    -# \ref bf_basic
+    -# \ref bf_multi
+        -# \ref bf_count
+        -# \ref bf_bitwise
+        -# \ref bf_spectral
+    -# \ref bf_age
+        -# \ref bf_stable
+        -# \ref bf_a2
+-# \ref arch
+-# \ref use
+
+\section bfs Bloom Filters
+
+\htmlonly
+<blockquote>
+Whenever you have a set or list, and space is an issue, a Bloom filter may be a
+useful alternative. --Mitzenmacher
+</blockquote>
+\endhtmlonly
+
+A <a href="http://en.wikipedia.org/wiki/Bloom_filter">Bloom filter</a> is a
+randomized synopsis data structure that allows for set membership queries. Its
+space-efficient representation comes at the cost of false positives, i.e.,
+elements can erroneously be reported as members of the set. In practice, the
+huge space savings often outweigh the false positives if kept at a sufficiently
+low rate.
+
+Bloom filters have received a great deal of attention by the research
+community. After introducing some terminology, we discuss the basic Bloom
+filter and then turn to some important extensions. Thereafter, we present the
+architecture of \c libBf and show how to integrate it with your own code.
+
+\subsection bf_term Terminology
+
+- Universe \f$U\f$
+- \f$N\f$ distinct items
+- \f$k\f$ independent hash functions \f$h_1,\dots,h_k\f$
+- Vector \f$V\f$ of \f$m\f$ cells, i.e., \f$m = |V|\f$
+- Set
+    - \f$S = \{x_1,\dots,x_n\}\f$ where \f$x_i\in U\f$ and \f$|S| = n\f$
+- Multiset / Stream
+    - \f$\mathcal{S} = \{x_1,\dots,x_n\}\f$ where \f$x_i\in U\f$ and
+      \f$|\mathcal{S}| = n\f$
+    - \f$C_x = \left\{ c_{h_1(x)},\dots,c_{h_k(x)} \right\}\f$
+      counters of \f$x\f$
+    - \f$f_x =\f$ multiplicity (frequency) of \f$x\in\mathcal{S}\f$
+- Bloom filter estimate denoted by "hat:"
+  \f$\widehat{S}, \widehat{\mathcal{S}}, \widehat{f}_x, \ldots\f$
+- Probability of a false positive (FP):
+  \f$\phi_P = \mathbb{P}\left(x\in \widehat{S} \vert x\notin S\right)\f$
+- Probability of a false negative (FN):
+  \f$\phi_N = \mathbb{P}\left(x\notin \widehat{S} \vert x\in S\right)\f$
+- Capacity \f$\kappa\f$, i.e., is the maximum number of items a Bloom filter
+  can hold until a given \f$\phi_P\f$ can no longer be guaranteed
+- A Bloom filter is \e full when then number of added items exceeds
+  \f$\kappa\f$
+
+\subsection bf_basic Basic
+
+Burton Bloom introduced the original Bloom filter in 1970, which we refer to as
+the <em>basic Bloom filter</em>. It uses a bit vector \f$V\f$ with \f$|V| = m =
+O(n)\f$ and \f$k\f$ independent hash functions \f$h_1, \dots, h_k\f$ that map
+items in \f$U\f$ to the range \f$[m] = \{1,\ldots,m\}\f$. (Unlike in the
+implementation, we start at index 1 for the formal treatment.) All bits in
+\f$V\f$ are initialized to 0. To insert an item \f$x\in S\f$, we set the
+bits at positions \f$h_1(x), \ldots, h_k(x)\f$ in \f$V\f$ to 1. To test whether
+an item \f$q\in U\f$ is a member of \f$\widehat{S}\f$, we examine the bits
+at positions \f$h_1(q),\dots,h_k(q)\f$ in \f$V\f$. If any of these bits is 0
+we report \f$q\notin \widehat{S}\f$. Otherwise we report that \f$q\in
+\widehat{S}\f$, although there remains some probability that
+\f$q\notin S\f$. This type of error is a <em>false positive</em> (FP) and also
+known as <em>Bloom error</em> \f$E_B\f$. It occurs because other elements in
+\f$S\f$ also map to the same positions. The Figure below illustrates how the
+basic Bloom filter works.
+
+\image html bf-basic.png "The basic Bloom filter devised by Burton Bloom. To insert an item \(x\), we set the corresponding positions in the bit vector to 1."
+
+To compute the probability of a Bloom error, we start off with an empty bit
+vector \f$V\f$ and insert an item. This is the same as independently (and
+uniformly) choosing \f$k\f$ bits and setting them to 1. Thereafter, the
+probability that a certain bit in \f$V\f$ is still 0 is 
+\f[
+\left(1 - \frac{1}{m}\right)^k.
+\f]
+
+Afer \f$n\f$ insertions, the probability that a certain bit is 1 is 
+\f[
+1 - \left(1 - \frac{1}{m}\right)^{kn}.
+\f]
+
+Testing for membership involves hashing an item \f$k\f$ times. Thus the
+probability of a Bloom error is
+\f{equation}{
+\mathbb{P}(E_B) = \left(1-\left(1-\frac{1}{m}\right)^{kn}\right)^k
+\approx \left(1 - e^{-kn/m}\right)^k
+\f}
+
+For fixed parameters \f$m\f$ and \f$n\f$, the optimal value \f$k^*\f$ that
+minimizes this probability is 
+\f[
+k^* = \arg\min_k \mathbb{P}(E_B) = 
+\left\lfloor\frac{m}{n}\ln 2\right\rfloor
+\f]
+
+For \f$k^*\f$, we have hence \f$E_B = (0.619)^{m/n}\f$. Moreover, for a
+desired FP probability \f$\phi_P\f$ we can compute the number of required bits
+by substituting the optimal value of \f$k\f$:
+\f[
+m = -\frac{n\ln p}{(\ln 2)^2}.
+\f]
+
+\subsection bf_multi Multisets
+
+A basic Bloom filter can only represent a set, but neither allows for querying
+the multiplicities of an item, nor does it support deleting entries. We use the
+term <em>counting Bloom filter</em> to refer to variants of Bloom filters that
+represent multisets rather than sets. In \c libBf, we call a counting Bloom
+filter a basic Bloom filter with width parameter \f$w\f$.
+
+\subsubsection bf_count Counting
+
+In a counting Bloom filter, inserting an item corresponds to incrementing a
+counter. Some variants also feature a decrement operation to remove item
+from a set. As soon we allow for deletions we introduce false negative (FN)
+errors. These occur when removing an item that itself was a FP. The
+probability of a FN is bounded by \f$O(E_B)\f$.
+
+When we get the count of an item \f$x\in\widehat{S}\f$, we compute its set of
+counters \f$C_x\f$ and return the \e minimum value as frequency estimate
+\f$\widehat{s}_x\f$. This query algorithm is also known as <em>minimum
+selction</em> (MS).
+
+\image html bf-counting.png "Each cell in the counting Bloom filter has a fixed bit width \(w\). To insert an item \(x\), we increment the counters \(C_x\). To remove an item \(y\), we decrement its counters \(C_y\)."
+
+There are two main issues with counting Bloom filters:
+-# Counter overflows
+-# Choosing \f$w\f$
+
+The first problem exists when we the counter value reaches \f$2^w - 1\f$ and
+cannot be incremented any more. The most natural thing to do is simply not
+continuing to count rather than overflowing and restarting at 0. However, this
+introduces \e undercounts, which we also refer to as FNs.
+
+The second problem concerns the choice of the width parameter \f$w\f$. If we
+choose \f$w\f$ very large, the space gains of a Bloom filter diminish. There
+will also be a lot of unused space, manifesting as unused zeros. If we choose
+\f$w\f$ too small, we will reach the maximum counter value to fast. Choosing
+the right value is a difficult trade-off that also depends on the data. It has
+been shown that for uniform distributions a value of \f$w = 4\f$ works well.
+
+\subsubsection bf_bitwise Bitwise
+
+The <em>bitwise Bloom filter</em> is a combination of \f$l\f$ counting Bloom
+filters with bit vectors \f$V_i\f$, each of which have \f$m_i\f$ cells,
+\f$k_i\f$ hash functions, and width \f$w_i\f$ where \f$i\in\{0,\dots,l-1\}\f$.
+It aims at solving both of the overflow and space problem of the counting Bloom
+filter.
+
+To add an item \f$x\f$, we first look at the counters in the first level
+\f$V_0\f$. If there is enough room (i.e., width) available, we simply perform
+the increment.  If the counter overflows, we insert \f$x\f$ into \f$V_1\f$ and
+remove it from \f$V_0\f$. In this fashion, the counter value is unbounded as
+we can always add more levels. However, the item has to be hashed \f$l\f$ times
+with a total of \f$\sum_{i=0}^{l-1} k_i\f$ hash functions.
+
+In order to read the counter of an item, we combine the binary representation
+of all the levels. Let \f$c_i\f$ be the counter value at level \f$i\f$. Then we
+compute the counter value as
+\f[
+C = \sum_{i=0}^{l-1} c_i 2^{\sum_{j=0}^i w_i}.
+\f]
+
+The Figure below illustrates a bitwise Bloom filter with \f$w_i = 1 \; \forall
+i\f$.
+
+\image html bf-bitwise.png "The bitwise Bloom filter consists of \(l\) counting Bloom filters, each of which represent \(w_i\) orders of magnitude of the entire counter."
+
+\subsubsection bf_spectral Spectral
+
+The <em>spectral Bloom filter</em> is an optimized version of the counting
+Bloom filter. It consists of two extra algorithms in addition to \ref bf_count
+"MS" and introduces a more space-efficient data structure to represent
+counters.
+
+-# Let us review the MS algorithm. When querying an item \f$q\in U\f$, MS uses
+   the minimum counter value \f$m_q = \min_i C_q\f$ as frequency estimate,
+   i.e., \f$\widehat{f}_q = m_q\f$. Cohen and Matias claim that \f$f_x \le
+   m_x\f$ and \f$\mathbb{P}(\widehat{f}_x \neq m_x) = \mathbb{P}(E_B)\f$ for
+   all \f$x\in S\f$.
+-# The second spectral algorithm is an optimization for the add operation. When
+   adding an item \f$x\f$ to the Bloom filter, the <em>minimum increase</em>
+   (MI) algorithm only increments the minimum counter value(s) 
+   \f$\tilde{C}_x = \min_i C_x\f$. The rationale behind this is that \f$m_x\f$
+   is always the most accurate count, thus MI results in the fewest possible
+   increment operations. 
+   Because not all counters are incremented on inserts, the effect of deletes
+   is significantly worse and the number of FNs becomes unbounded. Thus, the
+   MI algorithm should not be used when removing of items from a Bloom filter.
+   Cohen and Matias claim that \f$E_B^{MI} = O(E_B)\f$ and that if \f$x\f$ is
+   drawn uniformly from \f$U\f$, then \f$E_B^{MI} = E_B/k\f$.
+-# The third algorithm is <em>recurring minimum</em> (RM) and involves two
+   Bloom filters, \f$V_1\f$ and \f$V_2\f$. The key insight behind RM is that
+   items that experience Bloom errors are less likely to have recurring minima
+   counter values. Cohen and Matias found empirically that this applies to
+   approximately 20% of the items. Such items with a unique minimum are
+   maintained in the second Bloom filter to reduce the discrepancy between
+   \f$f_x\f$ and \f$\widehat{f}_x\f$.
+   To query an item \f$q\in U\f$ according to the RM algorithm, we look first
+   into the first Bloom filter and check if \f$q\f$ has a recurring minimum. If
+   so, we return the minimum counter value. Otherwise we look the minimum
+   counter value from the second Bloom filter, unless it is 0. If it is 0
+   (i.e., does not exist), we return the minimum counter from the first Bloom
+   filter.
+   Since all the items are inserted into the first bloom filter, the RM
+   optimization does at least as well as the MS algorithm, yet has usually
+   better error rates because a second filter holding fewer items is used for
+   items which experience higher error rates.
+
+\subsection bf_age Aging
+
+A problem all the above Bloom filter variants is that they eventually fill up
+over time when dealing with a large set or stream of data. This means that at
+some point the Bloom filter becomes unusable due to its high error rates. There
+exist various scenarios where one would like to "age out" old items that have
+been added a long time ago. For example, we might want to estimate only recent
+items or we have a very limited amount of space available.
+
+Although counting Bloom filters have a delete operation, it is often impossible
+to retain old items in memory. Thus we do not know their counter positions in
+the bit vector anymore, otherwise we would simply decrement their count. What
+we want is a Bloom filter that has <em>sliding window</em> semantics, as
+illustrated by the Figure below.
+
+\image html sliding-window.png "In a sliding window scenario, an insert operation for a new item \(x_7\) would ideally delete an old item \(x_0\)."
+
+To support a sliding window, we would like to have Bloom filter that acts like
+a FIFO. In the following, we discuss two different Bloom filter flavors that
+aim at providing this property.
+
+\subsubsection bf_stable Stable
+
+The <em>stable Bloom filter</em> is essentially a basic Bloom filter with an
+underlying bit vector with a fixed cell widht \f$w\f$. However, counters do not
+represent the multiplicities of the items but rather their age. Thus the
+interface supports only set membership queries.
+
+To insert an item, we decrement \f$d\f$ cells chosen uniformly at random.
+Thereafter, we set the counters of all \f$k\f$ cells to their maximum value of
+\f$2^w - 1\f$. 
+
+Deng and Rafiei have shown that the fraction of zeros will eventually become
+constant. When having reached this <em>stable point</em>, the probability of a
+Bloom error is
+\f[
+\phi_P = \left( 1 -\left( \frac{1}{1+\frac{1}{d(1/k-1/m)}} \right) \right)
+\f]
+
+\subsubsection bf_a2 \(A^2\)
+
+The <em>\f$A^2\f$ Bloom filter</em>, also known as active-active buffering,
+also provides a FIFO abstraction. To this end, it uses two single-bit vectors
+\f$V_1\f$ and \f$V_2\f$ where \f$|V_1| = |V_2| = \frac{m}{2}\f$. Unlike
+the \ref bf_spectral "spectral RM" algorithm, one Bloom filter is not a subset
+of the other, so an item can be in either Bloom filter.
+
+To query for an item, we return true if \f$q\f$ exists in either \f$V_1\f$ or
+\f$V_2\f$. To insert an item \f$x\f$, we simply return if it already exists in
+\f$V_1\f$. Otherwise we insert it in \f$V_1\f$ and test whether \f$V_1\f$ has
+reached its capacity. If it is full, we flush \f$V_2\f$ and swap \f$V_1\f$ and
+\f$V_2\f$. Thereafter we insert the item in \f$V_1\f$ (the old \f$V_2\f$).
+
+One advantage of the \f$A^2\f$ Bloom filter is space-efficiency, since one bit
+vector is always full. Let the subscript \f$a\f$ denote the value of the
+\f$A^2\f$ Bloom filter. The probability of a Bloom error is
+\f[
+{\phi_P}_a = 1 - \sqrt{1-\phi_P}
+\f]
+
+and the optimal value for \f$k_a\f$ and \f$\kappa_a\f$ are:
+\f[
+k_a^* =
+\left\lfloor -\log_2\left(1-\sqrt{1-\phi_P}\right) \right\rfloor
+\qquad
+\kappa_a^* = \left\lfloor \frac{m}{2k_a^*} \ln2 \right\rfloor
+\f]
+
+
+\section arch Architecture
+
+\c libBf implements a variety of different Bloom filters. Each Bloom filter
+type is based on one or more \e cores, which is a policy class that captures
+store, hash, and partition properties. 
+
+- \b Store: The store policy abstracts an \f$O(1)\f$ random-access array data
+  structure to access counter values.
+- \b Hash: The hash policy computes the hash values according to one of three
+  possible schemes. The default scheme is simply to use the hash value of the
+  underlying hasher (which is also configurable). The two other available
+  schemes are <em>double hashing</em> and <em>extended double hashing</em>,
+  implement \f$k\f$ independent hash function using only two pairwise
+  independent hash functions of the form
+  \f[
+  g_i(x) = h_1(x) + ih_2(x) + f(i) \quad \forall i \in [k]
+  \f]
+  The function \f$f\f$ is an arbitrary mapping into the real number. For
+  \f$f(i) \equiv 0\f$ we have double hashing.
+- \b Partition: The partition policy determines how to distribute the \f$k\f$
+  hash values to the bit vector. The default policy is to not use partitioning
+  and simply compute \f$h_i(x) \bmod m\f$ for all \f$i \in [k]\f$.
+  Alternatively, one could partitioning to map each hash value \f$h_i(x)\f$
+  into a disjoint sub-vector of size \f$m/k\f$, i.e., 
+  \f[
+  \left(h_i(x) \bmod \frac{m}{k}\right) + \frac{(i-1)m}{k}
+  \quad \forall i\in[k]
+  \f]
+
+The Figure below shows the architecture of \c libBf.
+
+\image html architecture.png "Each Bloom filter implementation in \c libBf is uses one or more \e cores. A core is a policy class that captures the store, hash, and partition properties of the Bloom filter."
+
+\section use Usage
+
+For clarity we assume in the following discussion that all the classes from \c
+libBf exist in the current namespace, e.g., via <code>using namespace
+bf</code>.
+
+\subsection use_synopsis Synopsis
+
+- Define a core type:
+    <pre><code>
+    typedef core<
+      fixed_width<uint8_t, std::allocator<uint8_t>
+    , double_hashing<default_hasher, 42, 4711>
+    , no_partitioning
+    > my_core;
+    </code></pre>
+- Define a Bloom filter type:
+    <pre><code>
+    typedef basic<my_core> my_bloom_filter;
+    </code></pre>
+- Instantiate with a core:
+    <pre><code>
+    my_bloom_filter bf({ 1 << 10, 5, 4 });
+    </code></pre>
+- Use:
+    <pre><code>
+    bf.add("foo")
+    bf.add("foo")
+    bf.add('z')
+    bf.add(3.14159)
+    std::cout << bf.count("foo") << std::endl;  // returns 2
+    </code></pre>
+
+*/
