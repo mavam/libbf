@@ -1,13 +1,13 @@
 BASE := .
 DOXYFILE := $(BASE)/Doxyfile
 DOC := $(BASE)/html/
-WEB := www.icir.org:matthias/libbf
+WEB := $(HOME)/code/www/output/libbf/api
 
 doc: FORCE
 	doxygen $(DOXYFILE)
 
 www: doc
-	rsync -az -e ssh --delete $(DOC) $(WEB)
+	rsync -az --delete $(DOC) $(WEB)
 
 update:
 	doxygen -u $(DOXYFILE)
