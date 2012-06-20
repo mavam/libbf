@@ -1,30 +1,22 @@
-
-                             ___ __    ____  ____
-                            / (_) /_  / __ )/ __/
-                           / / / __ \/ __  / /_  
-                          / / / /_/ / /_/ / __/  
-                         /_/_/_.___/_____/_/ 
-  
-
 **libbf** is a header-only C++11 library of a of Bloom filters. Its
 policy-based design makes it very flexible to customize and allows for creating
 new combinations of storage, hashing, and partition properties. libbf currently
 supports the follwing types of Bloom filters:
 
-    - Basic (fixed-width)
-    - Bitwise
-    - Spectral MI
-    - Spectral RM
-    - A^2
-    - Stable
+- Basic (fixed-width)
+- Bitwise
+- Spectral MI
+- Spectral RM
+- A^2
+- Stable
 
 
 Requirements
 =============
 
-    * A C++11 copmiler (GCC >= 4.7 or Clang >= 3.1)
-    * CMake (>= 2.8)
-    * Boost (>= 1.46)
+* A C++11 copmiler (GCC >= 4.7 or Clang >= 3.1)
+* CMake (>= 2.8)
+* Boost (>= 1.46)
 
 Installation
 ============
