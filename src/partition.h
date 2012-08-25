@@ -1,5 +1,5 @@
-#ifndef PARTITION_H
-#define PARTITION_H
+#ifndef BF_PARTITION_H
+#define BF_PARTITION_H
 
 namespace bf {
 
@@ -9,24 +9,24 @@ template <typename Derived>
 class partition_policy
 {
 public:
-    unsigned parts() const
-    {
-        return derived().parts();
-    }
+  unsigned parts() const
+  {
+    return derived().parts();
+  }
 
 private:
-    //
-    // CRTP interface
-    //
-    Derived& derived()
-    {
-        return *static_cast<Derived*>(this);
-    }
+  //
+  // CRTP interface
+  //
+  Derived& derived()
+  {
+    return *static_cast<Derived*>(this);
+  }
 
-    const Derived& derived() const
-    {
-        return *static_cast<const Derived*>(this);
-    }
+  const Derived& derived() const
+  {
+    return *static_cast<const Derived*>(this);
+  }
 };
 
 /// Do not perform partitioning; use the whole bitvector for all \f$k\f$ hash
@@ -34,19 +34,17 @@ private:
 class no_partitioning : public partition_policy<no_partitioning>
 {
 public:
-    no_partitioning(unsigned /* unused */)
-    {
-    }
+  no_partitioning(unsigned) = default;
 
-    unsigned parts() const
-    {
-        return 1;
-    }
+  unsigned parts() const
+  {
+    return 1;
+  }
 
-    unsigned position(std::size_t hash, unsigned i, unsigned cells) const
-    {
-        return hash % cells;
-    }
+  unsigned position(std::size_t hash, unsigned i, unsigned cells) const
+  {
+    return hash % cells;
+  }
 };
 
 /// Partition the bitvector of size \f$m\f$ in \f$k\f$ sub-vectors of size
@@ -55,26 +53,25 @@ public:
 struct partitioning : public partition_policy<partitioning>
 {
 public:
-    partitioning(unsigned parts)
-      : parts_(parts)
-    {
-    }
+  partitioning(unsigned parts)
+    : parts_(parts)
+  {
+  }
 
-    unsigned parts() const
-    {
-        return parts_;
-    }
+  unsigned parts() const
+  {
+    return parts_;
+  }
 
-    unsigned position(std::size_t hash, unsigned i, unsigned cells) const
-    {
-        assert(cells % parts_ == 0);
-
-        auto part_size = cells / parts_;
-        return hash % part_size + (i * part_size);
-    }
+  unsigned position(std::size_t hash, unsigned i, unsigned cells) const
+  {
+    assert(cells % parts_ == 0);
+    auto part_size = cells / parts_;
+    return hash % part_size + (i * part_size);
+  }
 
 private:
-    unsigned parts_;
+  unsigned parts_;
 };
 
 } // namespace partition
