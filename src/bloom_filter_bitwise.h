@@ -7,7 +7,7 @@
 
 namespace bf {
 
-/// The <em>bitwise Bloom filter</em>.
+/// The *Bitwise Bloom filter*
 template <typename Core = core<>>
 class bitwise : public bloom_filter<bitwise<Core>>
 {
@@ -19,8 +19,8 @@ private:
 
 public:
   /// Create a bitwise Bloom filter.
-  /// \param core An rvalue reference to the first core.
-  /// \param min_size The minimum size of the Bloom filter that represents
+  /// @param core An rvalue reference to the first core.
+  /// @param min_size The minimum size of the Bloom filter that represents
   ///     the most-significant bit.
   bitwise(core_type&& core, unsigned min_size = 128)
     : levels_(1, core)

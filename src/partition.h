@@ -4,7 +4,7 @@
 namespace bf {
 
 /// The base class for partition policies.
-/// \tparam The type of the derived policy.
+/// @tparam The type of the derived policy.
 template <typename Derived>
 class partition_policy
 {
@@ -29,7 +29,7 @@ private:
   }
 };
 
-/// Do not perform partitioning; use the whole bitvector for all \f$k\f$ hash
+/// Do not perform partitioning; use the whole bitvector for all @f$k@f$ hash
 /// values.
 class no_partitioning : public partition_policy<no_partitioning>
 {
@@ -47,8 +47,8 @@ public:
   }
 };
 
-/// Partition the bitvector of size \f$m\f$ in \f$k\f$ sub-vectors of size
-/// \f$\frac{m}{k}\f$. Each hash value \f$h_i\f$ for \f$i\in[k]\f$ maps to one
+/// Partition the bitvector of size @f$m@f$ in @f$k@f$ sub-vectors of size
+/// @f$@frac{m}{k}@f$. Each hash value @f$h_i@f$ for @f$i\in[k]@f$ maps to one
 /// of the sub-vectors.
 struct partitioning : public partition_policy<partitioning>
 {

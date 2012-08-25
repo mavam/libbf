@@ -5,8 +5,7 @@
 
 namespace bf {
 
-/// The <em>spectral Bloom filter</em> with <em>minimum increase</em>
-/// optimization.
+/// The *Spectral Bloom filter* with *Minimum Increase* (MI) optimization.
 template <typename Core = core<>>
 class spectral_mi : public basic<Core>
 {
@@ -15,7 +14,7 @@ public:
   typedef typename base::core_type core_type;
 
   /// Create a spectral Bloom filter.
-  /// \param core An rvalue reference to a core object.
+  /// @param core An rvalue reference to a core object.
   spectral_mi(core_type&& core)
     : base(std::forward<core_type>(core))
   {
@@ -31,8 +30,7 @@ public:
   void remove(const T& x) = delete;
 };
 
-/// The <em>spectral Bloom filter</em> with <em>recurring minimum</em>
-/// optimization.
+/// The *Spectral Bloom Filter* with *Recurring Minimum* (RM) optimization.
 template <typename Core1 = core<>, typename Core2 = Core1>
 class spectral_rm : public bloom_filter<spectral_rm<Core1, Core2>>
 {
@@ -42,8 +40,8 @@ public:
   typedef Core2 core2_type;
 
   /// Create a spectral Bloom filter (RM).
-  /// \param core1 An rvalue reference to the first core.
-  /// \param core2 An rvalue reference to the second core.
+  /// @param core1 An rvalue reference to the first core.
+  /// @param core2 An rvalue reference to the second core.
   spectral_rm(core1_type&& core1, core2_type&& core2)
     : core1_(core1)
     , core2_(core2)
@@ -74,15 +72,15 @@ public:
     core2_.store.reset();
   }
 
-  /// Get the first core.
-  /// \return A reference to the first core.
+  /// Retrieves the first core.
+  /// @return A reference to the first core.
   const core1_type& core1() const
   {
     return core1_;
   }
 
-  /// Get the second core.
-  /// \return A reference to the second core.
+  /// Retrieves the second core.
+  /// @return A reference to the second core.
   const core2_type& core2() const
   {
     return core2_;

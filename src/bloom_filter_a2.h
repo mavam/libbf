@@ -8,7 +8,7 @@
 
 namespace bf {
 
-/// The \f$A^2\f$ <em>Bloom filter</em>.
+/// The @f$A^2@f$ <em>Bloom filter</em>.
 template <typename Core = core<>>
 class a2 : public bloom_filter<a2<Core>>
 {
@@ -16,9 +16,9 @@ public:
   typedef Core core_type;
 
 public:
-  /// Compute \f$k^*\f$, the optimal number of hash functions for a given
-  /// false positive rate \f$f\f$.
-  /// \return The optimal number of hash functions.
+  /// Compute @f$k^*@f$, the optimal number of hash functions for a given
+  /// false positive rate @f$f@f$.
+  /// @return The optimal number of hash functions.
   static double k(double f)
   {
     return std::floor(- (std::log(1 - std::sqrt(1 - f)) / std::log(2)));
@@ -28,20 +28,20 @@ public:
   /// of hash functions and number of cells in the store. The capacity is
   /// defined as the maximum number of items the Bloom filter can hold before
   /// the FP rate can no longer be guaranteed.
-  /// \param k The number of hash functions.
-  /// \param m The number of cells in the Bloom filter
-  /// \return The maximum number of items the Bloom filter can hold.
+  /// @param k The number of hash functions.
+  /// @param m The number of cells in the Bloom filter
+  /// @return The maximum number of items the Bloom filter can hold.
   static double capacity(unsigned k, unsigned m)
   {
     return std::floor(m / (2 * k) * std::log(2));
   }
 
-  /// Create an \f$A^2\f$ Bloom filter.
-  /// \param core1 An rvalue reference to one core.
-  /// \param capacity The capacity of a core. The default value of 0 results
+  /// Create an @f$A^2@f$ Bloom filter.
+  /// @param core1 An rvalue reference to one core.
+  /// @param capacity The capacity of a core. The default value of 0 results
   ///     in a capacity value that is derived from a false positive
   ///     probability of 1%.
-  /// \todo Find a good minimum capacity value when the auto-calculation
+  /// @todo Find a good minimum capacity value when the auto-calculation
   ///     computes a value that is close to 0.
   a2(core_type&& core, size_t capacity = 0)
     : items_(0)
@@ -104,14 +104,14 @@ public:
   }
 
   /// Get the first core.
-  /// \return A reference to the first core.
+  /// @return A reference to the first core.
   const core_type& core1() const
   {
     return core1_;
   }
 
   /// Get the second core.
-  /// \return A reference to the second core.
+  /// @return A reference to the second core.
   const core_type& core2() const
   {
     return core2_;

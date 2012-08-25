@@ -7,7 +7,7 @@
 
 namespace bf {
 
-/// The <em>stable Bloom filter</em>.
+/// The *stable Bloom filter*.
 template <typename Core = core<>, typename Generator = std::mt19937>
 class stable : public basic<Core>
 {
@@ -18,9 +18,9 @@ public:
   typedef typename base::core_type core_type;
 
   /// Create a spectral Bloom filter.
-  /// \param core An rvalue reference to a core.
-  /// \param generator An lvalue reference to a randomness generator.
-  /// \param d The number of cells to decrement at each insert
+  /// @param core An rvalue reference to a core.
+  /// @param generator An lvalue reference to a randomness generator.
+  /// @param d The number of cells to decrement at each insert
   stable(core_type&& core, const generator_type& generator, unsigned d)
     : base(std::forward<core_type>(core))
     , generator_(generator)
@@ -30,8 +30,8 @@ public:
   }
 
   /// Add an item to the stable Bloom filter. This invovles 
-  /// (i) decrementing \e k positions uniformly at random and (ii) setting
-  /// the counter of the value \c x to its maximum value, i.e., all 1's.
+  /// *(i)* decrementing *k* positions uniformly at random and *(ii)* setting
+  /// the counter of the value *x* to its maximum value, i.e., all 1's.
   template <typename T>
   void add(const T& x)
   {

@@ -17,28 +17,28 @@ class basic : public bloom_filter<basic<Core>>
 public:
   typedef Core core_type;
 
-  /// Compute \f$k^*\f$, the optimal number of hash functions for a given
-  /// false positive rate \f$f\f$.
-  /// \return The optimal number of hash functions.
+  /// Computes @f$k^*@f$, the optimal number of hash functions for a given
+  /// false positive rate @f$f@f$.
+  /// @return The optimal number of hash functions.
   static double k(double f)
   {
     return std::floor(- (std::log(f) / std::log(2)));
   }
 
-  /// Compute the capacity of a Bloom filter with respect to a given number
+  /// Computes the capacity of a Bloom filter with respect to a given number
   /// of hash functions and number of cells in the store. The capacity is
   /// defined as the maximum number of items the Bloom filter can hold before
   /// the FP rate can no longer be guaranteed.
-  /// \param k The number of hash functions.
-  /// \param m The number of cells in the Bloom filter
-  /// \return The maximum number of items the Bloom filter can hold.
+  /// @param k The number of hash functions.
+  /// @param m The number of cells in the Bloom filter
+  /// @return The maximum number of items the Bloom filter can hold.
   static double capacity(unsigned k, unsigned m)
   {
     return std::floor(m / k * std::log(2));
   }
 
-  /// Create a basic Bloom filter.
-  /// \param core An rvalue reference to a core.
+  /// Constructs a *Basic Bloom Filter*.
+  /// @param core An rvalue reference to a core.
   basic(core_type&& core)
     : core_(core)
   {
@@ -73,15 +73,15 @@ public:
     return core_.store.to_string();
   }
 
-  /// Get the number of hash functions.
-  /// \return The number of hash functions.
+  /// Retrieves the number of hash functions.
+  /// @return The number of hash functions.
   unsigned k() const
   {
     return core_.hash.k();
   }
 
-  /// Get the core
-  /// \return A reference to the core.
+  /// Retrieves the core.
+  /// @return A reference to the core.
   const core_type& core() const
   {
     return core_;

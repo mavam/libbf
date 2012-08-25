@@ -9,7 +9,7 @@
 namespace bf {
 
 /// The base class for store policies.
-/// \tparam The type of the derived policy.
+/// @tparam The type of the derived policy.
 template <typename Derived>
 class store_policy
 {
@@ -31,7 +31,7 @@ private:
   }
 };
 
-/// The <em>fixed width</em> storage policy implements a bit vector where each
+/// The *fixed width* storage policy implements a bit vector where each
 /// cell itself is a counter with a fixed number of bits.
 template <typename Block, typename Allocator>
 class fixed_width : public store_policy<fixed_width<Block, Allocator>>
@@ -46,10 +46,10 @@ public:
   typedef uint64_t count_type;
 
 public:
-  /// Construct a bit vector of size \f$O(mw)\f$ where \f$m\f$ is the
-  /// number of cells and \f$w\f$ the number of bits per cell.
-  /// \param cells The number of cells in the bit vector.
-  /// \param width The number of pits per cell.
+  /// Construct a bit vector of size @f$O(mw)@f$ where @f$m@f$ is the
+  /// number of cells and @f$w@f$ the number of bits per cell.
+  /// @param cells The number of cells in the bit vector.
+  /// @param width The number of pits per cell.
   fixed_width(unsigned cells, unsigned width)
     : bits_(cells * width)
     , width_(width)
@@ -73,8 +73,8 @@ public:
   }
 
   /// Increment a cell counter.
-  /// \param cell The cell index.
-  /// \return \c true if the increment succeeded, \c false if all bits in the
+  /// @param cell The cell index.
+  /// @return `true` if the increment succeeded, `false` if all bits in the
   ///     cell were already 1.
   bool increment(size_type cell)
   {
@@ -96,9 +96,9 @@ public:
 
   /// Increment a cell counter by a given value. If the value is larger 
   /// than or equal to max(), All bits are set to 1.
-  /// \param cell The cell index.
-  /// \param value The value that is added to the current cell value.
-  /// \return - \c true if the increment succeeded, \c false if all bits in
+  /// @param cell The cell index.
+  /// @param value The value that is added to the current cell value.
+  /// @return `true` if the increment succeeded, `false` if all bits in
   ///     the cell were already 1.
   bool increment(size_type cell, count_type value)
   {
@@ -159,9 +159,9 @@ public:
   }
 
   /// Decrement a cell counter.
-  /// \param cell The cell index.
-  /// \return \c true if the decrement succeeded, \c false if all bits in the
-  ///     cell were already 0.
+  /// @param cell The cell index.
+  /// @return `true` if the decrement succeeded, `false` if all bits in the
+  /// cell were already 0.
   bool decrement(size_type cell)
   {
     assert(cell < size());
@@ -181,8 +181,8 @@ public:
   }
 
   /// Get the count of a cell.
-  /// \param cell The cell index.
-  /// \return \c true if the decrement succeeded, \c false if all bits in the
+  /// @param cell The cell index.
+  /// @return `true` if the decrement succeeded, `false` if all bits in the
   ///     cell were already 0.
   count_type count(size_type cell) const
   {
@@ -203,7 +203,7 @@ public:
   }
 
   /// Set a cell to all 1s.
-  /// \param cell The cell to set to all 1s.
+  /// @param cell The cell to set to all 1s.
   void set(size_type cell)
   {
     assert(cell < size());
@@ -213,8 +213,8 @@ public:
   }
 
   /// Set a cell to a given value.
-  /// \param cell The cell whose value changes.
-  /// \param value The new value of the cell.
+  /// @param cell The cell whose value changes.
+  /// @param value The new value of the cell.
   void set(size_type cell, count_type value)
   {
     assert(cell < size());
@@ -232,7 +232,7 @@ public:
   }
 
   /// Clear the bit(s) of specific cell.
-  /// \param cell The cell to clear.
+  /// @param cell The cell to clear.
   void reset(size_type cell)
   {
     assert(cell < size());
@@ -258,14 +258,14 @@ public:
   }
 
   /// Get the size of the underlying bit vector.
-  /// \return The size of the bit vector in number of cells.
+  /// @return The size of the bit vector in number of cells.
   size_type size() const
   {
     return bits_.size() / width_;
   }
 
   /// Get the maximum counter value this store supports.
-  /// \return The maximum counter value.
+  /// @return The maximum counter value.
   count_type max() const
   {
     return std::numeric_limits<count_type>::max() >>
@@ -273,21 +273,21 @@ public:
   }
 
   /// Test whether all bits are 0.
-  /// \return \c true \e iff all bits in the bit vector are 0.
+  /// @return \c true \e iff all bits in the bit vector are 0.
   bool none() const
   {
     return bits_.none();
   }
 
   /// Get the counter width of a cell.
-  /// \return The number of bits per cell.
+  /// @return The number of bits per cell.
   unsigned width() const
   {
     return width_;
   }
 
   /// Set the cell width.
-  /// \param w The new value of the cell width.
+  /// @param w The new value of the cell width.
   /// \todo Write unit tests.
   void width(unsigned w)
   {
@@ -329,7 +329,7 @@ public:
   /// Get a string representation of the storage. The output reads from left
   /// to right. That is, for each cell the least-significant bit corresponds
   /// to the left-most bit.
-  /// \param A string of the underlying bit vector.
+  /// @param A string of the underlying bit vector.
   std::string to_string() const
   {
     std::string str(bits_.size(), '0');
@@ -341,8 +341,8 @@ public:
   }
 
   /// Apply a functor to each counter in the bit vector.
-  /// \tparam The type of the unary functor.
-  /// \param f An instance of type F.
+  /// @tparam The type of the unary functor.
+  /// @param f An instance of type F.
   template <typename F>
   void each(F f) const
   {

@@ -19,7 +19,7 @@ struct random_seed
 };
 
 /// A seed policy that fixed seed.
-/// \tparam Seed The seed value.
+/// @tparam Seed The seed value.
 template <unsigned Seed = 42>
 struct fixed_seed
 {
@@ -53,16 +53,16 @@ private:
 };
 
 /// The base class for hash policies.
-/// \tparam The type of the derived policy.
+/// @tparam The type of the derived policy.
 template <typename Derived>
 class hash_policy
 {
 public:
-  /// Apply a function \f$k\f$ times to the hash values of \f$x\f$.
-  /// \tparam T The type of item \f$x\f$.
-  /// \tparam F The unary functor to apply to \f$h_(x)\f$.
-  /// \param x The item \f$x\f$.
-  /// \param f The functor instance.
+  /// Apply a function @f$k@f$ times to the hash values of @f$x@f$.
+  /// @tparam T The type of item @f$x@f$.
+  /// @tparam F The unary functor to apply to @f$h_(x)@f$.
+  /// @param x The item @f$x@f$.
+  /// @param f The functor instance.
   template <typename T, typename F>
   void each(const T& x, F f) const
   {
@@ -70,14 +70,14 @@ public:
       f(h);
   }
 
-  /// Apply a function \f$k\f$ times to \f$h_i(x)\f$ to test whether it is \c
-  /// true on \e any of the hash values.
-  /// \tparam T The type of item \f$x\f$.
-  /// \tparam F The unary functor to apply to \f$(h_i(x), i)\f$.
-  /// \param x The item \f$x\f$.
-  /// \param f The functor instance.
-  /// \return \c true if \e any of the function invocations \f$f(h_i(x))\f$
-  ///     is \c true.
+  /// Apply a function @f$k@f$ times to @f$h_i(x)@f$ to test whether it is
+  /// `true` on *any* of the hash values.
+  /// @tparam T The type of item @f$x\@$.
+  /// @tparam F The unary functor to apply to @f$(h_i(x), i)@f$.
+  /// @param x The item @f$x@f$.
+  /// @param f The functor instance.
+  /// @return `true` if *any* of the function invocations @f$f(h_i(x))@f$ is
+  /// `true`.
   template <typename T, typename F>
     bool any(const T& x, F f) const
     {
@@ -88,14 +88,14 @@ public:
       return false;
     }
 
-  /// Apply a function \f$k\f$ times to \f$h_i(x)\f$ to test whether it is \c
+  /// Apply a function @f$k@f$ times to @f$h_i(x)@f$ to test whether it is \c
   /// true on \e all of the hash values.
-  /// \tparam T The type of item \f$x\f$.
-  /// \tparam F The unary functor to apply to \f$h_i(x)\f$.
-  /// \param x The item \f$x\f$.
-  /// \param f The functor instance.
-  /// \return \c true if \e all of the function invocations \f$f(h_i(x))\f$
-  ///     are \c true and \c false otherwise.
+  /// @tparam T The type of item @f$x@f$.
+  /// @tparam F The unary functor to apply to @f$h_i(x)@f$.
+  /// @param x The item @f$x@f$.
+  /// @param f The functor instance.
+  /// @return `true` if *all* of the function invocations @f$f(h_i(x))@f$
+  ///     are `true` and `false` otherwise.
   template <typename T, typename F>
   bool all(const T& x, F f) const
   {
@@ -106,12 +106,12 @@ public:
     return true;
   }
 
-  /// Apply a function \f$k\f$ times to the pair \f$(h_i(x), i)\f$ where
-  /// \f$i\f$ is the index of the \f$i^{\mathrm{th}}\f$ hash function.
-  /// \tparam T The type of item \f$x\f$.
-  /// \tparam F The binary functor to apply to \f$(h_i(x), i)\f$.
-  /// \param x The item \f$x\f$.
-  /// \param f The functor instance.
+  /// Apply a function @f$k@f$ times to the pair @f$(h_i(x), i)@f$ where
+  /// @f$i@f$ is the index of the @f$i^{\mathrm{th}}@f$ hash function.
+  /// @tparam T The type of item @f$x@f$.
+  /// @tparam F The binary functor to apply to @f$(h_i(x), i)@f$.
+  /// @param x The item @f$x@f$.
+  /// @param f The functor instance.
   template <typename T, typename F>
   void each_with_index(const T& x, F f) const
   {
@@ -120,16 +120,16 @@ public:
       f(h[i], i);
   }
 
-  /// Apply a function \f$k\f$ times to the pair \f$(h_i(x), i)\f$, where
-  /// \f$i\f$ is the index of the \f$i^{\mathrm{th}}\f$ hash function, and
-  /// return \c true as soon as \f$f\f$ returns \c true for the first time.
-  /// Otherwise return \c false.
-  /// \tparam T The type of item \f$x\f$.
-  /// \tparam F The unary functor to apply to \f$(h_i(x), i)\f$.
-  /// \param x The item \f$x\f$.
-  /// \param f The functor instance.
-  /// \return \c true if \e any of the function invocations \f$f(h_i(x), i)\f$
-  ///     is \c true.
+  /// Apply a function @f$k@f$ times to the pair @f$(h_i(x), i)@f$, where
+  /// @f$i@f$ is the index of the @f$i^{\mathrm{th}}@f$ hash function, and
+  /// return `true` as soon as @f$f@f$ returns `true` for the first time.
+  /// Otherwise return `false`.
+  /// @tparam T The type of item @f$x@f$.
+  /// @tparam F The unary functor to apply to @f$(h_i(x), i)@f$.
+  /// @param x The item @f$x@f$.
+  /// @param f The functor instance.
+  /// @return `true` if *any* of the function invocations @f$f(h_i(x), i)@f$
+  /// `true`.
   template <typename T, typename F>
   bool any_with_index(const T& x, F f) const
   {
@@ -141,16 +141,16 @@ public:
     return false;
   }
 
-  /// Apply a function \f$k\f$ times to the pair \f$(h_i(x), i)\f$, where
-  /// \f$i\f$ is the index of the \f$i^{\mathrm{th}}\f$ hash function, and
-  /// return \c false as soon as \f$f\f$ returns \c false for the first time.
-  /// Otherwise return \c true.
-  /// \tparam T The type of item \f$x\f$.
-  /// \tparam F The unary functor to apply to \f$(h_i(x), i)\f$.
-  /// \param x The item \f$x\f$.
-  /// \param f The functor instance.
-  /// \return \c true if \e all the function invocations \f$f(h_i(x), i)\f$
-  ///     are \c true.
+  /// Apply a function @f$k@f$ times to the pair @f$(h_i(x), i)@f$, where
+  /// @f$i@f$ is the index of the @f$i^{\mathrm{th}}@f$ hash function, and
+  /// return `false` as soon as @f$f@f$ returns `false` for the first time.
+  /// Otherwise return `true`.
+  /// @tparam T The type of item @f$x@f$.
+  /// @tparam F The unary functor to apply to @f$(h_i(x), i)@f$.
+  /// @param x The item @f$x@f$.
+  /// @param f The functor instance.
+  /// @return `true. if *all* the function invocations @f$f(h_i(x), i)@f$
+  ///     are `true`.
   template <typename T, typename F>
   bool all_with_index(const T& x, F f) const
   {
@@ -178,8 +178,8 @@ private:
 };
 
 /// The default hash policy.
-/// \tparam Hasher An unary functor that computes the underlying hash value.
-/// \tparam Seed The seed for the hasher.
+/// @tparam Hasher An unary functor that computes the underlying hash value.
+/// @tparam Seed The seed for the hasher.
 template <typename Hasher = basic_hasher, typename Seed = fixed_seed<42>>
 class default_hashing : public hash_policy<default_hashing<Hasher, Seed>>
 {
@@ -226,9 +226,9 @@ private:
 };
 
 /// A hash policy that implements <em>double hashing</em>.
-/// \tparam Hasher An unary functor that computes the underlying hash value.
-/// \tparam Seed1 The seed for the first hasher.
-/// \tparam Seed2 The seed for the second hasher.
+/// @tparam Hasher An unary functor that computes the underlying hash value.
+/// @tparam Seed1 The seed for the first hasher.
+/// @tparam Seed2 The seed for the second hasher.
 template <
   typename Hasher = basic_hasher,
   typename Seed1 = fixed_seed<42>,
@@ -284,9 +284,9 @@ private:
 };
 
 /// A hash policy that implements <em>extended double hashing</em>.
-/// \tparam Hasher An unary functor that computes the underlying hash value.
-/// \tparam Seed1 The seed for the first hasher.
-/// \tparam Seed2 The seed for the second hasher.
+/// @tparam Hasher An unary functor that computes the underlying hash value.
+/// @tparam Seed1 The seed for the first hasher.
+/// @tparam Seed2 The seed for the second hasher.
 template <
   typename Hasher = basic_hasher,
   typename Seed1 = fixed_seed<42>,
