@@ -87,7 +87,7 @@ protected:
 private:
   friend std::string to_string(basic const& bf)
   {
-    return to_string(bf.core_.store);
+    return to_string(bf.core_);
   }
 };
 
