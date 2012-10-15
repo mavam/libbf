@@ -12,79 +12,55 @@ class bloom_filter
 {
 public:
 
-  /// Add an item to the set.
+  /// Adds an item to the set.
   /// @tparam T The type of the item to insert.
   /// @param x An instance of type T.
   template <typename T>
   void add(const T& x)
   {
     ++n_;
-    derived().add(x);
+    derived().add_impl(x);
   }
 
-  /// Remove an item from the set.
-  /// @tparam T The type of the item to delete.
-  /// @param x An instance of type T.
-  template <typename T>
-  void remove(const T& x)
-  {
-    --n_;
-    derived().remove(x);
-  }
-
-  /// Get the count of an item.
+  /// Retrieves the count of an item.
   /// @tparam T The type of the item to query.
   /// @param x An instance of type T.
   /// @return A frequency estimate for x.
   template <typename T>
-  unsigned count(const T& x) const
+  size_t count(const T& x) const
   {
-    return derived().count(x);
+    return derived().count_impl(x);
   }
 
-  /// Remove all items from the set.
-  void clear()
+  /// Removes all items from the set.
+  void clear_impl()
   {
     n_ = 0;
-    derived().clear();
+    derived().clear_impl();
   }
 
-  /// Get the number of items in the set, counted via add and remove.
-  /// @return The number of items.
-  unsigned long n() const
+  /// Retrieves the number of items in the set, counted via add() and remove().
+  /// @return The number of items in the Bloom filter.
+  size_t n() const
   {
     return n_;
-  }
-
-  /// Get a string representation of the Bloom filter.
-  /// @return A string representing of the Bloom filter.
-  std::string to_string() const
-  {
-    return derived().to_string();
   }
 
 protected:
   bloom_filter() = default;
 
+  size_t n_ = 0;
+
 private:
-  //
-  // CRTP interface
-  //
-  template <typename Derived>
-  Derived& derived() const
+  Derived& derived()
   {
-    return *static_cast<Derived*>(this);
+    return static_cast<Derived&>(*this);
   }
 
-  template <typename Derived>
   const Derived& derived() const
   {
-    return *static_cast<const Derived*>(this);
+    return static_cast<const Derived&>(*this);
   }
-
-protected:
-  /// The (multi)set cardinality.
-  unsigned long n_;
 };
 
 } // namespace bf

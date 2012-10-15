@@ -8,7 +8,7 @@
 
 namespace bf {
 
-/// The @f$A^2@f$ <em>Bloom filter</em>.
+/// The @f$A^2@f$ Bloom filter.
 template <typename Core = core<>>
 class a2 : public bloom_filter<a2<Core>>
 {
@@ -43,11 +43,8 @@ public:
   ///     probability of 1%.
   /// @todo Find a good minimum capacity value when the auto-calculation
   ///     computes a value that is close to 0.
-  a2(core_type&& core, size_t capacity = 0)
-    : items_(0)
-    , capacity_(capacity)
-    , core1_(core)
-    , core2_(core1_)
+  a2(core_type core, size_t capacity = 0)
+    : items_(0), capacity_(capacity), core1_(std::move(core)), core2_(core1_)
   {
     if (core1_.store.size() != core2_.store.size())
       throw std::invalid_argument("different store sizes");
@@ -92,29 +89,13 @@ public:
   void remove(const T& x) = delete;
 
   template <typename T>
-  unsigned count(const T& x) const
+  size_t count(const T& x) const
   {
     auto pos = core1_.positions(x);
     auto cnt = detail::spectral::minimum(pos, core1_.store);
     if (cnt)
       return cnt;
-
-    pos = core2_.positions(x);
-    return detail::spectral::minimum(pos, core2_.store);
-  }
-
-  /// Get the first core.
-  /// @return A reference to the first core.
-  const core_type& core1() const
-  {
-    return core1_;
-  }
-
-  /// Get the second core.
-  /// @return A reference to the second core.
-  const core_type& core2() const
-  {
-    return core2_;
+    return detail::spectral::minimum(core2_.positions(x), core2_.store);
   }
 
   /// Clear all bits.
@@ -124,29 +105,20 @@ public:
     core2_.store.reset();
   }
 
-  std::string to_string() const
+private:
+  friend std::string to_string(a2 const& bf)
   {
-    std::string str = core1_.store.to_string();
-    str.push_back('\n');
-    str += core2_.store.to_string();
-
+    auto str = to_string(bf.core1_);
+    str += '\n';
+    str += to_string(bf.core2_);
     return str;
   }
 
-private:
-  std::size_t items_;     ///< Number of items in the first (active) core.
-  std::size_t capacity_;  ///< Maximum number of items in the first core.
+  size_t items_;     ///< Number of items in the first (active) core.
+  size_t capacity_;  ///< Maximum number of items in the first core.
   core_type core1_;
   core_type core2_;
 };
-
-template <typename Elem ,  typename Traits ,  typename Core>
-std::basic_ostream<Elem, Traits>& operator<<(
-    std::basic_ostream<Elem, Traits>& os, const bf::a2<Core>& b)
-{
-  os << b.to_string();
-  return os;
-}
 
 } // namespace bf
 

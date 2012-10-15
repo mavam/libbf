@@ -3,11 +3,11 @@
 #include <iostream>
 #include <unordered_map>
 #include <boost/cstdlib.hpp>
-#include "bloom_filter_a2.h"
-#include "bloom_filter_basic.h"
-#include "bloom_filter_bitwise.h"
-#include "bloom_filter_spectral.h"
-#include "bloom_filter_stable.h"
+#include "bloom_filter/a2.h"
+#include "bloom_filter/basic.h"
+#include "bloom_filter/bitwise.h"
+#include "bloom_filter/spectral.h"
+#include "bloom_filter/stable.h"
 #include "configuration.h"
 #include "metrics.h"
 #include "exception.h"

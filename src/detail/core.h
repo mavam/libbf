@@ -17,15 +17,15 @@ typename std::enable_if<
 >::type
 positions(const T& x, const Core& core)
 {
-    std::vector<typename Core::store_type::size_type> v;
-    v.reserve(core.hash.k());
+  std::vector<typename Core::store_type::size_type> v;
+  v.reserve(core.hash.k());
 
-    auto h = core.hash.hash(x);
-    for (unsigned i = 0; i < h.size(); ++i)
-        v.push_back(core.part.position(h[i], i, core.store.size()));
+  auto h = core.hash.hash(x);
+  for (size_t i = 0; i < h.size(); ++i)
+    v.push_back(core.part.position(h[i], i, core.store.size()));
 
-    v.shrink_to_fit();
-    return v;
+  v.shrink_to_fit();
+  return v;
 }
 
 /// For a given item \f$x\f$, compute (at most) \f$k\f$ unique indices to
@@ -40,20 +40,20 @@ typename std::enable_if<
 >::type
 positions(const T& x, const Core& core)
 {
-    std::vector<typename Core::store_type::size_type> v;
-    v.reserve(core.hash.k());
+  std::vector<typename Core::store_type::size_type> v;
+  v.reserve(core.hash.k());
 
-    auto h = core.hash.hash(x);
-    for (unsigned i = 0; i < h.size(); ++i)
-    {
-        auto pos = core.part.position(h[i], i, core.store.size());
-        auto j = std::lower_bound(v.begin(), v.end(), pos);
-        if (j == v.end() || *j != pos)
-            v.insert(j, pos);
-    }
+  auto h = core.hash.hash(x);
+  for (size_t i = 0; i < h.size(); ++i)
+  {
+    auto pos = core.part.position(h[i], i, core.store.size());
+    auto j = std::lower_bound(v.begin(), v.end(), pos);
+    if (j == v.end() || *j != pos)
+      v.insert(j, pos);
+  }
 
-    v.shrink_to_fit();
-    return v;
+  v.shrink_to_fit();
+  return v;
 }
 
 } // namespace core

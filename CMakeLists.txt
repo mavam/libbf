@@ -50,6 +50,7 @@ find_package(Boost 1.46
     COMPONENTS 
         program_options
         thread
+        system
         unit_test_framework)
 if (NOT Boost_FOUND)
     message(FATAL_ERROR "Could not find required dependencies:${deps}")

@@ -33,19 +33,8 @@ struct core
   core(typename Store::size_type cells,
        unsigned k,
        unsigned width = 1,
-       unsigned parts = 1,
-       typename std::enable_if<
-         std::is_same<
-             store_type
-           , fixed_width<
-               typename store_type::block_type
-             , typename store_type::allocator_type
-             >
-         >::value
-       >* dummy = 0)
-    : store(cells, width)
-    , hash(k)
-    , part(parts)
+       unsigned parts = 1)
+    : store(cells, width), hash(k), part(parts)
   {
     if (parts == 0)
       throw std::invalid_argument("zero parts");
@@ -54,12 +43,12 @@ struct core
       throw std::invalid_argument("parts do not divide cells");
   }
 
-  //    template <typename S, typename H, typename P>
   void swap(core_type& c) // no throw
   {
-    std::swap(store, c.store);
-    std::swap(hash, c.hash);
-    std::swap(part, c.part);
+    using std::swap;
+    swap(store, c.store);
+    swap(hash, c.hash);
+    swap(part, c.part);
   }
 
   /// For a given item @f$x@f$, computes the (at most) @f$k@f$ corresponding
@@ -71,6 +60,11 @@ struct core
   std::vector<typename store_type::size_type> positions(const T& x) const
   {
     return detail::core::positions(x, *this);
+  }
+
+  friend std::string to_string(core_type const& c)
+  {
+    return to_string(c.store);
   }
 
   store_type store;

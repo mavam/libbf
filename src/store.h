@@ -17,29 +17,25 @@ public:
   // TODO: decide on a reasonable interface.
 
 private:
-  //
-  // CRTP interface
-  //
   Derived& derived()
   {
-    return *static_cast<Derived*>(this);
+    return static_cast<Derived&>(*this);
   }
 
   const Derived& derived() const
   {
-    return *static_cast<const Derived*>(this);
+    return static_cast<const Derived&>(*this);
   }
 };
 
 /// The *fixed width* storage policy implements a bit vector where each
-/// cell itself is a counter with a fixed number of bits.
+/// cell represents a counter having a fixed number of bits.
 template <typename Block, typename Allocator>
 class fixed_width : public store_policy<fixed_width<Block, Allocator>>
 {
 public:
   typedef Block block_type;
   typedef Allocator allocator_type;
-
   typedef boost::dynamic_bitset<Block, Allocator> bitset;
   typedef typename bitset::size_type size_type;
   typedef std::vector<size_type> pos_vector;
@@ -56,10 +52,8 @@ public:
   {
     if (cells == 0)
       throw std::invalid_argument("zero cells");
-
     if (width == 0)
       throw std::invalid_argument("zero width");
-
     auto max = std::numeric_limits<count_type>::digits;
     if (width > static_cast<decltype(width)>(max))
       throw std::invalid_argument("width too large");
@@ -68,8 +62,9 @@ public:
   template <typename B, typename A>
   void swap(fixed_width<B, A>& store) // no throw
   {
-    std::swap(bits_, store.bits_);
-    std::swap(width_, store.width_);
+    using std::swap;
+    swap(bits_, store.bits_);
+    swap(width_, store.width_);
   }
 
   /// Increment a cell counter.
@@ -87,10 +82,8 @@ public:
         bits_[i] = true;
         while (i && i > lsb)
           bits_[--i] = false;
-
         return true;
       }
-
     return false;
   }
 
@@ -114,14 +107,11 @@ public:
           if (! r)
             r = true;
         }
-
       return r;
     }
-
     bitset b(width_, value);
     bool carry = false;
     size_type i = lsb, j = 0;
-
     while (i < lsb + width_)
     {
       if (bits_[i])
@@ -144,17 +134,13 @@ public:
         bits_[i] = true;
         carry = false;
       }
-
       ++i;
       ++j;
     }
-
     if (! carry)
       return true;
-
     for (i = lsb; i < lsb + width_; ++i)
       bits_[i] = 1;
-
     return false;
   }
 
@@ -170,13 +156,10 @@ public:
       if (bits_[i])
       {
         bits_[i] = false;
-
         while (i && i > lsb)
           bits_[--i] = true;
-
         return true;
       }
-
     return false;
   }
 
@@ -192,7 +175,6 @@ public:
     for (auto i = lsb; i < lsb + width_; ++i, order <<= 1)
       if (bits_[i])
         cnt |= order;
-
     return cnt;
   }
 
@@ -236,7 +218,6 @@ public:
   void reset(size_type cell)
   {
     assert(cell < size());
-
     auto lsb = cell * width_;
     for (auto i = lsb; i < lsb + width_; ++i)
       bits_[i] = false;
@@ -250,10 +231,8 @@ public:
     size_type half = bits_.size() / 2;
     size_type i = 0;
     size_type j = half;
-
     while (i < half)
       set(i, count(i) + count(j));
-
     bits_.resize(half * width_);
   }
 
@@ -273,7 +252,7 @@ public:
   }
 
   /// Test whether all bits are 0.
-  /// @return \c true \e iff all bits in the bit vector are 0.
+  /// @return `true` *iff* all bits in the bit vector are 0.
   bool none() const
   {
     return bits_.none();
@@ -288,7 +267,7 @@ public:
 
   /// Set the cell width.
   /// @param w The new value of the cell width.
-  /// \todo Write unit tests.
+  /// @todo Write unit tests.
   void width(unsigned w)
   {
     assert(! "not yet tested");
@@ -302,7 +281,6 @@ public:
         else
           for (auto j = 0; j < w; ++j)
             bits_[i++] = bits_[cell + j];
-
       bits_.resize(w * bits_.size());
     }
     else
@@ -310,7 +288,6 @@ public:
       auto old = bits_.size();
       bits_.resize(w * bits_.size());
       auto i = bits_.size() / w - 1;
-
       for (auto cell = old - width_ - 1; cell != 0; cell -= width_)
       {
         size_type j = 0;
@@ -318,26 +295,10 @@ public:
           bits_[i++] = bits_[cell + j];
         while (j++ < w)
           bits_[i++] = 0;
-
         i -= width_;
       }
     }
-
     width_ = w;
-  }
-
-  /// Get a string representation of the storage. The output reads from left
-  /// to right. That is, for each cell the least-significant bit corresponds
-  /// to the left-most bit.
-  /// @param A string of the underlying bit vector.
-  std::string to_string() const
-  {
-    std::string str(bits_.size(), '0');
-    for (size_type i = 0; i < bits_.size(); ++i)
-      if (bits_[i])
-        str[i] = '1';
-
-    return str;
   }
 
   /// Apply a functor to each counter in the bit vector.
@@ -351,6 +312,18 @@ public:
   }
 
 private:
+  /// Creates a string representation of the storage. The output reads from
+  /// left to right. That is, for each cell the least-significant bit
+  /// corresponds to the left-most bit.
+  friend std::string to_string(fixed_width const& store)
+  {
+    std::string str(store.bits_.size(), '0');
+    for (size_type i = 0; i < store.bits_.size(); ++i)
+      if (store.bits_[i])
+        str[i] = '1';
+    return str;
+  }
+
   bitset bits_;
   unsigned width_;
 };

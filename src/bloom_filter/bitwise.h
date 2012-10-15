@@ -7,24 +7,23 @@
 
 namespace bf {
 
-/// The *Bitwise Bloom filter*
+/// The bitwise Bloom filter.
 template <typename Core = core<>>
 class bitwise : public bloom_filter<bitwise<Core>>
 {
 public:
   typedef Core core_type;
-  typedef std::function<unsigned(unsigned, unsigned)> growth_func_type;
+  typedef std::function<size_t(size_t, size_t)> growth_func_type;
 private:
   typedef std::vector<core_type> core_vector;
 
 public:
   /// Create a bitwise Bloom filter.
-  /// @param core An rvalue reference to the first core.
+  /// @param core The first Bloom filter core at level 0.
   /// @param min_size The minimum size of the Bloom filter that represents
   ///     the most-significant bit.
-  bitwise(core_type&& core, unsigned min_size = 128)
-    : levels_(1, core)
-    , min_size_(min_size)
+  bitwise(core_type core, size_t min_size = 128)
+    : levels_(1, std::move(core)), min_size_(min_size)
   {
     assert(min_size > 0);
   }
@@ -42,12 +41,12 @@ public:
   }
 
   template <typename T>
-  unsigned count(const T& x) const
+  size_t count(const T& x) const
   {
     return detail::bitwise::count(x, levels_);
   }
 
-  unsigned levels() const
+  size_t levels() const
   {
     return levels_.size();
   }
@@ -58,32 +57,23 @@ public:
       core.store.reset();
   }
 
-  std::string to_string() const
+private:
+  friend std::string to_string(bitwise const& bf)
   {
     std::string str;
-    auto i = levels_.size();
+    auto i = bf.levels_.size();
     while (i)
     {
-      str += levels_[--i].store.to_string();
+      str += to_string(bf.levels_[--i]);
       if (i)
-        str += "\n";
+        str += '\n';
     }
-
     return str;
   }
 
-private:
   core_vector levels_;
-  unsigned min_size_;
+  size_t min_size_;
 };
-
-template <typename Elem, typename Traits, typename Core>
-std::basic_ostream<Elem, Traits>& operator<<(
-    std::basic_ostream<Elem, Traits>& os, const bf::bitwise<Core>& b)
-{
-  os << b.to_string();
-  return os;
-}
 
 } // namespace bf
 

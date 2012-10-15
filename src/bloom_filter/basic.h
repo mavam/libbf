@@ -10,10 +10,13 @@
 
 namespace bf {
 
-/// The <em>basic Bloom filter</em>.
+/// The *basic Bloom filter*.
 template <typename Core = core<>>
 class basic : public bloom_filter<basic<Core>>
 {
+  typedef bloom_filter<basic<Core>> super;
+  friend super;
+
 public:
   typedef Core core_type;
 
@@ -38,66 +41,55 @@ public:
   }
 
   /// Constructs a *Basic Bloom Filter*.
-  /// @param core An rvalue reference to a core.
-  basic(core_type&& core)
-    : core_(core)
+  /// @param core The Bloom filter core.
+  basic(Core core)
+    : core_(std::move(core))
   {
   }
 
-  template <typename T>
-  void add(const T& x)
-  {
-    detail::basic::add(x, core_);
-  }
-
+  /// Removes an item from the set.
+  /// @tparam T The type of the item to delete.
+  /// @param x An instance of type T.
   template <typename T>
   void remove(const T& x)
   {
     detail::basic::remove(x, core_);
   }
 
-  template <typename T>
-  unsigned count(const T& x) const
-  {
-    auto pos = core_.positions(x);
-    return detail::spectral::minimum(pos, core_.store);
-  }
-
-  void clear()
-  {
-    core_.store.reset();
-  }
-
-  std::string to_string() const
-  {
-    return core_.store.to_string();
-  }
-
   /// Retrieves the number of hash functions.
   /// @return The number of hash functions.
-  unsigned k() const
+  size_t k() const
   {
     return core_.hash.k();
   }
 
-  /// Retrieves the core.
-  /// @return A reference to the core.
-  const core_type& core() const
+protected:
+  template <typename T>
+  void add_impl(const T& x)
   {
-    return core_;
+    detail::basic::add(x, core_);
+  }
+
+  template <typename T>
+  size_t count_impl(const T& x) const
+  {
+    return detail::spectral::minimum(core_.positions(x), core_.store);
+  }
+
+  void clear_impl()
+  {
+    core_.store.reset();
   }
 
 protected:
   core_type core_;
-};
 
-template <typename Elem, typename Traits, typename Core>
-std::basic_ostream<Elem, Traits>& operator<<(
-    std::basic_ostream<Elem, Traits>& os, const bf::basic<Core>& b)
-{
-  os << b.to_string();
-  return os;
-}
+private:
+  friend std::string to_string(basic const& bf)
+  {
+    return to_string(bf.core_.store);
+  }
+};
 
 } // namespace bf
 
