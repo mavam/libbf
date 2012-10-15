@@ -7,20 +7,16 @@ namespace bf {
 
 /// The spectral Bloom filter with *minimum increase* (MI) optimization.
 template <typename Core = core<>>
-class spectral_mi : public basic<Core>
+class spectral_mi : public bloom_filter<spectral_mi<Core>>
 {
-  typedef basic<Core> super;
-
-  template <typename T>
-  void remove(const T& x) = delete;
+  typedef bloom_filter<spectral_mi<Core>> super;
+  friend super;
 
 public:
-  typedef typename super::core_type core_type;
-
   /// Constructs a *Spectral Bloom Filter* with MI optimization.
   /// @param core The Bloom filter core.
   spectral_mi(Core core)
-    : super(std::move(core))
+    : core_(std::move(core))
   {
   }
 
@@ -28,13 +24,26 @@ private:
   template <typename T>
   void add_impl(const T& x)
   {
-    detail::spectral::minimum_increase(x, this->core_);
+    detail::spectral::minimum_increase(x, core_);
+  }
+
+  template <typename T>
+  size_t count_impl(const T& x) const
+  {
+    return detail::spectral::minimum(core_.positions(x), core_.store);
+  }
+
+  void clear_impl()
+  {
+    core_.store.reset();
   }
 
   friend std::string to_string(spectral_mi const& bf)
   {
-    return to_string(static_cast<super const&>(bf));
+    return to_string(bf.core_);
   }
+
+  Core core_;
 };
 
 /// The spectral Bloom filter with *recurring minimum* (RM) optimization.
