@@ -11,15 +11,14 @@ if ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
 endif ()
 
 
+# Support 'make uninstall'.
 if ("${PROJECT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
-    # Support 'make uninstall'.
     configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
                    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
                     @ONLY)
     add_custom_target(uninstall COMMAND
         ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
 endif ()
-
 
 set(CMAKE_CXX_FLAGS                "-Wall -std=c++11")
 set(CMAKE_CXX_FLAGS_DEBUG          "-O0 -g")
