@@ -1,21 +1,23 @@
-#ifndef DETAIL_CORE_H
-#define DETAIL_CORE_H
+#ifndef BF_DETAIL_CORE_H
+#define BF_DETAIL_CORE_H
+
+#include "traits.h"
 
 namespace bf {
 namespace detail {
 namespace core {
 
-/// For a given item \f$x\f$, compute \f$k\f$ unique indices to be used in
+/// For a given item @f$x@f$, compute @f$k@f$ unique indices to be used in
 /// the store.
-/// \tparam T the type of the item.
-/// \tparam x The item to compute the positions for.
-/// \return A vector with positions for the store.
+/// @tparam T the type of the item.
+/// @tparam x The item to compute the positions for.
+/// @return A vector with positions for the store.
 template <typename T, typename Core>
 typename std::enable_if<
-    std::is_same<typename Core::part_type, partitioning>::value
-  , std::vector<typename Core::store_type::size_type>
+    std::is_same<typename Core::part_type, partitioning>::value,
+    std::vector<typename Core::store_type::size_type>
 >::type
-positions(const T& x, const Core& core)
+positions(T const& x, Core const& core)
 {
   std::vector<typename Core::store_type::size_type> v;
   v.reserve(core.hash.k());
@@ -28,21 +30,19 @@ positions(const T& x, const Core& core)
   return v;
 }
 
-/// For a given item \f$x\f$, compute (at most) \f$k\f$ unique indices to
+/// For a given item @f$x@f$, compute (at most) @f$k@f$ unique indices to
 /// be used in the store.
-/// \tparam T the type of the item.
-/// \tparam x The item to compute the positions for.
-/// \return A vector with positions for the store.
+/// @tparam T the type of the item.
+/// @tparam x The item to compute the positions for.
+/// @return A vector with positions for the store.
 template <typename T, typename Core>
 typename std::enable_if<
-    std::is_same<typename Core::part_type, no_partitioning>::value
-  , std::vector<typename Core::store_type::size_type>
+    std::is_same<typename Core::part_type, no_partitioning>::value,
+    std::vector<typename Core::store_type::size_type>
 >::type
-positions(const T& x, const Core& core)
+positions(T const& x, Core const& core)
 {
-  std::vector<typename Core::store_type::size_type> v;
-  v.reserve(core.hash.k());
-
+  std::vector<typename Core::store_type::size_type> v(core.hash.k());
   auto h = core.hash.hash(x);
   for (size_t i = 0; i < h.size(); ++i)
   {
@@ -51,8 +51,6 @@ positions(const T& x, const Core& core)
     if (j == v.end() || *j != pos)
       v.insert(j, pos);
   }
-
-  v.shrink_to_fit();
   return v;
 }
 

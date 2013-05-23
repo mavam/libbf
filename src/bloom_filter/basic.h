@@ -51,7 +51,7 @@ public:
   /// @tparam T The type of the item to delete.
   /// @param x An instance of type T.
   template <typename T>
-  void remove(const T& x)
+  void remove(T const& x)
   {
     detail::basic::remove(x, core_);
   }
@@ -65,13 +65,13 @@ public:
 
 protected:
   template <typename T>
-  void add_impl(const T& x)
+  void add_impl(T const& x)
   {
     detail::basic::add(x, core_);
   }
 
   template <typename T>
-  size_t count_impl(const T& x) const
+  size_t count_impl(T const& x) const
   {
     return detail::spectral::minimum(core_.positions(x), core_.store);
   }

@@ -41,7 +41,7 @@ public:
   }
 
   template <typename T>
-  size_t operator()(const T& x) const
+  size_t operator()(T const& x) const
   {
     size_t s = seed_;
     boost::hash_combine(s, x);
@@ -64,7 +64,7 @@ public:
   /// @param x The item @f$x@f$.
   /// @param f The functor instance.
   template <typename T, typename F>
-  void each(const T& x, F f) const
+  void each(T const& x, F f) const
   {
     for (auto h : derived().hash(x))
       f(h);
@@ -79,14 +79,13 @@ public:
   /// @return `true` if *any* of the function invocations @f$f(h_i(x))@f$ is
   /// `true`.
   template <typename T, typename F>
-    bool any(const T& x, F f) const
-    {
-      for (auto h : derived().hash(x))
-        if (f(h))
-          return true;
-
-      return false;
-    }
+  bool any(T const& x, F f) const
+  {
+    for (auto h : derived().hash(x))
+      if (f(h))
+        return true;
+    return false;
+  }
 
   /// Apply a function @f$k@f$ times to @f$h_i(x)@f$ to test whether it is \c
   /// true on \e all of the hash values.
@@ -97,12 +96,11 @@ public:
   /// @return `true` if *all* of the function invocations @f$f(h_i(x))@f$
   ///     are `true` and `false` otherwise.
   template <typename T, typename F>
-  bool all(const T& x, F f) const
+  bool all(T const& x, F f) const
   {
     for (auto h : derived().hash(x))
       if (! f(h))
         return false;
-
     return true;
   }
 
@@ -113,7 +111,7 @@ public:
   /// @param x The item @f$x@f$.
   /// @param f The functor instance.
   template <typename T, typename F>
-  void each_with_index(const T& x, F f) const
+  void each_with_index(T const& x, F f) const
   {
     auto h = derived().hash(x);
     for (size_t i = 0; i < h.size(); ++i)
@@ -131,13 +129,12 @@ public:
   /// @return `true` if *any* of the function invocations @f$f(h_i(x), i)@f$
   /// `true`.
   template <typename T, typename F>
-  bool any_with_index(const T& x, F f) const
+  bool any_with_index(T const& x, F f) const
   {
     auto h = derived().hash(x);
     for (size_t i = 0; i < h.size(); ++i)
       if (f(h[i], i))
         return true;
-
     return false;
   }
 
@@ -152,13 +149,12 @@ public:
   /// @return `true. if *all* the function invocations @f$f(h_i(x), i)@f$
   ///     are `true`.
   template <typename T, typename F>
-  bool all_with_index(const T& x, F f) const
+  bool all_with_index(T const& x, F f) const
   {
     auto h = derived().hash(x);
     for (size_t i = 0; i < h.size(); ++i)
       if (! f(h[i], i))
         return false;
-
     return true;
   }
 
@@ -170,7 +166,7 @@ private:
 
   const Derived& derived() const
   {
-    return static_cast<const Derived&>(*this);
+    return static_cast<Derived const&>(*this);
   }
 };
 
@@ -182,10 +178,8 @@ class default_hashing : public hash_policy<default_hashing<Hasher, Seed>>
 {
   typedef Hasher hasher;
   typedef Seed seed;
-  typedef std::vector<hasher> hasher_vector;
 public:
   typedef typename hasher::value_type value_type;
-  typedef std::vector<value_type> hash_vector;
 
 public:
   default_hashing(size_t k)
@@ -202,23 +196,22 @@ public:
   }
 
   template <typename T>
-  hash_vector hash(const T&x) const
+  std::vector<value_type> hash(T const&x) const
   {
-    hash_vector h(k(), 0);
-    for (typename hasher_vector::size_type i = 0; i < k(); ++i)
+    std::vector<value_type> h(k(), 0);
+    for (typename std::vector<hasher>::size_type i = 0; i < k(); ++i)
       h[i] = hash(i, x);
-
     return h;
   }
 
 private:
   template <typename T>
-  value_type hash(size_t i, const T& x) const
+  value_type hash(size_t i, T const& x) const
   {
     return hashers_[i](x);
   }
 
-  hasher_vector hashers_;
+  std::vector<hasher> hashers_;
 };
 
 /// A hash policy that implements *double hashing*.
@@ -237,7 +230,6 @@ public:
   typedef Seed1 seed1;
   typedef Seed2 seed2;
   typedef typename hasher::value_type value_type;
-  typedef std::vector<value_type> hash_vector;
 
 public:
   double_hashing(size_t k)
@@ -253,14 +245,13 @@ public:
   }
 
   template <typename T>
-  hash_vector hash(const T&x) const
+  std::vector<value_type> hash(T const&x) const
   {
     auto h1 = h1_(x);
     auto h2 = h2_(x);
-    hash_vector h(k(), 0);
+    std::vector<value_type> h(k(), 0);
     for (size_t i = 0; i < k_; ++i)
       h[i] = hash(i, h1, h2);
-
     return h;
   }
 

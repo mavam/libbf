@@ -16,7 +16,7 @@ public:
   /// @tparam T The type of the item to insert.
   /// @param x An instance of type T.
   template <typename T>
-  void add(const T& x)
+  void add(T const& x)
   {
     ++n_;
     derived().add_impl(x);
@@ -27,13 +27,13 @@ public:
   /// @param x An instance of type T.
   /// @return A frequency estimate for x.
   template <typename T>
-  size_t count(const T& x) const
+  size_t count(T const& x) const
   {
     return derived().count_impl(x);
   }
 
   /// Removes all items from the set.
-  void clear_impl()
+  void clear()
   {
     n_ = 0;
     derived().clear_impl();
@@ -57,9 +57,9 @@ private:
     return static_cast<Derived&>(*this);
   }
 
-  const Derived& derived() const
+  Derived const& derived() const
   {
-    return static_cast<const Derived&>(*this);
+    return static_cast<Derived const&>(*this);
   }
 };
 

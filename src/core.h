@@ -36,11 +36,8 @@ struct core
        unsigned parts = 1)
     : store(cells, width), hash(k), part(parts)
   {
-    if (parts == 0)
-      throw std::invalid_argument("zero parts");
-
-    if (cells % parts)
-      throw std::invalid_argument("parts do not divide cells");
+    assert(parts != 0);
+    assert(cells % parts == 0);
   }
 
   void swap(core_type& c) // no throw
@@ -57,7 +54,7 @@ struct core
   /// @tparam x The item to compute the positions for.
   /// @return A vector with positions in the store.
   template <typename T>
-  std::vector<typename store_type::size_type> positions(const T& x) const
+  std::vector<typename store_type::size_type> positions(T const& x) const
   {
     return detail::core::positions(x, *this);
   }
