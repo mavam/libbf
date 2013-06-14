@@ -20,13 +20,10 @@ typename std::enable_if<
 positions(T const& x, Core const& core)
 {
   std::vector<typename Core::store_type::size_type> v;
-  v.reserve(core.hash.k());
-
   auto h = core.hash.hash(x);
+  v.resize(h.size());
   for (size_t i = 0; i < h.size(); ++i)
-    v.push_back(core.part.position(h[i], i, core.store.size()));
-
-  v.shrink_to_fit();
+    v[i] = core.part.position(h[i], i, core.store.size());
   return v;
 }
 
