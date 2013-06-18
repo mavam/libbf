@@ -1,66 +1,53 @@
 #ifndef BF_BLOOM_FILTER_H
 #define BF_BLOOM_FILTER_H
 
-#include <string>
+#include "hash.h"
+#include "wrap.h"
 
 namespace bf {
 
-/// The Bloom filter interface.
-/// @tparam Derived The type of the child class that implements a Bloom filter.
-template <typename Derived>
+/// The abstract Bloom filter interface.
 class bloom_filter
 {
-public:
+  bloom_filter(bloom_filter const&) = delete;
+  bloom_filter& operator=(bloom_filter const&) = delete;
 
-  /// Adds an item to the set.
-  /// @tparam T The type of the item to insert.
-  /// @param x An instance of type T.
+public:
+  virtual ~bloom_filter() = default;
+
+  /// Adds an element to the Bloom filter.
+  /// @tparam T The type of the element to insert.
+  /// @param x An instance of type `T`.
   template <typename T>
   void add(T const& x)
   {
-    ++n_;
-    derived().add_impl(x);
+    add_impl(hasher_(wrap(x)));
   }
 
-  /// Retrieves the count of an item.
-  /// @tparam T The type of the item to query.
-  /// @param x An instance of type T.
+  /// Retrieves the count of an element.
+  /// @tparam T The type of the element to query.
+  /// @param x An instance of type `T`.
   /// @return A frequency estimate for x.
   template <typename T>
-  size_t count(T const& x) const
+  size_t lookup(T const& x) const
   {
-    return derived().count_impl(x);
+    return lookup_impl(hasher_(wrap(x)));
   }
 
-  /// Removes all items from the set.
-  void clear()
-  {
-    n_ = 0;
-    derived().clear_impl();
-  }
-
-  /// Retrieves the number of items in the set, counted via add() and remove().
-  /// @return The number of items in the Bloom filter.
-  size_t n() const
-  {
-    return n_;
-  }
+  /// Removes all items in the Bloom filter.
+  virtual void clear() = 0;
 
 protected:
-  bloom_filter() = default;
+  bloom_filter(hasher h)
+    : hasher_(h)
+  {
+  };
 
-  size_t n_ = 0;
+  virtual void add_impl(std::vector<digest> const& digests) = 0;
+  virtual size_t lookup_impl(std::vector<digest> const& digests) const = 0;
 
 private:
-  Derived& derived()
-  {
-    return static_cast<Derived&>(*this);
-  }
-
-  Derived const& derived() const
-  {
-    return static_cast<Derived const&>(*this);
-  }
+  hasher hasher_;
 };
 
 } // namespace bf
