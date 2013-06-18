@@ -3,6 +3,12 @@
 
 namespace bf {
 
+basic_bloom_filter::basic_bloom_filter(hasher h, size_t cells)
+  : bloom_filter(std::move(h)),
+    bits_(cells)
+{
+}
+
 size_t basic_bloom_filter::m(double fp, size_t capacity)
 {
   auto ln2 = std::log(2);

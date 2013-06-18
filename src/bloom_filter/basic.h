@@ -35,7 +35,7 @@ public:
   static size_t k(size_t cells, size_t capacity);
 
   /// Constructs a basic Bloom filter.
-  basic_bloom_filter(hash_policy const& hash, size_t cells);
+  basic_bloom_filter(hasher h, size_t cells);
 
 protected:
   virtual void add_impl(std::vector<digest> const& digests) override;
