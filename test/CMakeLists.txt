@@ -1,6 +1,4 @@
-file(GLOB_RECURSE deps bf.cc configuration.cc metrics.cc)
-add_executable(bf ${deps})
-target_link_libraries(bf ${Boost_LIBRARIES})
+add_subdirectory(bf)
 
 add_executable(unit unit.cc)
-target_link_libraries(unit ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+target_link_libraries(unit libbf ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
