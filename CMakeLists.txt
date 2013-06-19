@@ -50,5 +50,6 @@ if (NOT Boost_FOUND)
 endif ()
 include_directories(${Boost_INCLUDE_DIRS})
 
+include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 add_subdirectory(src)
 add_subdirectory(test)
