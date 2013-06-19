@@ -21,7 +21,7 @@ public:
   template <typename T>
   void add(T const& x)
   {
-    add_impl(wrap(x));
+    add(wrap(x));
   }
 
   /// Adds an element to the Bloom filter.
@@ -35,7 +35,7 @@ public:
   template <typename T>
   size_t lookup(T const& x) const
   {
-    return lookup_impl(wrap(x));
+    return lookup(wrap(x));
   }
 
   /// Retrieves the count of an element.
