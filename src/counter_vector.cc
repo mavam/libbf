@@ -17,47 +17,27 @@ bool counter_vector::increment(size_type cell, size_t value)
   if (value >= max())
   {
     bool r = false;
-    for (auto i = lsb; i < lsb + width_; ++i)
-      if (! bits_[i])
+    for (auto i = 0; i < width_; ++i)
+      if (! bits_[lsb + i])
       {
-        bits_[i] = 1;
+        bits_[lsb + i] = true;
         if (! r)
           r = true;
       }
     return r;
   }
-  bitvector b(width_, value);
   bool carry = false;
-  size_type i = lsb, j = 0;
-  while (i < lsb + width_)
+  for (size_type i = 0; i < width_; ++i)
   {
-    if (bits_[i])
-    {
-      if (b[j])
-      {
-        bits_[i] = false;
-        if (! carry)
-          carry = true;
-      }
-      else if (carry)
-        bits_[i] = false;
-    }
-    else if (b[j])
-    {
-      bits_[i] = true;
-    }
-    else if (carry)
-    {
-      bits_[i] = true;
-      carry = false;
-    }
-    ++i;
-    ++j;
+    bool b1 = bits_[lsb + i];
+    bool b2 = value & (1 << i);
+    bits_[lsb + i] ^= b2 != carry; // bit1 ^ bit2 ^ carry
+    carry = carry ? b1 || b2 : b1 && b2;
   }
   if (! carry)
     return true;
   for (i = lsb; i < lsb + width_; ++i)
-    bits_[i] = 1;
+    bits_[i] = true;
   return false;
 }
 
