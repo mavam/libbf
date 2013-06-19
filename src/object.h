@@ -8,6 +8,7 @@ namespace bf {
 /// Wraps sequential data to be used in hashing.
 class object
 {
+public:
   object(void const* data, size_t size)
     : data_(data), size_(size)
   {

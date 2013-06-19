@@ -17,6 +17,8 @@ public:
   /// @param width The number of bits per cell.
   counting_bloom_filter(hasher h, size_t cells, size_t width);
 
+  using bloom_filter::add;
+  using bloom_filter::lookup;
   virtual void add(object const& o) override;
   virtual size_t lookup(object const& o) const override;
   virtual void clear() override;
@@ -30,6 +32,8 @@ protected:
 class spectral_mi_bloom_filter : public counting_bloom_filter
 {
 public:
+  using bloom_filter::add;
+  using bloom_filter::lookup;
   virtual void add(object const& o) override;
 };
 
@@ -37,6 +41,8 @@ public:
 class spectral_rm_bloom_filter : public counting_bloom_filter
 {
 public:
+  using bloom_filter::add;
+  using bloom_filter::lookup;
   virtual void add(object const& o) override;
   virtual size_t lookup(object const& o) const override;
   virtual void clear() override;
