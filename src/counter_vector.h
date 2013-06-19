@@ -11,6 +11,8 @@ namespace bf {
 /// cell represents a counter having a fixed number of bits.
 class counter_vector
 {
+  friend std::string to_string(counter_vector const&, bool, size_t);
+
 public:
   /// Construct a counter vector of size @f$O(mw)@f$ where *m is the number of
   /// cells and *w the number of bits per cell.
@@ -70,6 +72,11 @@ private:
   bitvector bits_;
   size_t width_;
 };
+
+/// Generates a string representation of a counter vector.
+/// The arguments have the same meaning as in bf::bitvector.
+std::string to_string(counter_vector const& v, bool all = false,
+                      size_t cut_off = 0);
 
 } // namespace bf
 
