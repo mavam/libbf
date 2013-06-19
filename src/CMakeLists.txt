@@ -1,8 +1,7 @@
-include_directories(BEFORE . ..)
-
 set(libbf_sources
   bitvector.cc
   counter_vector.cc
+  hash.cc
   bloom_filter/basic.cc
   bloom_filter/counting.cc
   )
