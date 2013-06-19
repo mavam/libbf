@@ -3,6 +3,7 @@
 
 #include "counter_vector.h"
 #include "bloom_filter.h"
+#include "hash.h"
 
 namespace bf {
 
@@ -16,33 +17,36 @@ public:
   /// @param width The number of bits per cell.
   counting_bloom_filter(hasher h, size_t cells, size_t width);
 
-protected:
-  virtual void add_impl(std::vector<digest> const& digests) override;
-  virtual size_t lookup_impl(std::vector<digest> const& digests) const override;
+  virtual void add(object const& o) override;
+  virtual size_t lookup(object const& o) const override;
   virtual void clear() override;
 
+protected:
+  hasher hasher_;
   counter_vector cells_;
 };
 
 /// A spectral Bloomfilter with minimum increase (MI) policy.
 class spectral_mi_bloom_filter : public counting_bloom_filter
 {
-protected:
-  virtual void add_impl(std::vector<digest> const& digests) override;
+public:
+  virtual void add(object const& o) override;
 };
 
 /// A spectral Bloomfilter with recurring minimum (RM) policy.
 class spectral_rm_bloom_filter : public counting_bloom_filter
 {
-protected:
-  virtual void add_impl(std::vector<digest> const& digests) override;
-  virtual size_t lookup_impl(std::vector<digest> const& digests) const override;
+public:
+  virtual void add(object const& o) override;
+  virtual size_t lookup(object const& o) const override;
   virtual void clear() override;
 
   /// Removes an element from the spectral Bloom filter.
-  void remove(std::vector<digest> const& digests);
+  void remove(object const& o);
 
-  counter_vector second_;
+private:
+  hasher hasher2_;
+  counter_vector cells2_;
 };
 
 } // namespace bf

@@ -1,6 +1,9 @@
 #ifndef BF_HASH_POLICY_H
 #define BF_HASH_POLICY_H
 
+#include <functional>
+#include "object.h"
+
 namespace bf {
 
 /// The hash digest type.
@@ -16,21 +19,22 @@ typedef std::function<std::vector<digest>(object const&)> hasher;
 class default_hashing
 {
 public:
-  default_hashing(std::vector<hash_function> hashers)
-    : hashers(std::move(hashers))
+  default_hashing(std::vector<hash_function> fns)
+    : fns_(std::move(fns))
   {
   }
 
   std::vector<digest> operator()(object const& o) const
   {
-    std::vector<digest> d(k());
-    for (size_t i = 0; i < hashers_.size(); ++i)
+    std::vector<digest> d(fns_.size());
+    for (size_t i = 0; i < fns_.size(); ++i)
       d[i] = fns_[i](o);
+    return d;
   }
 
 private:
   std::vector<hash_function> fns_;
-}
+};
 
 /// Hashes an object two times and generates *k* hash digests as linear
 /// combinations of the two digests.
@@ -56,7 +60,7 @@ private:
   size_t k_;
   hash_function h1_;
   hash_function h2_;
-}
+};
 
 } // namespace bf
 

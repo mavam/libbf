@@ -3,6 +3,7 @@
 
 #include "bitvector.h"
 #include "bloom_filter.h"
+#include "hash.h"
 
 namespace bf {
 
@@ -37,12 +38,12 @@ public:
   /// Constructs a basic Bloom filter.
   basic_bloom_filter(hasher h, size_t cells);
 
-protected:
-  virtual void add_impl(std::vector<digest> const& digests) override;
-  virtual size_t lookup_impl(std::vector<digest> const& digests) const override;
+  virtual void add(object const& o) override;
+  virtual size_t lookup(object const& o) const override;
   virtual void clear() override;
 
 private:
+  hasher hasher_;
   bitvector bits_;
 };
 

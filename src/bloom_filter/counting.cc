@@ -1,5 +1,6 @@
-#ifndef BF_BLOOM_FILTER_COUNTING_H
-#define BF_BLOOM_FILTER_COUNTING_H
+#include "bloom_filter/counting.h"
+
+#include <cassert>
 
 namespace bf {
 
@@ -34,24 +35,24 @@ std::vector<size_t> minima(counter_vector const& v,
 
 counting_bloom_filter::counting_bloom_filter(hasher h, size_t cells,
                                              size_t width)
-  : bloom_filter(std::move(h)),
+  : hasher_(std::move(h)),
     cells_(cells, width)
 {
 }
 
-void counting_bloom_filter::add_impl(std::vector<digest> const& digests)
+void counting_bloom_filter::add(object const& o)
 {
-  for (auto d : digests)
-    cells_.increment(d % bits_.size());
+  for (auto d : hasher_(o))
+    cells_.increment(d % cells_.size());
 }
 
-size_t counting_bloom_filter::lookup_impl(std::vector<digest> const& digests) const
+size_t counting_bloom_filter::lookup(object const& o) const
 {
   auto min = cells_.max();
-  for (auto d : digests)
+  for (auto d : hasher_(o))
   {
     // TODO: use partitioning here to allow for reusing derived bounds of CMS.
-    auto cnt = cells_[d % bits_.size()];
+    auto cnt = cells_.count(d % cells_.size());
     if (cnt < min)
       return min = cnt;
   }
@@ -64,59 +65,61 @@ void counting_bloom_filter::clear()
 }
 
 
-void spectral_mi_bloom_filter::add_impl(std::vector<digest> const& digests)
+void spectral_mi_bloom_filter::add(object const& o)
 {
-  for (auto i : minima(cells_, digests))
+  for (auto i : minima(cells_, hasher_(o)))
     cells_.increment(i);
 }
 
 
-void spectral_rm_bloom_filter::add_impl(std::vector<digest> const& digests)
+void spectral_rm_bloom_filter::add(object const& o)
 {
-  counting_bloom_filter::add_impl(digests);
+  auto digests = hasher_(o);
+  for (auto d : digests)
+    cells_.increment(d % cells_.size());
 
   auto mins = minima(cells_, digests);
   if (mins.size() == 1)
     // Do nothing if the minimum is recurring.
     return;
 
-  // FIXME: hash again instead of resuing digests. This may mean we need to
-  // pass in the object instead of just the digests and change the bloom filter
-  // interface.
-  mins = minima(second_, digests);
-  auto min = minimum(second_, mins);
-  if (min > 0)
-    for (auto i : mins)
-      second_.increment(i);
-  else
-    for (auto i : mins)
-      second_.increment(i, min);
+  auto digests2 = hasher2_(o);
+  mins = minima(cells2_, digests);
+  // TODO
+  //auto min = minimum(cells2_, mins);
+  //if (min > 0)
+  //  for (auto i : mins)
+  //    cells2_.increment(i);
+  //else
+  //  for (auto i : mins)
+  //    cells2_.increment(i, min);
 }
 
-size_t spectral_rm_bloom_filter::lookup_impl(std::vector<digest> const& digests) const
+size_t spectral_rm_bloom_filter::lookup(object const& o) const
 {
+  auto digests = hasher_(o);
   auto mins = minima(cells_, digests);
   if (mins.size() == 1)
-    return cells_[mins[0]];
+    return cells_.count(mins[0]);
 
-  // FIXME: see add_impl.
-  auto min2 = minimum(second_, minima(second_, digests));
-  if (min2 > 0)
-    return min2;
+  auto digests2 = hasher2_(o);
+  // TODO
+  //auto min2 = minimum(cells2_, minima(cells2_, digests));
+  //if (min2 > 0)
+  //  return min2;
 
-  return cells_[mins[0]];
+  return cells_.count(mins[0]);
 }
 
 void spectral_rm_bloom_filter::clear()
 {
   counting_bloom_filter::clear();
-  second_.clear();
+  cells2_.clear();
 }
 
-void spectral_rm_bloom_filter::remove(std::vector<digest> const& digests)
+void spectral_rm_bloom_filter::remove(object const& o)
 {
   assert(! "removal not yet implemented");
 }
 
 } // namespace bf
-#endif

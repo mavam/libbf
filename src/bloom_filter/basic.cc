@@ -1,10 +1,11 @@
-#ifndef BF_BLOOM_FILTER_BASIC_H
-#define BF_BLOOM_FILTER_BASIC_H
+#include "bloom_filter/basic.h"
+
+#include <cmath>
 
 namespace bf {
 
 basic_bloom_filter::basic_bloom_filter(hasher h, size_t cells)
-  : bloom_filter(std::move(h)),
+  : hasher_(std::move(h)),
     bits_(cells)
 {
 }
@@ -21,15 +22,15 @@ size_t basic_bloom_filter::k(size_t cells, size_t capacity)
   return std::ceil(frac * std::log(2));
 }
 
-void basic_bloom_filter::add_impl(std::vector<digest> const& digests)
+void basic_bloom_filter::add(object const& o)
 {
-  for (auto d : digests)
+  for (auto d : hasher_(o))
     bits_.set(d % bits_.size());
 }
 
-size_t basic_bloom_filter::lookup_impl(std::vector<digest> const& digests) const
+size_t basic_bloom_filter::lookup(object const& o) const
 {
-  for (auto d : digests)
+  for (auto d : hasher_(o))
     if (! bits_[d % bits_.size()])
       return 0;
   return 1;
@@ -41,5 +42,3 @@ void basic_bloom_filter::clear()
 }
 
 } // namespace bf
-
-#endif

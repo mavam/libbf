@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <vector>
+#include "bitvector.h"
 
 namespace bf {
 
@@ -28,7 +29,7 @@ public:
   ///
   /// @return `true` if the increment succeeded, `false` if all bits in
   ///     the cell were already 1.
-  bool increment(size_type cell, size_t value = 1);
+  bool increment(size_t cell, size_t value = 1);
 
   /// Decrements a cell counter.
   ///
@@ -36,19 +37,19 @@ public:
   ///
   /// @return `true` if decrementing succeeded, `false` if all bits in the
   /// cell were already 0.
-  bool decrement(size_type cell, size_t value);
+  bool decrement(size_t cell);
 
   /// Retrieves the counter of a cell.
   ///
   /// @param cell The cell index.
   ///
   /// @return The counter associated with *cell*.
-  size_t count(size_type cell) const;
+  size_t count(size_t cell) const;
 
   /// Sets a cell to a given value.
   /// @param cell The cell whose value changes.
   /// @param value The new value of the cell.
-  void set(size_type cell, size_t value);
+  void set(size_t cell, size_t value);
 
   /// Sets all counter values to 0.
   void clear();

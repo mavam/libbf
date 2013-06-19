@@ -20,7 +20,7 @@ if ("${PROJECT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
         ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
 endif ()
 
-set(CMAKE_CXX_FLAGS                "-Wall -std=c++11")
+set(CMAKE_CXX_FLAGS                "-Wall -Wextra -std=c++11")
 set(CMAKE_CXX_FLAGS_DEBUG          "-O0 -g")
 set(CMAKE_CXX_FLAGS_MINSIZEREL     "-Os -DNDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE        "-O4 -DNDEBUG")
@@ -28,7 +28,6 @@ set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
 
 if (ENABLE_DEBUG)
     set(CMAKE_BUILD_TYPE Debug)
-    add_definitions("-DBF_DEBUG")
 else ()
     set(CMAKE_BUILD_TYPE Release)
 endif ()
@@ -45,16 +44,11 @@ else()
     message(FATAL_ERROR "Your C++ compiler does not support C++11.")
 endif ()
 
-find_package(Boost 1.46
-    COMPONENTS 
-        program_options
-        thread
-        system
-        unit_test_framework)
+find_package(Boost 1.46 COMPONENTS unit_test_framework)
 if (NOT Boost_FOUND)
     message(FATAL_ERROR "Could not find required dependencies:${deps}")
 endif ()
 include_directories(${Boost_INCLUDE_DIRS})
 
-include_directories(src)
+add_subdirectory(src)
 add_subdirectory(test)
