@@ -15,11 +15,11 @@ typedef std::function<digest(object const&)> hash_function;
 /// A function that hashes an object *k* times.
 typedef std::function<std::vector<digest>(object const&)> hasher;
 
-/// Hashes an object *k* times.
-class default_hashing
+/// A hasher which hashes an object *k* times.
+class default_hasher
 {
 public:
-  default_hashing(std::vector<hash_function> fns)
+  default_hasher(std::vector<hash_function> fns)
     : fns_(std::move(fns))
   {
   }
@@ -36,13 +36,15 @@ private:
   std::vector<hash_function> fns_;
 };
 
-/// Hashes an object two times and generates *k* hash digests as linear
-/// combinations of the two digests.
-class double_hashing
+/// A hasher which hashes an object two times and generates *k* digests through
+/// a linear combinations of the two digests.
+class double_hasher
 {
 public:
-  double_hashing(size_t k, hash_function h1, hash_function h2)
-    : k_(k), h1_(std::move(h1)), h2_(std::move(h2))
+  double_hasher(size_t k, hash_function h1, hash_function h2)
+    : k_(k),
+      h1_(std::move(h1)),
+      h2_(std::move(h2))
   {
   }
 
