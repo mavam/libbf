@@ -64,12 +64,27 @@ void counting_bloom_filter::clear()
 }
 
 
+spectral_mi_bloom_filter::spectral_mi_bloom_filter(hasher h, size_t cells,
+                                                   size_t width)
+  : counting_bloom_filter(std::move(h), cells, width)
+{
+}
+
 void spectral_mi_bloom_filter::add(object const& o)
 {
   for (auto i : minima(cells_, mod(hasher_(o), cells_.size())))
     cells_.increment(i);
 }
 
+
+spectral_rm_bloom_filter::spectral_rm_bloom_filter(
+    hasher h1, size_t cells1, size_t width1,
+    hasher h2, size_t cells2, size_t width2)
+  : counting_bloom_filter(std::move(h1), cells1, width1),
+    hasher2_(std::move(h2)),
+    cells2_(cells2, width2)
+{
+}
 
 // "When adding an item x, increase the counters of x in the primary SBF. Then
 // check if x has a recurring minimum. If so, continue normally. Otherwise (if
