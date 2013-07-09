@@ -8,7 +8,8 @@
 template <typename T, int N>
 class h3
 {
-  static size_t const bits_per_byte = std::numeric_limits<unsigned char>::digits;
+  static size_t const bits_per_byte =
+    std::numeric_limits<unsigned char>::digits;
 
 public:
   constexpr static size_t byte_range =
