@@ -82,9 +82,13 @@ public:
 
   using bloom_filter::add;
   using bloom_filter::lookup;
+
   virtual void add(object const& o) override;
   virtual size_t lookup(object const& o) const override;
   virtual void clear() override;
+
+  /// Swaps two basic Bloom filters.
+  void swap(basic_bloom_filter& other);
 
 private:
   hasher hasher_;

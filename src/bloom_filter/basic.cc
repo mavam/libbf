@@ -35,4 +35,11 @@ void basic_bloom_filter::clear()
   bits_.reset();
 }
 
+void basic_bloom_filter::swap(basic_bloom_filter& other)
+{
+  using std::swap;
+  swap(hasher_, other.hasher_);
+  swap(bits_, other.bits_);
+}
+
 } // namespace bf

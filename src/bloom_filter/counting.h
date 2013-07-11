@@ -7,31 +7,33 @@
 
 namespace bf {
 
-class a2_bloom_filter;
 class spectral_mi_bloom_filter;
 class spectral_rm_bloom_filter;
 
 /// The counting Bloom filter.
 class counting_bloom_filter : public bloom_filter
 {
-  friend a2_bloom_filter;
   friend spectral_mi_bloom_filter;
   friend spectral_rm_bloom_filter;
 
 public:
-  /// Constructs a basic Bloom filter.
+  /// Constructs a counting Bloom filter.
   /// @param h The hasher.
   /// @param cells The number of cells.
   /// @param width The number of bits per cell.
   counting_bloom_filter(hasher h, size_t cells, size_t width);
 
+  /// Move-constructs a counting Bloom filter.
+  counting_bloom_filter(counting_bloom_filter&&) = default;
+
   using bloom_filter::add;
   using bloom_filter::lookup;
+
   virtual void add(object const& o) override;
   virtual size_t lookup(object const& o) const override;
   virtual void clear() override;
 
-private:
+protected:
   /// Maps an object to the indices in the underlying counter vector.
   ///
   /// @param o The object to map.
