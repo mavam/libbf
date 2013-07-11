@@ -1,12 +1,14 @@
 /**
 
-\mainpage libBf
+\mainpage libbf
 
-libBf is a header-only C++11 library of various types of Bloom filters.
+**libbf** is a C++11 Bloom filter library.
 
-\section intro Details
+\section Usage
 
-Please refer to <a href="http://matthias.vallentin.net/libbf">the homepage of
-libBf</a> for details about the library. This manual only documents the API.
+Please refer to [the project page](https://github.com/mavam/libbf) for usage
+examples.
+
+This manual only documents the API.
 
 */
