@@ -41,8 +41,9 @@ bool counter_vector::increment(size_t cell, size_t value)
   return false;
 }
 
-bool counter_vector::decrement(size_t cell)
+bool counter_vector::decrement(size_t cell, size_t value)
 {
+  assert(value == 1); // TODO: adapt function to values > 1.
   assert(cell < size());
   size_t lsb = cell * width_;
   for (auto i = lsb; i < lsb + width_; ++i)

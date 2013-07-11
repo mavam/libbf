@@ -1,37 +1,8 @@
 #include "bloom_filter/counting.h"
 
 #include <cassert>
-#include "partitioning.h"
 
 namespace bf {
-namespace {
-
-/// Computes minima for a vector and a list of indices.
-/// @param cv A counter vector instance.
-/// @param ind The indices to use when looking for minima.
-std::vector<size_t> minima(counter_vector const& cv,
-                           std::vector<size_t> const& ind)
-{
-  auto min = cv.max();
-  std::vector<size_t> positions;
-  for (auto i : ind)
-  {
-    auto cnt = cv.count(i);
-    if (cnt == min)
-    {
-      positions.push_back(i);
-    }
-    else if (cnt < min)
-    {
-      min = cnt;
-      positions.clear();
-      positions.push_back(i);
-    }
-  }
-  return positions;
-}
-} // namespace <anonymous>
-
 
 counting_bloom_filter::counting_bloom_filter(hasher h, size_t cells,
                                              size_t width)
@@ -42,14 +13,13 @@ counting_bloom_filter::counting_bloom_filter(hasher h, size_t cells,
 
 void counting_bloom_filter::add(object const& o)
 {
-  for (auto d : hasher_(o))
-    cells_.increment(d % cells_.size());
+  increment(find_indices(o));
 }
 
 size_t counting_bloom_filter::lookup(object const& o) const
 {
   auto min = cells_.max();
-  for (auto i : partition(hasher_(o), cells_.size()))
+  for (auto i : find_indices(o))
   {
     auto cnt = cells_.count(i);
     if (cnt < min)
@@ -63,6 +33,85 @@ void counting_bloom_filter::clear()
   cells_.clear();
 }
 
+std::vector<size_t>
+counting_bloom_filter::find_indices(object const& o, bool part) const
+{
+  auto digests = hasher_(o);
+  std::vector<size_t> indices(digests.size());
+  if (part)
+  {
+    assert(cells_.size() % digests.size() == 0);
+    size_t const parts = cells_.size() / digests.size();
+    for (size_t i = 0; i < indices.size(); ++i)
+      indices[i] = digests[i] % parts + (i * parts);
+  }
+  else
+  {
+    for (size_t i = 0; i < indices.size(); ++i)
+      indices[i] = digests[i] % cells_.size();
+  }
+  return indices;
+};
+
+size_t
+counting_bloom_filter::find_minimum(std::vector<size_t> const& indices) const
+{
+  auto min = cells_.max();
+  for (auto i : indices)
+  {
+    auto cnt = cells_.count(i);
+    if (cnt < min)
+      min = cnt;
+  }
+  return min;
+}
+
+std::vector<size_t>
+counting_bloom_filter::find_minima(std::vector<size_t> const& indices) const
+{
+  auto min = cells_.max();
+  std::vector<size_t> positions;
+  for (auto i : indices)
+  {
+    auto cnt = cells_.count(i);
+    if (cnt == min)
+    {
+      positions.push_back(i);
+    }
+    else if (cnt < min)
+    {
+      min = cnt;
+      positions.clear();
+      positions.push_back(i);
+    }
+  }
+  return positions;
+}
+
+bool counting_bloom_filter::increment(std::vector<size_t> const& indices,
+                                      size_t value)
+{
+  auto status = true;
+  for (auto i : indices)
+    if (! cells_.increment(i, value))
+      status = false;
+  return status;
+}
+
+bool counting_bloom_filter::decrement(std::vector<size_t> const& indices,
+                                      size_t value)
+{
+  auto status = true;
+  for (auto i : indices)
+    if (! cells_.decrement(i, value))
+      status = false;
+  return status;
+}
+
+size_t counting_bloom_filter::count(size_t index) const
+{
+  return cells_.count(index);
+}
 
 spectral_mi_bloom_filter::spectral_mi_bloom_filter(hasher h, size_t cells,
                                                    size_t width)
@@ -72,17 +121,15 @@ spectral_mi_bloom_filter::spectral_mi_bloom_filter(hasher h, size_t cells,
 
 void spectral_mi_bloom_filter::add(object const& o)
 {
-  for (auto i : minima(cells_, mod(hasher_(o), cells_.size())))
-    cells_.increment(i);
+  increment(find_minima(find_indices(o)));
 }
 
 
 spectral_rm_bloom_filter::spectral_rm_bloom_filter(
     hasher h1, size_t cells1, size_t width1,
     hasher h2, size_t cells2, size_t width2)
-  : counting_bloom_filter(std::move(h1), cells1, width1),
-    hasher2_(std::move(h2)),
-    cells2_(cells2, width2)
+  : first_(std::move(h1), cells1, width1),
+    second_(std::move(h2), cells2, width2)
 {
 }
 
@@ -93,29 +140,20 @@ spectral_rm_bloom_filter::spectral_rm_bloom_filter(
 // that equals its minimal value from the primary SBF."
 void spectral_rm_bloom_filter::add(object const& o)
 {
-  auto digests = hasher_(o);
-  auto indices = mod(digests, cells_.size());
-  for (auto i : indices)
-    cells_.increment(i);
-
-  auto mins = minima(cells_, indices);
-  if (mins.size() > 1)
+  auto indices1 = first_.find_indices(o);
+  first_.increment(indices1);
+  auto mins1 = first_.find_minima(indices1);
+  if (mins1.size() > 1)
     return;
 
-  assert(mins.size() == 1);
-  auto min1 = cells_.count(mins[0]);
-  indices = mod(hasher2_(o), cells2_.size());
-  mins = minima(cells2_, indices);
-  auto min2 = cells2_.count(mins[0]);
-  if (min2 > 0)
-    // Note: it's unclear to me whether "increase its counters" means increase
-    // only the minima or all indices. I opted for the latter (same during
-    // deletion).
-    for (auto i : indices)
-      cells2_.increment(i);
-  else
-    for (auto i : indices)
-      cells2_.increment(i, min1);
+  auto indices2 = second_.find_indices(o);
+  auto min1 = first_.count(mins1[0]);
+  auto min2 = second_.find_minimum(indices2);
+
+  // Note: it's unclear to me whether "increase its counters" means increase
+  // only the minima or all indices. I opted for the latter (same during
+  // deletion).
+  second_.increment(indices2, min2 > 0 ? 1 : min1);
 }
 
 // "When performing lookup for x, check if x has a recurring minimum in the
@@ -124,19 +162,18 @@ void spectral_rm_bloom_filter::add(object const& o)
 // Otherwise, return minimum from primary SBF."
 size_t spectral_rm_bloom_filter::lookup(object const& o) const
 {
-  auto mins1 = minima(cells_, mod(hasher_(o), cells_.size()));
-  auto min1 = cells_.count(mins1[0]);
+  auto mins1 = first_.find_minima(first_.find_indices(o));
+  auto min1 = first_.count(mins1[0]);
   if (mins1.size() > 1)
     return min1;
-  auto mins2 = minima(cells2_, mod(hasher2_(o), cells2_.size()));
-  auto min2 = cells2_.count(mins2[0]);
+  auto min2 = second_.find_minimum(second_.find_indices(o));
   return min2 > 0 ? min2 : min1;
 }
 
 void spectral_rm_bloom_filter::clear()
 {
-  cells_.clear();
-  cells2_.clear();
+  first_.clear();
+  second_.clear();
 }
 
 // "First decrease its counters in the primary SBF, then if it has a single
@@ -144,20 +181,15 @@ void spectral_rm_bloom_filter::clear()
 // unless at least one of them is 0."
 void spectral_rm_bloom_filter::remove(object const& o)
 {
-  auto digests = hasher_(o);
-  auto indices = mod(digests, cells_.size());
-  for (auto i : indices)
-    cells_.decrement(i);
-
-  auto mins = minima(cells_, indices);
-  if (mins.size() > 1)
+  auto indices1 = first_.find_indices(o);
+  first_.decrement(indices1);
+  auto mins1 = first_.find_minima(indices1);
+  if (mins1.size() > 1)
     return;
 
-  indices = mod(hasher2_(o), cells2_.size());
-  mins = minima(cells2_, indices);
-  if (cells2_.count(mins[0]) > 0)
-    for (auto i : indices)
-      cells_.decrement(i);
+  auto indices2 = second_.find_indices(o);
+  if (second_.find_minimum(indices2) > 0)
+    second_.decrement(indices2);
 }
 
 } // namespace bf

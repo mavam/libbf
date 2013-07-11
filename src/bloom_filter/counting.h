@@ -7,9 +7,17 @@
 
 namespace bf {
 
+class a2_bloom_filter;
+class spectral_mi_bloom_filter;
+class spectral_rm_bloom_filter;
+
 /// The counting Bloom filter.
 class counting_bloom_filter : public bloom_filter
 {
+  friend a2_bloom_filter;
+  friend spectral_mi_bloom_filter;
+  friend spectral_rm_bloom_filter;
+
 public:
   /// Constructs a basic Bloom filter.
   /// @param h The hasher.
@@ -23,7 +31,44 @@ public:
   virtual size_t lookup(object const& o) const override;
   virtual void clear() override;
 
-protected:
+private:
+  /// Maps an object to the indices in the underlying counter vector.
+  ///
+  /// @param o The object to map.
+  ///
+  /// @param part If `false`, the function maps *o* uniformly into the counter
+  /// vector modding each digest with the number of available cells. If
+  /// `true`, the function partitions the counter vector into *k* distinct
+  /// sub-vectors and mods each digest into one sub-vector.
+  ///
+  /// @return The indices corresponding to the digests of *o*.
+  std::vector<size_t> find_indices(object const& o, bool part = false) const;
+
+  /// Finds the minimum value in a list of arbitrary indices.
+  /// @param indices The indices over which to compute the minimum.
+  /// @return The minimum counter value over *indices*.
+  size_t find_minimum(std::vector<size_t> const& indices) const;
+
+  /// Finds one or more minimum indices for a list of arbitrary indices.
+  /// @param indices The indices over which to compute the minimum.
+  /// @return The indices corresponding to the minima in the counter vector.
+  std::vector<size_t> find_minima(std::vector<size_t> const& indices) const;
+
+  /// Increments a given set of indices in the underlying counter vector.
+  /// @param indices The indices to increment.
+  /// @return `true` iff no counter overflowed.
+  bool increment(std::vector<size_t> const& indices, size_t value = 1);
+
+  /// Decrements a given set of indices in the underlying counter vector.
+  /// @param indices The indices to decrement.
+  /// @return `true` iff no counter underflowed.
+  bool decrement(std::vector<size_t> const& indices, size_t value = 1);
+
+  /// Retrieves the counter for given cell index.
+  /// @param index The index of the counter vector.
+  /// @pre `index < cells.size()`
+  size_t count(size_t index) const;
+
   hasher hasher_;
   counter_vector cells_;
 };
@@ -44,7 +89,7 @@ public:
 };
 
 /// A spectral Bloom filter with recurring minimum (RM) policy.
-class spectral_rm_bloom_filter : public counting_bloom_filter
+class spectral_rm_bloom_filter : public bloom_filter
 {
 public:
   /// Constructs a spectral RM Bloom filter.
@@ -67,8 +112,8 @@ public:
   void remove(object const& o);
 
 private:
-  hasher hasher2_;
-  counter_vector cells2_;
+  counting_bloom_filter first_;
+  counting_bloom_filter second_;
 };
 
 } // namespace bf

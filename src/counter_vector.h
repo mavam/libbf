@@ -39,7 +39,7 @@ public:
   ///
   /// @return `true` if decrementing succeeded, `false` if all bits in the
   /// cell were already 0.
-  bool decrement(size_t cell);
+  bool decrement(size_t cell, size_t value = 1);
 
   /// Retrieves the counter of a cell.
   ///
