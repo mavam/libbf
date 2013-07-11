@@ -16,6 +16,12 @@ size_t basic_bloom_filter::k(size_t cells, size_t capacity)
   return std::ceil(frac * std::log(2));
 }
 
+basic_bloom_filter::basic_bloom_filter(basic_bloom_filter&& other)
+  : hasher_(std::move(other.hasher_)),
+    bits_(std::move(other.bits_))
+{
+}
+
 void basic_bloom_filter::add(object const& o)
 {
   for (auto d : hasher_(o))
@@ -33,6 +39,12 @@ size_t basic_bloom_filter::lookup(object const& o) const
 void basic_bloom_filter::clear()
 {
   bits_.reset();
+}
+
+void basic_bloom_filter::remove(object const& o)
+{
+  for (auto d : hasher_(o))
+    bits_.reset(d % bits_.size());
 }
 
 void basic_bloom_filter::swap(basic_bloom_filter& other)

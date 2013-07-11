@@ -8,11 +8,11 @@
 
 namespace bf {
 
-/// The *basic Bloom filter*.
+/// The basic Bloom filter.
 ///
-/// This Bloom filter does not use partitioning because it results in slightly
-/// worse performance because partitioned Bloom filters tend to have more 1s
-/// than non-partitioned filters.
+/// @note This Bloom filter does not use partitioning because it results in
+/// slightly worse performance because partitioned Bloom filters tend to have
+/// more 1s than non-partitioned filters.
 class basic_bloom_filter : public bloom_filter
 {
 public:
@@ -26,7 +26,7 @@ public:
   /// elements.
   static size_t m(double fp, size_t capacity);
 
-  /// Computes @f$k^*$@f, the optimal number of hash functions for a given
+  /// Computes @f$k^*@f$, the optimal number of hash functions for a given
   /// Bloom filter size (in terms of cells) and capacity.
   ///
   /// @param cells The number of cells in the Bloom filter (aka. *m*)
@@ -80,6 +80,8 @@ public:
     bits_.resize(required_cells);
   }
 
+  basic_bloom_filter(basic_bloom_filter&&);
+
   using bloom_filter::add;
   using bloom_filter::lookup;
 
@@ -87,7 +89,15 @@ public:
   virtual size_t lookup(object const& o) const override;
   virtual void clear() override;
 
+  /// Removes an object from the Bloom filter.
+  /// May introduce false negatives because the bitvector indices of the object
+  /// to remove may be shared with other objects.
+  ///
+  /// @param o The object to remove.
+  void remove(object const& o);
+
   /// Swaps two basic Bloom filters.
+  /// @param other The other basic Bloom filter.
   void swap(basic_bloom_filter& other);
 
 private:
