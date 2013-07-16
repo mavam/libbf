@@ -24,10 +24,6 @@ public:
   static size_t capacity(double fp, size_t cells);
 
   /// Constructs an @f$A^2$@f Bloom filter.
-  /// @param capacity The capacity of the Bloom filter.
-  a2_bloom_filter(size_t capacity = 0);
-
-  /// Constructs an @f$A^2$@f Bloom filter.
   ///
   /// @param k The number of hash functions to use in each Bloom filter.
   ///

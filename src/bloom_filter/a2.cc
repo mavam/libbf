@@ -28,7 +28,7 @@ void a2_bloom_filter::add(object const& o)
 {
   if (first_.lookup(o))
     return;
-  first_.add(o);  // FIXME: do not hash object twice.
+  first_.add(o);  // FIXME: do not hash object twice for better performance.
   if (++items_ <= capacity_)
     return;
   items_ = 1;

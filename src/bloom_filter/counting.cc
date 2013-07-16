@@ -33,6 +33,11 @@ void counting_bloom_filter::clear()
   cells_.clear();
 }
 
+void counting_bloom_filter::remove(object const& o)
+{
+  decrement(find_indices(o));
+}
+
 std::vector<size_t>
 counting_bloom_filter::find_indices(object const& o, bool part) const
 {

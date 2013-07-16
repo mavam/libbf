@@ -1,5 +1,5 @@
-#ifndef BF_BLOOM_FILTER_BASIC_H
-#define BF_BLOOM_FILTER_BASIC_H
+#ifndef BF_BLOOM_FILTER_COUNTING_H
+#define BF_BLOOM_FILTER_COUNTING_H
 
 #include "counter_vector.h"
 #include "bloom_filter.h"
@@ -32,6 +32,16 @@ public:
   virtual void add(object const& o) override;
   virtual size_t lookup(object const& o) const override;
   virtual void clear() override;
+
+  /// Removes an element.
+  /// @param o The object whose cells to decrement by 1.
+  void remove(object const& o);
+
+  template <typename T>
+  void remove(T const& x)
+  {
+    remove(wrap(x));
+  }
 
 protected:
   /// Maps an object to the indices in the underlying counter vector.
@@ -87,6 +97,7 @@ public:
 
   using bloom_filter::add;
   using bloom_filter::lookup;
+  using counting_bloom_filter::remove;
   virtual void add(object const& o) override;
 };
 
@@ -110,7 +121,8 @@ public:
   virtual size_t lookup(object const& o) const override;
   virtual void clear() override;
 
-  /// Removes an element from the spectral Bloom filter.
+  /// Removes an element.
+  /// @param o The object whose cells to decrement by 1.
   void remove(object const& o);
 
 private:

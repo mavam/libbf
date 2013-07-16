@@ -43,7 +43,7 @@ public:
   /// @return A frequency estimate for *o*.
   virtual size_t lookup(object const& o) const = 0;
 
-  /// Removes all items in the Bloom filter.
+  /// Removes all items from the Bloom filter.
   virtual void clear() = 0;
 };
 
