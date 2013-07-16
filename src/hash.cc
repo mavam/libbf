@@ -43,4 +43,21 @@ std::vector<digest> double_hasher::operator()(object const& o) const
   return d;
 }
 
+hasher make_hasher(size_t k, size_t seed, bool double_hashing)
+{
+  std::minstd_rand0 prng(seed);
+  if (double_hashing)
+  {
+    auto h1 = default_hash_function(prng());
+    auto h2 = default_hash_function(prng());
+    return double_hasher(k, std::move(h1), std::move(h2));
+  }
+  else
+  {
+    std::vector<hash_function> fns(k);
+    for (size_t i = 0; i < k; ++i)
+      fns[i] = default_hash_function(prng());
+    return default_hasher(std::move(fns));
+  }
+}
 } // namespace bf

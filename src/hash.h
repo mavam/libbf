@@ -54,6 +54,19 @@ private:
   hash_function h2_;
 };
 
+/// Creates a default or double hasher with the default hash function, using
+/// seeds from a linear congruential PRNG.
+///
+/// @param k The number of hash functions to use.
+///
+/// @param seed The initial seed of the PRNG.
+///
+/// @param double_hashing If `true`, the function constructs a ::double_hasher
+/// and a ::default_hasher otherwise.
+///
+/// @return A ::hasher with the *k* hash functions.
+hasher make_hasher(size_t k, size_t seed = 0, bool double_hashing = false);
+
 } // namespace bf
 
 #endif
