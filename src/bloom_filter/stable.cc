@@ -1,5 +1,7 @@
 #include "bloom_filter/stable.h"
 
+#include <cassert>
+
 namespace bf {
 
 stable_bloom_filter::stable_bloom_filter(hasher h, size_t cells, size_t width,
@@ -8,6 +10,7 @@ stable_bloom_filter::stable_bloom_filter(hasher h, size_t cells, size_t width,
     d_(d),
     unif_(0, cells - 1)
 {
+  assert(d <= cells);
 }
 
 void stable_bloom_filter::add(object const& o)

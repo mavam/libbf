@@ -15,6 +15,7 @@ public:
   /// @param cells The number of cells.
   /// @param width The number of bits per cell.
   /// @param d The number of cells to decrement before adding an element.
+  /// @pre `cells <= d`
   stable_bloom_filter(hasher h, size_t cells, size_t width, size_t d);
 
   /// Adds an item to the stable Bloom filter.
@@ -22,6 +23,9 @@ public:
   /// then setting the counter of *o* to all 1s.
   /// @param o The object to add.
   virtual void add(object const& o) override;
+
+  using bloom_filter::add;
+  using bloom_filter::lookup;
 
 private:
   size_t d_;

@@ -7,6 +7,8 @@ namespace bf {
 counter_vector::counter_vector(size_t cells, size_t width)
   : bits_(cells * width), width_(width)
 {
+  assert(cells > 0);
+  assert(width > 0);
 }
 
 bool counter_vector::increment(size_t cell, size_t value)

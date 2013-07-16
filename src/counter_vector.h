@@ -20,6 +20,8 @@ public:
   /// @param cells The number of cells.
   ///
   /// @param width The number of bits per cell.
+  ///
+  /// @pre `cells > 0 && width > 0`
   counter_vector(size_t cells, size_t width);
 
   /// Increments a cell counter by a given value. If the value is larger 
