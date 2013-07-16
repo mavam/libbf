@@ -19,12 +19,14 @@ typedef std::function<std::vector<digest>(object const&)> hasher;
 class default_hash_function
 {
 public:
+  constexpr static size_t max_obj_size = 36;
+
   default_hash_function(size_t seed);
 
   size_t operator()(object const& o) const;
 
 private:
-  h3<size_t, 36> h3_;
+  h3<size_t, max_obj_size> h3_;
 };
 
 /// A hasher which hashes an object *k* times.

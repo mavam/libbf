@@ -9,7 +9,11 @@ default_hash_function::default_hash_function(size_t seed)
 
 size_t default_hash_function::operator()(object const& o) const
 {
-  return h3_(o.data(), o.size());
+  // FIXME: fall back to a generic universal hash function (e.g., HMAC/MD5) for
+  // too large objects.
+  if (o.size() > max_obj_size)
+    throw std::runtime_error("object too large");
+  return o.size() == 0 ? 0 : h3_(o.data(), o.size());
 }
 
 default_hasher::default_hasher(std::vector<hash_function> fns)
@@ -60,4 +64,5 @@ hasher make_hasher(size_t k, size_t seed, bool double_hashing)
     return default_hasher(std::move(fns));
   }
 }
+
 } // namespace bf
