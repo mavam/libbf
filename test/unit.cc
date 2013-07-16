@@ -4,11 +4,11 @@
 #include <iostream>
 #include "test.h"
 #include "counter_vector.h"
-//#include "bloom_filter/a2.h"
+#include "bloom_filter/a2.h"
 #include "bloom_filter/basic.h"
-//#include "bloom_filter/spectral.h"
-//#include "bloom_filter/stable.h"
-//#include "bloom_filter/bitwise.h"
+#include "bloom_filter/counting.h"
+#include "bloom_filter/stable.h"
+#include "bloom_filter/bitwise.h"
 
 using namespace bf;
 
@@ -119,36 +119,29 @@ BOOST_AUTO_TEST_CASE(bloom_filter_basic)
   BOOST_CHECK_EQUAL(bf.lookup('a'), 1);
 }
 
-//BOOST_AUTO_TEST_CASE(basic_bloom_filter_counting)
-//{
-//  typedef basic<>::core_type::store_type store;
-//  basic<core<store, double_hashing<>>> b({23, 3, 3});
-//
-//  for (unsigned i = 0; i < 4; ++i)
-//  {
-//    b.add("qux");
-//    b.add("corge");
-//    b.add("grault");
-//    b.add(3.14159265);
-//  }
-//
-//  BOOST_CHECK_EQUAL(b.count("qux"), 4);
-//  BOOST_CHECK_EQUAL(b.count("corge"), 4);
-//  BOOST_CHECK_EQUAL(b.count("grault"), 4);
-//  BOOST_CHECK_EQUAL(b.count(3.14159265), 4);
-//  BOOST_CHECK_EQUAL(b.count(3.14), 0);
-//  BOOST_CHECK_EQUAL(b.count("foo"), 0);
-//
-//  for (unsigned i = 0; i < 4; ++i)
-//  {
-//    b.remove("grault");
-//    b.add("qux");
-//  }
-//
-//  BOOST_CHECK_EQUAL(b.count("qux"), 7);
-//  BOOST_CHECK_EQUAL(b.count("corge"), 4);
-//}
-//
+BOOST_AUTO_TEST_CASE(bloom_filter_counting)
+{
+  counting_bloom_filter bf(make_hasher(3), 10, 2);
+
+  for (size_t i = 0; i < 3; ++i)
+  {
+    bf.add("qux");
+    bf.add("corge");
+    bf.add("grault");
+    bf.add(3.14159265);
+  }
+
+  BOOST_CHECK_EQUAL(bf.lookup("foo"), 0);
+  BOOST_CHECK_EQUAL(bf.lookup("qux"), 3);
+  BOOST_CHECK_EQUAL(bf.lookup("corge"), 3);
+  BOOST_CHECK_EQUAL(bf.lookup("grault"), 3);
+  BOOST_CHECK_EQUAL(bf.lookup(3.14159265), 3);
+
+  for (size_t i = 0; i < 3; ++i)
+    bf.remove("grault");
+  BOOST_CHECK_EQUAL(bf.lookup("corge"), 0);
+}
+
 //BOOST_AUTO_TEST_CASE(stable_bloom_filter)
 //{
 //  stable<> b(3, {5, 3, 2});
