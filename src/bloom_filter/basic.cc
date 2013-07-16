@@ -16,6 +16,21 @@ size_t basic_bloom_filter::k(size_t cells, size_t capacity)
   return std::ceil(frac * std::log(2));
 }
 
+basic_bloom_filter::basic_bloom_filter(hasher h, size_t cells)
+  : hasher_(std::move(h)),
+    bits_(cells)
+{
+}
+
+basic_bloom_filter::basic_bloom_filter(double fp, size_t capacity, size_t seed,
+                                       bool double_hashing)
+{
+  auto required_cells = m(fp, capacity);
+  auto optimal_k = k(required_cells, capacity);
+  bits_.resize(required_cells);
+  hasher_ = make_hasher(optimal_k, seed, double_hashing);
+}
+
 basic_bloom_filter::basic_bloom_filter(basic_bloom_filter&& other)
   : hasher_(std::move(other.hasher_)),
     bits_(std::move(other.bits_))

@@ -37,48 +37,24 @@ public:
   static size_t k(size_t cells, size_t capacity);
 
   /// Constructs a basic Bloom filter.
-  /// @param k The number of hash functions to use.
+  /// @param hasher The hasher to use.
   /// @param cells The number of cells in the bit vector.
-  /// @param seed The initial seed used to construct the hash functions.
-  template <
-    typename HashFunction = default_hash_function,
-    typename Hasher = default_hasher
-  >
-  basic_bloom_filter(size_t k, size_t cells, size_t seed = 0)
-  {
-    std::minstd_rand0 prng(seed);
-    std::vector<hash_function> fns(k);
-    for (size_t i = 0; i < k; ++i)
-      fns[i] = HashFunction(prng());
-
-    hasher_ = Hasher(std::move(fns));
-    bits_.resize(cells);
-  }
+  basic_bloom_filter(hasher h, size_t cells);
 
   /// Constructs a basic Bloom filter by given a desired false-positive
   /// probability and an expected number of elements. The implementation
   /// computes the optimal number of hash function and required space.
-  /// @tparam HashFunction The hash function.
-  /// @tparam HashFunction The hasher.
+  ///
   /// @param fp The desired false-positive probability.
+  ///
   /// @param capacity The desired false-positive probability.
+  ///
   /// @param seed The initial seed used to construct the hash functions.
-  template <
-    typename HashFunction = default_hash_function,
-    typename Hasher = default_hasher
-  >
-  basic_bloom_filter(double fp, size_t capacity, size_t seed = 0)
-  {
-    std::minstd_rand0 prng(seed);
-    auto required_cells = m(fp, capacity);
-    auto optimal_k = k(required_cells, 10);
-    std::vector<hash_function> fns(optimal_k);
-    for (size_t i = 0; i < optimal_k; ++i)
-      fns[i] = HashFunction(prng());
-
-    hasher_ = Hasher(std::move(fns));
-    bits_.resize(required_cells);
-  }
+  ///
+  /// @param double_hashing Flag indicating whether to use default or double
+  /// hashing.
+  basic_bloom_filter(double fp, size_t capacity, size_t seed = 0,
+                     bool double_hashing = true);
 
   basic_bloom_filter(basic_bloom_filter&&);
 
