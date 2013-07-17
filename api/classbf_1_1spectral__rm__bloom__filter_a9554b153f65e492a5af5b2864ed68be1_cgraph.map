@@ -1,0 +1,13 @@
+<map id="bf::spectral_rm_bloom_filter::add" name="bf::spectral_rm_bloom_filter::add">
+<area shape="rect" id="node2" href="$classbf_1_1counting__bloom__filter.html#a92113d5011edf42655dcd23e203f0ae4" title="Retrieves the counter for given cell index." alt="" coords="213,73,347,117"/>
+<area shape="rect" id="node6" href="$classbf_1_1counting__bloom__filter.html#aba21eb65388a590633d56de93094017e" title="Maps an object to the indices in the underlying counter vector." alt="" coords="401,269,535,313"/>
+<area shape="rect" id="node7" href="$classbf_1_1counting__bloom__filter.html#ae76453ea36ff3c4823668681f4783f6d" title="Finds one or more minimum indices for a list of arbitrary indices." alt="" coords="213,141,347,185"/>
+<area shape="rect" id="node10" href="$classbf_1_1counting__bloom__filter.html#a435324659266570d0556ca6e5b0e854e" title="Finds the minimum value in a list of arbitrary indices." alt="" coords="208,5,352,49"/>
+<area shape="rect" id="node11" href="$classbf_1_1counting__bloom__filter.html#a45e713e1442e86557f51913eba344e7b" title="Increments a given set of indices in the underlying counter vector." alt="" coords="213,209,347,253"/>
+<area shape="rect" id="node3" href="$classbf_1_1counter__vector.html#ae60aefada8096ab53d37df82d57f8ff1" title="Retrieves the counter of a cell." alt="" coords="404,77,532,121"/>
+<area shape="rect" id="node4" href="$classbf_1_1counter__vector.html#ad5b8aca3644708bb33cb54e5e6811a65" title="Retrieves the number of cells." alt="" coords="600,201,728,245"/>
+<area shape="rect" id="node5" href="$classbf_1_1bitvector.html#abc4e8434cdfd7cfa4ccb486caa28cdc3" title="Retrieves the number of bits the bitvector consist of." alt="" coords="795,209,917,237"/>
+<area shape="rect" id="node8" href="$classbf_1_1counter__vector.html#a472fc42e6538a6b1cb9af0551468e1a7" title="Retrieves the maximum possible counter value." alt="" coords="584,149,744,177"/>
+<area shape="rect" id="node9" href="$classbf_1_1counter__vector.html#ad5d12af1b4170dd9e9f3cd1fc7ea5718" title="Retrieves the counter width." alt="" coords="792,141,920,185"/>
+<area shape="rect" id="node12" href="$classbf_1_1counter__vector.html#a4022ab6a4783afb082cc4c3ba53c8bab" title="Increments a cell counter by a given value." alt="" coords="404,201,532,245"/>
+</map>

@@ -1,0 +1,8 @@
+<map id="bf::counting_bloom_filter::lookup" name="bf::counting_bloom_filter::lookup">
+<area shape="rect" id="node2" href="$classbf_1_1counter__vector.html#ae60aefada8096ab53d37df82d57f8ff1" title="Retrieves the counter of a cell." alt="" coords="205,5,333,49"/>
+<area shape="rect" id="node5" href="$classbf_1_1counting__bloom__filter.html#aba21eb65388a590633d56de93094017e" title="Maps an object to the indices in the underlying counter vector." alt="" coords="202,73,336,117"/>
+<area shape="rect" id="node6" href="$classbf_1_1counter__vector.html#a472fc42e6538a6b1cb9af0551468e1a7" title="Retrieves the maximum possible counter value." alt="" coords="189,141,350,169"/>
+<area shape="rect" id="node3" href="$classbf_1_1counter__vector.html#ad5b8aca3644708bb33cb54e5e6811a65" title="Retrieves the number of cells." alt="" coords="397,35,525,79"/>
+<area shape="rect" id="node4" href="$classbf_1_1bitvector.html#abc4e8434cdfd7cfa4ccb486caa28cdc3" title="Retrieves the number of bits the bitvector consist of." alt="" coords="574,43,695,71"/>
+<area shape="rect" id="node7" href="$classbf_1_1counter__vector.html#ad5d12af1b4170dd9e9f3cd1fc7ea5718" title="Retrieves the counter width." alt="" coords="397,133,525,177"/>
+</map>

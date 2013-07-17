@@ -1,0 +1,6 @@
+<map id="bf::bitvector::set" name="bf::bitvector::set">
+<area shape="rect" id="node2" href="$classbf_1_1bitvector.html#ac728129cb979c3388100e23e8c40fc39" title="Computes the bitmask block to extract a bit a given bit position." alt="" coords="171,13,322,41"/>
+<area shape="rect" id="node4" href="$classbf_1_1bitvector.html#a3ac596ca3698500443e3a20b42703c8f" title="Computes the block index for a given bit position." alt="" coords="182,65,311,109"/>
+<area shape="rect" id="node5" href="$classbf_1_1bitvector.html#a7dafad7d71f7e1226b203b8d4294f951" title="Sets all bits to 0." alt="" coords="183,133,310,161"/>
+<area shape="rect" id="node3" href="$classbf_1_1bitvector.html#a69f6a0a878ebcbe9b6f76c755c32bb1a" title="Computes the bit index within a given block for a given bit position." alt="" coords="371,5,483,49"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="bf::counting_bloom_filter::count" name="bf::counting_bloom_filter::count">
+<area shape="rect" id="node2" href="$classbf_1_1spectral__rm__bloom__filter.html#a9554b153f65e492a5af5b2864ed68be1" title="Adds an element to the Bloom filter." alt="" coords="190,5,343,49"/>
+<area shape="rect" id="node3" href="$classbf_1_1spectral__rm__bloom__filter.html#a3093fddf137241e8ef31ae9850491b3a" title="Retrieves the count of an element." alt="" coords="190,73,343,117"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="bf::bitvector::reset" name="bf::bitvector::reset">
+<area shape="rect" id="node2" href="$classbf_1_1bitvector.html#a54bc997ec982b70001da98eff1bac42a" title="Sets a bit at a specific position to a given value." alt="" coords="182,5,298,33"/>
+<area shape="rect" id="node3" href="$classbf_1_1basic__bloom__filter.html#a042f9ce057b515dac91cda7fc5d2430d" title="Adds an element to the Bloom filter." alt="" coords="348,5,524,33"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="bf::stable_bloom_filter::add" name="bf::stable_bloom_filter::add">
+<area shape="rect" id="node2" href="$classbf_1_1counter__vector.html#a2d5956d151ba79b92c1dc5d3a311fee1" title="Decrements a cell counter." alt="" coords="419,5,547,49"/>
+<area shape="rect" id="node5" href="$classbf_1_1counting__bloom__filter.html#aba21eb65388a590633d56de93094017e" title="Maps an object to the indices in the underlying counter vector." alt="" coords="236,65,370,109"/>
+<area shape="rect" id="node6" href="$classbf_1_1counting__bloom__filter.html#a45e713e1442e86557f51913eba344e7b" title="Increments a given set of indices in the underlying counter vector." alt="" coords="236,133,370,177"/>
+<area shape="rect" id="node8" href="$classbf_1_1counter__vector.html#a472fc42e6538a6b1cb9af0551468e1a7" title="Retrieves the maximum possible counter value." alt="" coords="594,171,755,199"/>
+<area shape="rect" id="node3" href="$classbf_1_1counter__vector.html#ad5b8aca3644708bb33cb54e5e6811a65" title="Retrieves the number of cells." alt="" coords="611,65,739,109"/>
+<area shape="rect" id="node4" href="$classbf_1_1bitvector.html#abc4e8434cdfd7cfa4ccb486caa28cdc3" title="Retrieves the number of bits the bitvector consist of." alt="" coords="806,73,927,101"/>
+<area shape="rect" id="node7" href="$classbf_1_1counter__vector.html#a4022ab6a4783afb082cc4c3ba53c8bab" title="Increments a cell counter by a given value." alt="" coords="419,133,547,177"/>
+<area shape="rect" id="node9" href="$classbf_1_1counter__vector.html#ad5d12af1b4170dd9e9f3cd1fc7ea5718" title="Retrieves the counter width." alt="" coords="803,163,931,207"/>
+</map>

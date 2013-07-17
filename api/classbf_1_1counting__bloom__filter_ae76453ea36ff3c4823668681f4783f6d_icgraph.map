@@ -1,0 +1,6 @@
+<map id="bf::counting_bloom_filter::find_minima" name="bf::counting_bloom_filter::find_minima">
+<area shape="rect" id="node2" href="$classbf_1_1spectral__mi__bloom__filter.html#adef2b5e436db31b1e18ab2790724093f" title="Adds an element to the Bloom filter." alt="" coords="191,5,343,49"/>
+<area shape="rect" id="node3" href="$classbf_1_1spectral__rm__bloom__filter.html#a9554b153f65e492a5af5b2864ed68be1" title="Adds an element to the Bloom filter." alt="" coords="190,73,343,117"/>
+<area shape="rect" id="node4" href="$classbf_1_1spectral__rm__bloom__filter.html#a3093fddf137241e8ef31ae9850491b3a" title="Retrieves the count of an element." alt="" coords="190,141,343,185"/>
+<area shape="rect" id="node5" href="$classbf_1_1spectral__rm__bloom__filter.html#a4e06f564c28f07245ce3a911a2741705" title="Removes an element." alt="" coords="190,209,343,253"/>
+</map>

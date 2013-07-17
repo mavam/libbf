@@ -1,0 +1,4 @@
+<map id="bf::bitvector::operator[]" name="bf::bitvector::operator[]">
+<area shape="rect" id="node2" href="$classbf_1_1bitvector.html#a69f6a0a878ebcbe9b6f76c755c32bb1a" title="Computes the bit index within a given block for a given bit position." alt="" coords="217,5,329,49"/>
+<area shape="rect" id="node3" href="$classbf_1_1bitvector.html#a3ac596ca3698500443e3a20b42703c8f" title="Computes the block index for a given bit position." alt="" coords="209,73,338,117"/>
+</map>

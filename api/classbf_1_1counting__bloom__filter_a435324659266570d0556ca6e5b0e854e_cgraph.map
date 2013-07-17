@@ -1,0 +1,7 @@
+<map id="bf::counting_bloom_filter::find_minimum" name="bf::counting_bloom_filter::find_minimum">
+<area shape="rect" id="node2" href="$classbf_1_1counter__vector.html#ae60aefada8096ab53d37df82d57f8ff1" title="Retrieves the counter of a cell." alt="" coords="213,7,341,51"/>
+<area shape="rect" id="node5" href="$classbf_1_1counter__vector.html#a472fc42e6538a6b1cb9af0551468e1a7" title="Retrieves the maximum possible counter value." alt="" coords="197,77,358,105"/>
+<area shape="rect" id="node3" href="$classbf_1_1counter__vector.html#ad5b8aca3644708bb33cb54e5e6811a65" title="Retrieves the number of cells." alt="" coords="405,5,533,49"/>
+<area shape="rect" id="node4" href="$classbf_1_1bitvector.html#abc4e8434cdfd7cfa4ccb486caa28cdc3" title="Retrieves the number of bits the bitvector consist of." alt="" coords="582,13,703,41"/>
+<area shape="rect" id="node6" href="$classbf_1_1counter__vector.html#ad5d12af1b4170dd9e9f3cd1fc7ea5718" title="Retrieves the counter width." alt="" coords="405,73,533,117"/>
+</map>

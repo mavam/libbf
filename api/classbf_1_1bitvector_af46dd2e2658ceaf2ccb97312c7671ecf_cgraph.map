@@ -1,0 +1,5 @@
+<map id="bf::bitvector::flip" name="bf::bitvector::flip">
+<area shape="rect" id="node2" href="$classbf_1_1bitvector.html#ac728129cb979c3388100e23e8c40fc39" title="Computes the bitmask block to extract a bit a given bit position." alt="" coords="168,13,320,41"/>
+<area shape="rect" id="node4" href="$classbf_1_1bitvector.html#a3ac596ca3698500443e3a20b42703c8f" title="Computes the block index for a given bit position." alt="" coords="180,65,308,109"/>
+<area shape="rect" id="node3" href="$classbf_1_1bitvector.html#a69f6a0a878ebcbe9b6f76c755c32bb1a" title="Computes the bit index within a given block for a given bit position." alt="" coords="368,5,480,49"/>
+</map>

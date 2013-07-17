@@ -1,0 +1,5 @@
+<map id="bf::counting_bloom_filter" name="bf::counting_bloom_filter">
+<area shape="rect" id="node3" href="$classbf_1_1spectral__mi__bloom__filter.html" title="A spectral Bloom filter with minimum increase (MI) policy." alt="" coords="4,659,189,773"/>
+<area shape="rect" id="node4" href="$classbf_1_1stable__bloom__filter.html" title="A stable Bloom filter." alt="" coords="214,651,367,781"/>
+<area shape="rect" id="node2" href="$classbf_1_1bloom__filter.html" title="The abstract Bloom filter interface." alt="" coords="134,6,252,215"/>
+</map>

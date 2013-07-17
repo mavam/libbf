@@ -1,0 +1,4 @@
+<map id="bf::bitvector::resize" name="bf::bitvector::resize">
+<area shape="rect" id="node2" href="$classbf_1_1basic__bloom__filter.html#aa09baf1854f87d4ef134a2537d4e1dc9" title="Constructs a basic Bloom filter by given a desired false&#45;positive probability and an expected number ..." alt="" coords="194,5,342,49"/>
+<area shape="rect" id="node3" href="$classbf_1_1bitvector.html#ac7b0ec0f2d7c65e1ca18a0e938392d98" title="Appends a single bit to the end of the bit vector." alt="" coords="187,73,349,101"/>
+</map>

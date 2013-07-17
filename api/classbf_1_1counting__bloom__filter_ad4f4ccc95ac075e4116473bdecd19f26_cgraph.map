@@ -1,0 +1,5 @@
+<map id="bf::counting_bloom_filter::decrement" name="bf::counting_bloom_filter::decrement">
+<area shape="rect" id="node2" href="$classbf_1_1counter__vector.html#a2d5956d151ba79b92c1dc5d3a311fee1" title="Decrements a cell counter." alt="" coords="189,5,317,49"/>
+<area shape="rect" id="node3" href="$classbf_1_1counter__vector.html#ad5b8aca3644708bb33cb54e5e6811a65" title="Retrieves the number of cells." alt="" coords="365,5,493,49"/>
+<area shape="rect" id="node4" href="$classbf_1_1bitvector.html#abc4e8434cdfd7cfa4ccb486caa28cdc3" title="Retrieves the number of bits the bitvector consist of." alt="" coords="542,13,663,41"/>
+</map>

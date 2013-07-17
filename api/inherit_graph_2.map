@@ -1,0 +1,9 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classbf_1_1bloom__filter.html" title="The abstract Bloom filter interface." alt="" coords="6,87,114,115"/>
+<area shape="rect" id="node2" href="$classbf_1_1basic__bloom__filter.html" title="The basic Bloom filter." alt="" coords="168,5,315,33"/>
+<area shape="rect" id="node3" href="$classbf_1_1bitwise__bloom__filter.html" title="The bitwise Bloom filter." alt="" coords="163,57,320,85"/>
+<area shape="rect" id="node4" href="$classbf_1_1counting__bloom__filter.html" title="The counting Bloom filter." alt="" coords="174,109,308,153"/>
+<area shape="rect" id="node7" href="$classbf_1_1spectral__rm__bloom__filter.html" title="A spectral Bloom filter with recurring minimum (RM) policy." alt="" coords="165,177,318,221"/>
+<area shape="rect" id="node5" href="$classbf_1_1spectral__mi__bloom__filter.html" title="A spectral Bloom filter with minimum increase (MI) policy." alt="" coords="368,79,520,123"/>
+<area shape="rect" id="node6" href="$classbf_1_1stable__bloom__filter.html" title="A stable Bloom filter." alt="" coords="368,147,520,175"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="bf::counting_bloom_filter::increment" name="bf::counting_bloom_filter::increment">
+<area shape="rect" id="node2" href="$classbf_1_1stable__bloom__filter.html#a6e37f77ba9595fe6ea1156374d5e883f" title="Adds an item to the stable Bloom filter." alt="" coords="189,5,371,33"/>
+<area shape="rect" id="node3" href="$classbf_1_1counting__bloom__filter.html#a7d41aa4e481b8edc603960a2980f5525" title="Adds an element to the Bloom filter." alt="" coords="213,57,347,101"/>
+<area shape="rect" id="node4" href="$classbf_1_1spectral__mi__bloom__filter.html#adef2b5e436db31b1e18ab2790724093f" title="Adds an element to the Bloom filter." alt="" coords="204,125,356,169"/>
+<area shape="rect" id="node5" href="$classbf_1_1spectral__rm__bloom__filter.html#a9554b153f65e492a5af5b2864ed68be1" title="Adds an element to the Bloom filter." alt="" coords="203,193,357,237"/>
+</map>

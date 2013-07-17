@@ -1,0 +1,7 @@
+<map id="bf::bitvector::resize" name="bf::bitvector::resize">
+<area shape="rect" id="node2" href="$classbf_1_1bitvector.html#adb125a85dca14e74651df5d774b47a47" title="Computes the number of blocks needed to represent a given number of bits." alt="" coords="206,5,325,49"/>
+<area shape="rect" id="node3" href="$classbf_1_1bitvector.html#a8f2979a2bad4cf6e64a5c2b92af39741" title="Retrieves the number of blocks of the underlying storage." alt="" coords="198,73,333,101"/>
+<area shape="rect" id="node4" href="$classbf_1_1bitvector.html#a1396d724721d0f47abeab719cf07abe2" title="Computes the number of excess/unused bits in the bit vector." alt="" coords="188,125,343,153"/>
+<area shape="rect" id="node5" href="$classbf_1_1bitvector.html#a69f6a0a878ebcbe9b6f76c755c32bb1a" title="Computes the bit index within a given block for a given bit position." alt="" coords="397,86,509,130"/>
+<area shape="rect" id="node6" href="$classbf_1_1bitvector.html#abc4e8434cdfd7cfa4ccb486caa28cdc3" title="Retrieves the number of bits the bitvector consist of." alt="" coords="393,154,514,182"/>
+</map>

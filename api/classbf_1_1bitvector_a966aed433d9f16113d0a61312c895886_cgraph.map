@@ -1,0 +1,5 @@
+<map id="bf::bitvector::find_first" name="bf::bitvector::find_first">
+<area shape="rect" id="node2" href="$classbf_1_1bitvector.html#a31f921ad641e120cdf281dd1104a041e" title="Looks for the first 1&#45;bit starting at a given position." alt="" coords="174,31,327,59"/>
+<area shape="rect" id="node3" href="$classbf_1_1bitvector.html#a8f2979a2bad4cf6e64a5c2b92af39741" title="Retrieves the number of blocks of the underlying storage." alt="" coords="387,5,522,33"/>
+<area shape="rect" id="node4" href="$classbf_1_1bitvector.html#ac65a3670cce55193c534a0c4b9ff97dc" title="Computes the bit position first 1&#45;bit in a given block." alt="" coords="376,57,533,85"/>
+</map>

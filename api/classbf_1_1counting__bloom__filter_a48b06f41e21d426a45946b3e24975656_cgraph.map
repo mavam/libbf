@@ -1,0 +1,7 @@
+<map id="bf::counting_bloom_filter::remove" name="bf::counting_bloom_filter::remove">
+<area shape="rect" id="node2" href="$classbf_1_1counting__bloom__filter.html#ad4f4ccc95ac075e4116473bdecd19f26" title="Decrements a given set of indices in the underlying counter vector." alt="" coords="190,7,324,51"/>
+<area shape="rect" id="node6" href="$classbf_1_1counting__bloom__filter.html#aba21eb65388a590633d56de93094017e" title="Maps an object to the indices in the underlying counter vector." alt="" coords="374,73,508,117"/>
+<area shape="rect" id="node3" href="$classbf_1_1counter__vector.html#a2d5956d151ba79b92c1dc5d3a311fee1" title="Decrements a cell counter." alt="" coords="377,5,505,49"/>
+<area shape="rect" id="node4" href="$classbf_1_1counter__vector.html#ad5b8aca3644708bb33cb54e5e6811a65" title="Retrieves the number of cells." alt="" coords="557,39,685,83"/>
+<area shape="rect" id="node5" href="$classbf_1_1bitvector.html#abc4e8434cdfd7cfa4ccb486caa28cdc3" title="Retrieves the number of bits the bitvector consist of." alt="" coords="734,47,855,75"/>
+</map>

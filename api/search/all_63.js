@@ -1,0 +1,10 @@
+var searchData=
+[
+  ['clear',['clear',['../classbf_1_1bitvector.html#a597924ec5adcae01318f98438b7d10b1',1,'bf::bitvector::clear()'],['../classbf_1_1basic__bloom__filter.html#a7c1c41d9e81813aebf7e953d0aa3ece3',1,'bf::basic_bloom_filter::clear()'],['../classbf_1_1bitwise__bloom__filter.html#a7548de2ec205c90b160d17ace011267d',1,'bf::bitwise_bloom_filter::clear()'],['../classbf_1_1counting__bloom__filter.html#a98b36961ed06b87cdde1cdd97d9e45c9',1,'bf::counting_bloom_filter::clear()'],['../classbf_1_1spectral__rm__bloom__filter.html#a0e7554c39a1aa4f6932eb30f87695058',1,'bf::spectral_rm_bloom_filter::clear()'],['../classbf_1_1bloom__filter.html#a5984cb2c03238ea70b23316fc632dd4c',1,'bf::bloom_filter::clear()'],['../classbf_1_1counter__vector.html#a9dc72d9357cd8887b69a94748c79bdb1',1,'bf::counter_vector::clear()']]],
+  ['const_5freference',['const_reference',['../classbf_1_1bitvector.html#a8fefd603d29e5308c4a388da3985dd57',1,'bf::bitvector']]],
+  ['count',['count',['../classbf_1_1bitvector.html#a383344babd2c077cfcf1c27243ee340b',1,'bf::bitvector::count()'],['../classbf_1_1counting__bloom__filter.html#a92113d5011edf42655dcd23e203f0ae4',1,'bf::counting_bloom_filter::count()'],['../classbf_1_1counter__vector.html#ae60aefada8096ab53d37df82d57f8ff1',1,'bf::counter_vector::count()']]],
+  ['counter_5fvector',['counter_vector',['../classbf_1_1counter__vector.html#aa2122dad6b654d0253c64c937f22d620',1,'bf::counter_vector']]],
+  ['counter_5fvector',['counter_vector',['../classbf_1_1counter__vector.html',1,'bf']]],
+  ['counting_5fbloom_5ffilter',['counting_bloom_filter',['../classbf_1_1counting__bloom__filter.html',1,'bf']]],
+  ['counting_5fbloom_5ffilter',['counting_bloom_filter',['../classbf_1_1counting__bloom__filter.html#a777e45082205fa115a7a8502b0d8b9d5',1,'bf::counting_bloom_filter::counting_bloom_filter(hasher h, size_t cells, size_t width)'],['../classbf_1_1counting__bloom__filter.html#ae5cdadb73f83a371950cb79b2f0ddc6a',1,'bf::counting_bloom_filter::counting_bloom_filter(counting_bloom_filter &amp;&amp;)=default']]]
+];

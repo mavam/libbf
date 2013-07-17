@@ -1,0 +1,4 @@
+<map id="bf::bitvector::find_from" name="bf::bitvector::find_from">
+<area shape="rect" id="node2" href="$classbf_1_1bitvector.html#a966aed433d9f16113d0a61312c895886" title="Finds the bit position of of the first 1&#45;bit." alt="" coords="224,5,344,49"/>
+<area shape="rect" id="node3" href="$classbf_1_1bitvector.html#a2573acc814168f7936ec536df31c5041" title="Finds the next 1&#45;bit from a given starting position." alt="" coords="208,73,360,101"/>
+</map>

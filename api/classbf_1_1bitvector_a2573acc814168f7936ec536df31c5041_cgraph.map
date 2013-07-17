@@ -1,0 +1,8 @@
+<map id="bf::bitvector::find_next" name="bf::bitvector::find_next">
+<area shape="rect" id="node2" href="$classbf_1_1bitvector.html#a69f6a0a878ebcbe9b6f76c755c32bb1a" title="Computes the bit index within a given block for a given bit position." alt="" coords="227,5,339,49"/>
+<area shape="rect" id="node3" href="$classbf_1_1bitvector.html#a3ac596ca3698500443e3a20b42703c8f" title="Computes the block index for a given bit position." alt="" coords="218,73,347,117"/>
+<area shape="rect" id="node4" href="$classbf_1_1bitvector.html#a31f921ad641e120cdf281dd1104a041e" title="Looks for the first 1&#45;bit starting at a given position." alt="" coords="206,141,359,169"/>
+<area shape="rect" id="node6" href="$classbf_1_1bitvector.html#ac65a3670cce55193c534a0c4b9ff97dc" title="Computes the bit position first 1&#45;bit in a given block." alt="" coords="408,193,565,221"/>
+<area shape="rect" id="node7" href="$classbf_1_1bitvector.html#abc4e8434cdfd7cfa4ccb486caa28cdc3" title="Retrieves the number of bits the bitvector consist of." alt="" coords="222,245,343,273"/>
+<area shape="rect" id="node5" href="$classbf_1_1bitvector.html#a8f2979a2bad4cf6e64a5c2b92af39741" title="Retrieves the number of blocks of the underlying storage." alt="" coords="419,141,554,169"/>
+</map>

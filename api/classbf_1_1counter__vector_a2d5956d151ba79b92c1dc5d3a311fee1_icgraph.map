@@ -1,0 +1,6 @@
+<map id="bf::counter_vector::decrement" name="bf::counter_vector::decrement">
+<area shape="rect" id="node2" href="$classbf_1_1stable__bloom__filter.html#a6e37f77ba9595fe6ea1156374d5e883f" title="Adds an item to the stable Bloom filter." alt="" coords="181,5,363,33"/>
+<area shape="rect" id="node3" href="$classbf_1_1counting__bloom__filter.html#ad4f4ccc95ac075e4116473bdecd19f26" title="Decrements a given set of indices in the underlying counter vector." alt="" coords="205,57,339,101"/>
+<area shape="rect" id="node4" href="$classbf_1_1counting__bloom__filter.html#a48b06f41e21d426a45946b3e24975656" title="Removes an element." alt="" coords="421,22,555,66"/>
+<area shape="rect" id="node5" href="$classbf_1_1spectral__rm__bloom__filter.html#a4e06f564c28f07245ce3a911a2741705" title="Removes an element." alt="" coords="411,90,565,134"/>
+</map>

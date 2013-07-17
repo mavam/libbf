@@ -1,0 +1,6 @@
+<map id="bf::counter_vector::increment" name="bf::counter_vector::increment">
+<area shape="rect" id="node2" href="$classbf_1_1counter__vector.html#a472fc42e6538a6b1cb9af0551468e1a7" title="Retrieves the maximum possible counter value." alt="" coords="181,13,342,41"/>
+<area shape="rect" id="node4" href="$classbf_1_1counter__vector.html#ad5b8aca3644708bb33cb54e5e6811a65" title="Retrieves the number of cells." alt="" coords="197,65,325,109"/>
+<area shape="rect" id="node3" href="$classbf_1_1counter__vector.html#ad5d12af1b4170dd9e9f3cd1fc7ea5718" title="Retrieves the counter width." alt="" coords="389,5,517,49"/>
+<area shape="rect" id="node5" href="$classbf_1_1bitvector.html#abc4e8434cdfd7cfa4ccb486caa28cdc3" title="Retrieves the number of bits the bitvector consist of." alt="" coords="393,73,514,101"/>
+</map>

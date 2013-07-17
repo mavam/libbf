@@ -1,0 +1,10 @@
+<map id="bf::counter_vector::count" name="bf::counter_vector::count">
+<area shape="rect" id="node2" href="$classbf_1_1counting__bloom__filter.html#a92113d5011edf42655dcd23e203f0ae4" title="Retrieves the counter for given cell index." alt="" coords="186,5,320,49"/>
+<area shape="rect" id="node5" href="$classbf_1_1counting__bloom__filter.html#ae76453ea36ff3c4823668681f4783f6d" title="Finds one or more minimum indices for a list of arbitrary indices." alt="" coords="186,141,320,185"/>
+<area shape="rect" id="node8" href="$classbf_1_1counting__bloom__filter.html#a435324659266570d0556ca6e5b0e854e" title="Finds the minimum value in a list of arbitrary indices." alt="" coords="181,73,326,117"/>
+<area shape="rect" id="node9" href="$classbf_1_1counting__bloom__filter.html#aba48b9be3ad7d23bcb37385e240c460c" title="Retrieves the count of an element." alt="" coords="186,209,320,253"/>
+<area shape="rect" id="node3" href="$classbf_1_1spectral__rm__bloom__filter.html#a9554b153f65e492a5af5b2864ed68be1" title="Adds an element to the Bloom filter." alt="" coords="374,73,527,117"/>
+<area shape="rect" id="node4" href="$classbf_1_1spectral__rm__bloom__filter.html#a3093fddf137241e8ef31ae9850491b3a" title="Retrieves the count of an element." alt="" coords="374,5,527,49"/>
+<area shape="rect" id="node6" href="$classbf_1_1spectral__mi__bloom__filter.html#adef2b5e436db31b1e18ab2790724093f" title="Adds an element to the Bloom filter." alt="" coords="375,209,527,253"/>
+<area shape="rect" id="node7" href="$classbf_1_1spectral__rm__bloom__filter.html#a4e06f564c28f07245ce3a911a2741705" title="Removes an element." alt="" coords="374,141,527,185"/>
+</map>

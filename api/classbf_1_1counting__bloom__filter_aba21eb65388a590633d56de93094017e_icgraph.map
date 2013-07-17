@@ -1,0 +1,10 @@
+<map id="bf::counting_bloom_filter::find_indices" name="bf::counting_bloom_filter::find_indices">
+<area shape="rect" id="node2" href="$classbf_1_1stable__bloom__filter.html#a6e37f77ba9595fe6ea1156374d5e883f" title="Adds an item to the stable Bloom filter." alt="" coords="189,5,371,33"/>
+<area shape="rect" id="node3" href="$classbf_1_1counting__bloom__filter.html#a7d41aa4e481b8edc603960a2980f5525" title="Adds an element to the Bloom filter." alt="" coords="213,57,347,101"/>
+<area shape="rect" id="node4" href="$classbf_1_1spectral__mi__bloom__filter.html#adef2b5e436db31b1e18ab2790724093f" title="Adds an element to the Bloom filter." alt="" coords="204,125,356,169"/>
+<area shape="rect" id="node5" href="$classbf_1_1spectral__rm__bloom__filter.html#a9554b153f65e492a5af5b2864ed68be1" title="Adds an element to the Bloom filter." alt="" coords="203,193,357,237"/>
+<area shape="rect" id="node6" href="$classbf_1_1counting__bloom__filter.html#aba48b9be3ad7d23bcb37385e240c460c" title="Retrieves the count of an element." alt="" coords="213,261,347,305"/>
+<area shape="rect" id="node7" href="$classbf_1_1spectral__rm__bloom__filter.html#a3093fddf137241e8ef31ae9850491b3a" title="Retrieves the count of an element." alt="" coords="203,329,357,373"/>
+<area shape="rect" id="node8" href="$classbf_1_1counting__bloom__filter.html#a48b06f41e21d426a45946b3e24975656" title="Removes an element." alt="" coords="213,397,347,441"/>
+<area shape="rect" id="node9" href="$classbf_1_1spectral__rm__bloom__filter.html#a4e06f564c28f07245ce3a911a2741705" title="Removes an element." alt="" coords="203,465,357,509"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="bf::bitwise_bloom_filter::grow" name="bf::bitwise_bloom_filter::grow">
+<area shape="rect" id="node2" href="$classbf_1_1bitwise__bloom__filter.html#a222f3567a92fc1a9800b3646281681be" title="Adds an element to the Bloom filter." alt="" coords="211,5,397,33"/>
+<area shape="rect" id="node3" href="$classbf_1_1bitwise__bloom__filter.html#a958112c6ae088fc9a8fd913d027a091f" title="Constructs a bitwise Bloom filter." alt="" coords="226,57,382,101"/>
+<area shape="rect" id="node4" href="$classbf_1_1bitwise__bloom__filter.html#a7548de2ec205c90b160d17ace011267d" title="Removes all items from the Bloom filter." alt="" coords="226,125,382,169"/>
+</map>

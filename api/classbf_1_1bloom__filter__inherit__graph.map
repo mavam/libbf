@@ -1,0 +1,8 @@
+<map id="bf::bloom_filter" name="bf::bloom_filter">
+<area shape="rect" id="node2" href="$classbf_1_1basic__bloom__filter.html" title="The basic Bloom filter." alt="" coords="4,313,152,554"/>
+<area shape="rect" id="node3" href="$classbf_1_1bitwise__bloom__filter.html" title="The bitwise Bloom filter." alt="" coords="177,337,335,530"/>
+<area shape="rect" id="node4" href="$classbf_1_1counting__bloom__filter.html" title="The counting Bloom filter." alt="" coords="359,265,533,602"/>
+<area shape="rect" id="node7" href="$classbf_1_1spectral__rm__bloom__filter.html" title="A spectral Bloom filter with recurring minimum (RM) policy." alt="" coords="558,345,745,522"/>
+<area shape="rect" id="node5" href="$classbf_1_1spectral__mi__bloom__filter.html" title="A spectral Bloom filter with minimum increase (MI) policy." alt="" coords="256,659,441,773"/>
+<area shape="rect" id="node6" href="$classbf_1_1stable__bloom__filter.html" title="A stable Bloom filter." alt="" coords="466,651,619,781"/>
+</map>

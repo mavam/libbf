@@ -1,0 +1,8 @@
+<map id="bf::bitvector::push_back" name="bf::bitvector::push_back">
+<area shape="rect" id="node2" href="$classbf_1_1bitvector.html#a5fcf5ff0c55d5bb635e0a25d2e777af2" title="Resizes the bit vector to a new number of bits." alt="" coords="216,95,349,123"/>
+<area shape="rect" id="node7" href="$classbf_1_1bitvector.html#abc4e8434cdfd7cfa4ccb486caa28cdc3" title="Retrieves the number of bits the bitvector consist of." alt="" coords="603,177,725,205"/>
+<area shape="rect" id="node3" href="$classbf_1_1bitvector.html#a8f2979a2bad4cf6e64a5c2b92af39741" title="Retrieves the number of blocks of the underlying storage." alt="" coords="408,5,544,33"/>
+<area shape="rect" id="node4" href="$classbf_1_1bitvector.html#adb125a85dca14e74651df5d774b47a47" title="Computes the number of blocks needed to represent a given number of bits." alt="" coords="417,57,535,101"/>
+<area shape="rect" id="node5" href="$classbf_1_1bitvector.html#a1396d724721d0f47abeab719cf07abe2" title="Computes the number of excess/unused bits in the bit vector." alt="" coords="398,125,554,153"/>
+<area shape="rect" id="node6" href="$classbf_1_1bitvector.html#a69f6a0a878ebcbe9b6f76c755c32bb1a" title="Computes the bit index within a given block for a given bit position." alt="" coords="608,109,720,153"/>
+</map>

@@ -1,0 +1,20 @@
+<map id="bf::counter_vector::size" name="bf::counter_vector::size">
+<area shape="rect" id="node2" href="$classbf_1_1counter__vector.html#ae60aefada8096ab53d37df82d57f8ff1" title="Retrieves the counter of a cell." alt="" coords="195,141,323,185"/>
+<area shape="rect" id="node11" href="$classbf_1_1counter__vector.html#a2d5956d151ba79b92c1dc5d3a311fee1" title="Decrements a cell counter." alt="" coords="195,401,323,445"/>
+<area shape="rect" id="node15" href="$classbf_1_1counting__bloom__filter.html#aba21eb65388a590633d56de93094017e" title="Maps an object to the indices in the underlying counter vector." alt="" coords="389,273,523,317"/>
+<area shape="rect" id="node17" href="$classbf_1_1counter__vector.html#a4022ab6a4783afb082cc4c3ba53c8bab" title="Increments a cell counter by a given value." alt="" coords="195,333,323,377"/>
+<area shape="rect" id="node19" href="$classbf_1_1counter__vector.html#a59d3828ba60380fdb69ab1b4c99eaaa9" title="Sets a cell to a given value." alt="" coords="182,469,335,497"/>
+<area shape="rect" id="node3" href="$classbf_1_1counting__bloom__filter.html#a92113d5011edf42655dcd23e203f0ae4" title="Retrieves the counter for given cell index." alt="" coords="389,5,523,49"/>
+<area shape="rect" id="node6" href="$classbf_1_1counting__bloom__filter.html#ae76453ea36ff3c4823668681f4783f6d" title="Finds one or more minimum indices for a list of arbitrary indices." alt="" coords="389,141,523,185"/>
+<area shape="rect" id="node9" href="$classbf_1_1counting__bloom__filter.html#a435324659266570d0556ca6e5b0e854e" title="Finds the minimum value in a list of arbitrary indices." alt="" coords="384,73,528,117"/>
+<area shape="rect" id="node10" href="$classbf_1_1counting__bloom__filter.html#aba48b9be3ad7d23bcb37385e240c460c" title="Retrieves the count of an element." alt="" coords="600,209,734,253"/>
+<area shape="rect" id="node4" href="$classbf_1_1spectral__rm__bloom__filter.html#a9554b153f65e492a5af5b2864ed68be1" title="Adds an element to the Bloom filter." alt="" coords="590,73,743,117"/>
+<area shape="rect" id="node5" href="$classbf_1_1spectral__rm__bloom__filter.html#a3093fddf137241e8ef31ae9850491b3a" title="Retrieves the count of an element." alt="" coords="590,5,743,49"/>
+<area shape="rect" id="node7" href="$classbf_1_1spectral__mi__bloom__filter.html#adef2b5e436db31b1e18ab2790724093f" title="Adds an element to the Bloom filter." alt="" coords="591,277,743,321"/>
+<area shape="rect" id="node8" href="$classbf_1_1spectral__rm__bloom__filter.html#a4e06f564c28f07245ce3a911a2741705" title="Removes an element." alt="" coords="590,141,743,185"/>
+<area shape="rect" id="node12" href="$classbf_1_1stable__bloom__filter.html#a6e37f77ba9595fe6ea1156374d5e883f" title="Adds an item to the stable Bloom filter." alt="" coords="576,481,757,509"/>
+<area shape="rect" id="node13" href="$classbf_1_1counting__bloom__filter.html#ad4f4ccc95ac075e4116473bdecd19f26" title="Decrements a given set of indices in the underlying counter vector." alt="" coords="389,342,523,386"/>
+<area shape="rect" id="node14" href="$classbf_1_1counting__bloom__filter.html#a48b06f41e21d426a45946b3e24975656" title="Removes an element." alt="" coords="600,345,734,389"/>
+<area shape="rect" id="node16" href="$classbf_1_1counting__bloom__filter.html#a7d41aa4e481b8edc603960a2980f5525" title="Adds an element to the Bloom filter." alt="" coords="600,413,734,457"/>
+<area shape="rect" id="node18" href="$classbf_1_1counting__bloom__filter.html#a45e713e1442e86557f51913eba344e7b" title="Increments a given set of indices in the underlying counter vector." alt="" coords="389,410,523,454"/>
+</map>
