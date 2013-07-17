@@ -1,4 +1,4 @@
-#include "hash.h"
+#include <bf/hash.h>
 
 #include <cassert>
 

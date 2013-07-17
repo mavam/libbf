@@ -2,7 +2,7 @@
 #define BF_BLOOM_FILTER_STABLE_H
 
 #include <random>
-#include "bloom_filter/counting.h"
+#include <bf/bloom_filter/counting.h>
 
 namespace bf {
 

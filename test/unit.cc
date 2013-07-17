@@ -3,12 +3,7 @@
 
 #include <iostream>
 #include "test.h"
-#include "counter_vector.h"
-#include "bloom_filter/a2.h"
-#include "bloom_filter/basic.h"
-#include "bloom_filter/counting.h"
-#include "bloom_filter/stable.h"
-#include "bloom_filter/bitwise.h"
+#include "bf.h"
 
 using namespace bf;
 

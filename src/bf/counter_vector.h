@@ -3,7 +3,7 @@
 
 #include <cstdint>
 #include <vector>
-#include "bitvector.h"
+#include <bf/bitvector.h>
 
 namespace bf {
 

@@ -1,7 +1,7 @@
 #ifndef BF_BLOOM_FILTER_A2_H
 #define BF_BLOOM_FILTER_A2_H
 
-#include "bloom_filter/basic.h"
+#include <bf/bloom_filter/basic.h>
 
 namespace bf {
 

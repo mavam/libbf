@@ -4,6 +4,8 @@
 #include <limits>
 #include <random>
 
+namespace bf {
+
 /// An implementation of the H3 hash function family.
 template <typename T, int N>
 class h3
@@ -60,5 +62,7 @@ public:
 private:
   T bytes_[N][byte_range];
 };
+
+} // namespace bf
 
 #endif 

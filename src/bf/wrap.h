@@ -3,7 +3,7 @@
 
 #include <type_traits>
 #include <vector>
-#include "object.h"
+#include <bf/object.h>
 
 namespace bf {
 

@@ -2,9 +2,9 @@
 #define BF_BLOOM_FILTER_BASIC_H
 
 #include <random>
-#include "bitvector.h"
-#include "bloom_filter.h"
-#include "hash.h"
+#include <bf/bitvector.h>
+#include <bf/bloom_filter.h>
+#include <bf/hash.h>
 
 namespace bf {
 

@@ -5,11 +5,7 @@
 #include <memory>
 #include <unordered_map>
 #include "configuration.h"
-#include "bloom_filter/a2.h"
-#include "bloom_filter/basic.h"
-#include "bloom_filter/bitwise.h"
-#include "bloom_filter/counting.h"
-#include "bloom_filter/stable.h"
+#include "bf.h"
 
 using namespace bf;
 

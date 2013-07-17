@@ -2,8 +2,8 @@
 #define BF_HASH_POLICY_H
 
 #include <functional>
-#include "h3.h"
-#include "object.h"
+#include <bf/h3.h>
+#include <bf/object.h>
 
 namespace bf {
 

@@ -1,4 +1,4 @@
-#include "bloom_filter/a2.h"
+#include <bf/bloom_filter/a2.h>
 
 #include <cassert>
 
@@ -48,6 +48,5 @@ void a2_bloom_filter::clear()
   first_.clear();
   second_.clear();
 }
-
 
 } // namespace bf
