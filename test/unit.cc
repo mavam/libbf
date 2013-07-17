@@ -142,18 +142,32 @@ BOOST_AUTO_TEST_CASE(bloom_filter_counting)
   BOOST_CHECK_EQUAL(bf.lookup("corge"), 0);
 }
 
-//BOOST_AUTO_TEST_CASE(stable_bloom_filter)
-//{
-//  stable<> b(3, {5, 3, 2});
-//
-//  b.add("one fish");
-//  b.add("two fish");
-//  b.add("red fish");
-//  b.add("blue fish");
-//
-//  BOOST_CHECK_EQUAL(to_string(b), "1101110011");
-//}
-//
+BOOST_AUTO_TEST_CASE(bloom_filter_stable)
+{
+  stable_bloom_filter bf(make_hasher(3), 10, 2, 2);
+
+  bf.add("one fish");
+  bf.add("two fish");
+  bf.add("red fish");
+  bf.add("blue fish");
+  bf.add("green fish");
+  bf.add("cyan fish");
+  bf.add("yellow fish");
+  bf.add("orange fish");
+  bf.add("purple fish");
+  bf.add("pink fish");
+  bf.add("brown fish");
+  bf.add("white fish");
+  bf.add("black fish");
+  bf.add("grey fish");
+  bf.add("jelly fish");
+
+  BOOST_CHECK_EQUAL(bf.lookup("one fish"), 2);
+  BOOST_CHECK_EQUAL(bf.lookup("two fish"), 1);
+  BOOST_CHECK_EQUAL(bf.lookup("red fish"), 3);
+  BOOST_CHECK_EQUAL(bf.lookup("blue fish"), 0);
+}
+
 //BOOST_AUTO_TEST_CASE(spectral_mi_bloom_filter)
 //{
 //  spectral_mi<> b({7, 3, 2});

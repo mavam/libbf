@@ -15,8 +15,28 @@ stable_bloom_filter::stable_bloom_filter(hasher h, size_t cells, size_t width,
 
 void stable_bloom_filter::add(object const& o)
 {
-  for (size_t i = 0; i < d_; ++i)
-    cells_.decrement(unif_(generator_));
+  // Decrement d distinct cells uniformly at random.
+  std::vector<size_t> indices;
+  for (size_t d = 0; d < d_; ++d)
+  {
+    bool unique;
+    do
+    {
+      size_t u = unif_(generator_);
+      unique = true;
+      for (auto i : indices)
+        if (i == u)
+        {
+          unique = false;
+          break;
+        }
+      if (unique)
+      {
+        indices.push_back(u);
+        cells_.decrement(u);
+      }
+    } while (! unique);
+  }
 
   increment(find_indices(o), cells_.max());
 }
