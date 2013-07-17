@@ -1,37 +1,37 @@
 <!DOCTYPE html>
 <html>
+
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <title>libbf by mavam</title>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="libbf : Bloom filters for C++11" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>libbf</title>
   </head>
 
   <body>
-    <div id="container">
-      <div class="inner">
 
-        <header>
-          <h1>libbf</h1>
-          <h2>Bloom filters for C++11</h2>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/mavam/libbf">View on GitHub</a>
+
+          <h1 id="project_title">libbf</h1>
+          <h2 id="project_tagline">Bloom filters for C++11</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/mavam/libbf/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/mavam/libbf/tarball/master">Download this project as a tar.gz file</a>
+            </section>
         </header>
+    </div>
 
-        <section id="downloads" class="clearfix">
-          <a href="https://github.com/mavam/libbf/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/mavam/libbf/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/mavam/libbf" id="view-on-github" class="button"><span>View on GitHub</span></a>
-        </section>
-
-        <hr>
-
-        <section id="main_content">
-          <p><strong>libbf</strong> is a C++11 library which implements various Bloom filters, including:</p>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p><strong>libbf</strong> is a C++11 library which implements various Bloom filters, including:</p>
 
 <ul>
 <li>Basic</li>
@@ -65,7 +65,8 @@ int main()
 
   // Remove all elements.
   b.clear();
-  std::cout &lt;&lt; b.lookup("foo") &lt;&lt; ' ' &lt;&lt; b.lookup(42) &lt;&lt; std::endl;
+  std::cout &lt;&lt; b.lookup("foo") &lt;&lt; std::endl;  // 0
+  std::cout &lt;&lt; b.lookup(42) &lt;&lt; std::endl;     // 0
 
   return 0;
 }
@@ -94,6 +95,14 @@ make install
 </code></pre>
 
 <h1>
+<a name="documentation" class="anchor" href="#documentation"><span class="octicon octicon-link"></span></a>Documentation</h1>
+
+<p>The most recent version of the Doxygen API documentation exists at
+<a href="http://mavam.github.io/libbf/api">http://mavam.github.io/libbf/api</a>. Alternatively, you can build the
+documentation locally via <code>make doc</code> and then browse to
+<code>doc/gh-pages/api/index.html</code>.</p>
+
+<h1>
 <a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h1>
 
 <p>After having installed libbf, you can use it in your application by including
@@ -105,8 +114,8 @@ reside in the namespace <code>bf</code> and the following examples assume:</p>
 
 <p>Each Bloom filter inherits from the abstract base class <code>bloom_filter</code>, which
 provides addition and lookup via the virtual functions <code>add</code> and <code>lookup</code>.
-These functions take an <code>object</code> as argument, which is a lightweight view over
-sequential data that can be hashed.</p>
+These functions take an <em>object</em> as argument, which serves a light-weight view
+over sequential data for hashing.</p>
 
 <p>For example, if you can create a basic Bloom filter with a desired
 false-positive probability and capacity as follows:</p>
@@ -129,22 +138,23 @@ bf-&gt;clear();
 <p>In this case, libbf computes the optimal number of hash functions needed to
 achieve the desired false-positive rate which holds until the capacity has been
 reached (80% and 100 distinct elements, in the above example). Alternatively,
-you can construct a basic Bloom filter by exactly specifying the number of hash
+you can construct a basic Bloom filter by specifying the number of hash
 functions and the number of cells in the underlying bit vector:</p>
 
 <pre><code>bloom_filter* bf = new basic_bloom_filter(make_hasher(3), 1024);
 </code></pre>
 
 <p>Since not all Bloom filter implementations come with closed-form solutions
-based on false-positive probabilities, most constructor will use this latter
-form of explicit resource provisioning.</p>
+based on false-positive probabilities, most constructors use this latter form
+of explicit resource provisioning.</p>
 
-<p>In the above example, the free function <code>make_hasher</code> constructs a <em>hasher</em>,
-an abstraction for hashing objects <em>k</em> times. There exist currently two
-different hasher, the <code>default_hasher</code> and the <code>double_hasher</code>. The latter uses
-a linear combination of two pairwise-independent, universal hash functions to
-produce the <em>k</em> digests, whereas the default hasher merely hashes the object
-<em>k</em> times.</p>
+<p>In the above example, the free function <code>make_hasher</code> constructs a <em>hasher</em>-an
+abstraction for hashing objects <em>k</em> times. There exist currently two different
+hasher, a <code>default_hasher</code> and a
+<a href="http://www.eecs.harvard.edu/%7Ekirsch/pubs/bbbf/rsa.pdf"><code>double_hasher</code></a>. The
+latter uses a linear combination of two pairwise-independent, universal hash
+functions to produce the <em>k</em> digests, whereas the former merely hashes the
+object <em>k</em> times.</p>
 
 <h2>
 <a name="evaluation" class="anchor" href="#evaluation"><span class="octicon octicon-link"></span></a>Evaluation</h2>
@@ -200,15 +210,18 @@ incremental evaluation.</p>
 <a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h1>
 
 <p>libbf comes with a BSD-style license (see <a href="COPYING">COPYING</a> for details).</p>
-        </section>
-
-        <footer>
-          libbf is maintained by <a href="https://github.com/mavam">mavam</a><br>
-          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
-        </footer>
-
-        
-      </div>
+      </section>
     </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">libbf maintained by <a href="https://github.com/mavam">mavam</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
   </body>
 </html>
