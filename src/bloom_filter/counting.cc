@@ -55,6 +55,8 @@ counting_bloom_filter::find_indices(object const& o, bool part) const
     for (size_t i = 0; i < indices.size(); ++i)
       indices[i] = digests[i] % cells_.size();
   }
+  std::sort(indices.begin(), indices.end());
+  indices.erase(std::unique(indices.begin(), indices.end()), indices.end());
   return indices;
 };
 
