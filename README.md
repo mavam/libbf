@@ -1,4 +1,5 @@
-**libbf** is a C++11 library which implements various Bloom filters, including:
+**libbf** is a C++11 library which implements [various Bloom
+filters][blog-post], including:
 
 - Basic
 - Counting
@@ -8,8 +9,7 @@
 - A^2
 - Stable
 
-You can find an overview of these different Bloom filter types [at my
-blog](http://matthias.vallentin.net/blog/2011/06/a-garden-variety-of-bloom-filters/).
+[blog-post]: http://matthias.vallentin.net/blog/2011/06/a-garden-variety-of-bloom-filters/
 
 Synopsis
 ========
@@ -43,7 +43,7 @@ Requirements
 
 - A C++11 copmiler (GCC >= 4.7 or Clang >= 3.2)
 - CMake (>= 2.8)
-- Boost (>= 1.46) (optional, for unit testing)
+- Boost (>= 1.46) *(optional, for unit testing)*
 
 Installation
 ============
