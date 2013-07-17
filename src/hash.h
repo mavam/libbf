@@ -67,6 +67,8 @@ private:
 /// and a ::default_hasher otherwise.
 ///
 /// @return A ::hasher with the *k* hash functions.
+///
+/// @pre `k > 0`
 hasher make_hasher(size_t k, size_t seed = 0, bool double_hashing = false);
 
 } // namespace bf

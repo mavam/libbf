@@ -142,9 +142,110 @@ BOOST_AUTO_TEST_CASE(bloom_filter_counting)
   BOOST_CHECK_EQUAL(bf.lookup("corge"), 0);
 }
 
+BOOST_AUTO_TEST_CASE(bloom_filter_spectral_mi)
+{
+  spectral_mi_bloom_filter bf(make_hasher(3), 8, 2);
+
+  bf.add("oh");
+  bf.add("oh");
+  bf.add("my");
+  bf.add("god");
+  bf.add("becky");
+  bf.add("look");
+  BOOST_CHECK_EQUAL(bf.lookup("oh"), 2);
+  BOOST_CHECK_EQUAL(bf.lookup("my"), 1);
+  BOOST_CHECK_EQUAL(bf.lookup("god"), 1);
+  BOOST_CHECK_EQUAL(bf.lookup("becky"), 1);
+  BOOST_CHECK_EQUAL(bf.lookup("look"), 2); // FP, same cells as "god".
+}
+
+BOOST_AUTO_TEST_CASE(bloom_filter_spectral_rm)
+{
+  auto h1 = make_hasher(3, 0);
+  auto h2 = make_hasher(3, 1);
+  spectral_rm_bloom_filter bf(std::move(h1), 5, 2, std::move(h2), 4, 2);
+
+  bf.add("foo");
+  BOOST_CHECK_EQUAL(bf.lookup("foo"), 1);
+
+  // TODO: port old unit tests and double-check the implementation.
+
+  //// For "bar", all hash functions return the same position, the we have
+  //// necessarily a recurring minimum (RM). Thus we do not look in the second
+  //// core and return 2, although the correct count would be 1.
+  //b.add("bar"); // 2 0 1 0 0 and 0 0
+  //BOOST_CHECK(b.count("bar") == 2);
+  //BOOST_CHECK(to_string(b) == "010000100000000\n0000");
+
+  //// For "foo", we encounter a unique minimum in the first core, but since
+  //// all positions for "foo" are zero in the second core, we return the
+  //// mimimum of the first, which is 1.
+  //BOOST_CHECK(b.count("foo") == 1);
+
+  //// After increasing the counters for "foo", we find that it (still) has a
+  //// unique minimum in in the first core. Hence we add its minimum to the
+  //// second core.
+  //b.add("foo"); // 3 0 2 0 0 and 2 2
+  //BOOST_CHECK(b.count("foo") == 2);
+  //BOOST_CHECK(to_string(b) == "110000010000000\n0101");
+
+  //// The "blue fish" causes some trouble: because its insertion yields a
+  //// unique minimum, we go into the second bitvector. There, we find that it
+  //// hashes to the same positions as foo, wich has a counter of 2. Because it
+  //// appears to exist there, we have to increment its counters. This falsely
+  //// bumps up the counter of "blue fish" to 3.
+  //b.add("blue fish"); // 3 0 3 0 1 and 3 3
+  //BOOST_CHECK(b.count("blue fish") == 3);
+  //BOOST_CHECK(to_string(b) == "110000110000100\n1111");
+
+  //// Since the "blue fish" has (still) a unique minimum after removing it one
+  //// time, we look in the second core and find it to be present there.
+  //// Hence we decrement the counters in the second core.
+  //b.remove("blue fish"); // 3 0 2 0 0 and 2 2
+  //BOOST_CHECK(b.count("blue fish") == 2);
+  //BOOST_CHECK(to_string(b) == "110000010000000\n0101");
+
+  //b.remove("blue fish");
+  //BOOST_CHECK(b.count("blue fish") == 1); // 3 0 1 0 0 and 1 1
+
+  //// Let's look at "foo". This fellow has now a unique minimum. Since it has
+  //// a unique minimum after the removal, we also decrement the counter in the
+  //// second core.
+  //b.remove("foo"); // 2 0 0 0 0 and 0 0
+  //BOOST_CHECK(b.count("foo") == 0);
+  //BOOST_CHECK(to_string(b) == "010000000000000\n0000");
+
+  //// Alas, we violated Claim 1 in Section 2.2 in the paper! The spectral
+  //// Bloom filter returns a count of 0 for "foo", although it should be 1.
+  //// Thus, the frequency estimate is no longer a lower bound. This occurs
+  //// presumably due to the fact that we remove "blue fish" twice although we
+  //// added it only once.
+}
+
+BOOST_AUTO_TEST_CASE(bloom_filter_bitwise)
+{
+  bitwise_bloom_filter bf(3, 8);
+
+  BOOST_CHECK_EQUAL(bf.lookup("foo"), 0);
+  bf.add("foo");
+  BOOST_CHECK_EQUAL(bf.lookup("foo"), 1);
+  bf.add("foo");
+  BOOST_CHECK_EQUAL(bf.lookup("foo"), 2);
+  bf.add("foo");
+  BOOST_CHECK_EQUAL(bf.lookup("foo"), 3);
+
+  BOOST_CHECK_EQUAL(bf.lookup("baz"), 0);
+  bf.add("baz");
+  BOOST_CHECK_EQUAL(bf.lookup("baz"), 1);
+  BOOST_CHECK_EQUAL(bf.lookup("foo"), 3);
+  bf.add("baz");
+  BOOST_CHECK_EQUAL(bf.lookup("baz"), 2);
+  BOOST_CHECK_EQUAL(bf.lookup("foo"), 3);
+}
+
 BOOST_AUTO_TEST_CASE(bloom_filter_stable)
 {
-  stable_bloom_filter bf(make_hasher(3), 10, 2, 2);
+  stable_bloom_filter bf(make_hasher(3), 11, 2, 2);
 
   bf.add("one fish");
   bf.add("two fish");
@@ -162,173 +263,27 @@ BOOST_AUTO_TEST_CASE(bloom_filter_stable)
   bf.add("grey fish");
   bf.add("jelly fish");
 
-  BOOST_CHECK_EQUAL(bf.lookup("one fish"), 2);
-  BOOST_CHECK_EQUAL(bf.lookup("two fish"), 1);
+  BOOST_CHECK_EQUAL(bf.lookup("one fish"), 0);
+  BOOST_CHECK_EQUAL(bf.lookup("two fish"), 2);
   BOOST_CHECK_EQUAL(bf.lookup("red fish"), 3);
-  BOOST_CHECK_EQUAL(bf.lookup("blue fish"), 0);
+  BOOST_CHECK_EQUAL(bf.lookup("blue fish"), 3);
 }
 
-//BOOST_AUTO_TEST_CASE(spectral_mi_bloom_filter)
-//{
-//  spectral_mi<> b({7, 3, 2});
-//
-//  b.add("one fish");
-//  b.add("one fish"); // 0 2 0 0 2 0 2
-//  BOOST_CHECK_EQUAL(b.count("one fish"), 2);
-//  BOOST_CHECK_EQUAL(to_string(b), "00010000010001");
-//
-//  b.add("blue fish"); // 0 2 1 0 2 0 2
-//  BOOST_CHECK_EQUAL(to_string(b), "00011000010001");
-//
-//  b.add("blue fish"); // 0 2 2 0 2 0 2
-//  BOOST_CHECK_EQUAL(to_string(b), "00010100010001");
-//  BOOST_CHECK_EQUAL(b.count("blue fish"), 2);
-//
-//  b.add("blue fish"); // 0 2 3 0 3 0 2
-//  BOOST_CHECK_EQUAL(to_string(b), "00011100110001");
-//  BOOST_CHECK_EQUAL(b.count("blue fish"), 3);
-//}
-//
-//BOOST_AUTO_TEST_CASE(spectral_rm_bloom_filter)
-//{
-//  spectral_rm<> b({5, 2, 3}, {2, 2, 2});
-//
-//  b.add("foo"); // 1 0 1 0 0 and 0 0
-//  BOOST_CHECK(b.count("foo") == 1);
-//
-//  // For "bar", all hash functions return the same position, the we have
-//  // necessarily a recurring minimum (RM). Thus we do not look in the second
-//  // core and return 2, although the correct count would be 1.
-//  b.add("bar"); // 2 0 1 0 0 and 0 0
-//  BOOST_CHECK(b.count("bar") == 2);
-//  BOOST_CHECK(to_string(b) == "010000100000000\n0000");
-//
-//  // For "foo", we encounter a unique minimum in the first core, but since
-//  // all positions for "foo" are zero in the second core, we return the
-//  // mimimum of the first, which is 1.
-//  BOOST_CHECK(b.count("foo") == 1);
-//
-//  // After increasing the counters for "foo", we find that it (still) has a
-//  // unique minimum in in the first core. Hence we add its minimum to the
-//  // second core.
-//  b.add("foo"); // 3 0 2 0 0 and 2 2
-//  BOOST_CHECK(b.count("foo") == 2);
-//  BOOST_CHECK(to_string(b) == "110000010000000\n0101");
-//
-//  // The "blue fish" causes some trouble: because its insertion yields a
-//  // unique minimum, we go into the second bitvector. There, we find that it
-//  // hashes to the same positions as foo, wich has a counter of 2. Because it
-//  // appears to exist there, we have to increment its counters. This falsely
-//  // bumps up the counter of "blue fish" to 3.
-//  b.add("blue fish"); // 3 0 3 0 1 and 3 3
-//  BOOST_CHECK(b.count("blue fish") == 3);
-//  BOOST_CHECK(to_string(b) == "110000110000100\n1111");
-//
-//  // Since the "blue fish" has (still) a unique minimum after removing it one
-//  // time, we look in the second core and find it to be present there.
-//  // Hence we decrement the counters in the second core.
-//  b.remove("blue fish"); // 3 0 2 0 0 and 2 2
-//  BOOST_CHECK(b.count("blue fish") == 2);
-//  BOOST_CHECK(to_string(b) == "110000010000000\n0101");
-//
-//  b.remove("blue fish");
-//  BOOST_CHECK(b.count("blue fish") == 1); // 3 0 1 0 0 and 1 1
-//
-//  // Let's look at "foo". This fellow has now a unique minimum. Since it has
-//  // a unique minimum after the removal, we also decrement the counter in the
-//  // second core.
-//  b.remove("foo"); // 2 0 0 0 0 and 0 0
-//  BOOST_CHECK(b.count("foo") == 0);
-//  BOOST_CHECK(to_string(b) == "010000000000000\n0000");
-//
-//  // Alas, we violated Claim 1 in Section 2.2 in the paper! The spectral
-//  // Bloom filter returns a count of 0 for "foo", although it should be 1.
-//  // Thus, the frequency estimate is no longer a lower bound. This occurs
-//  // presumably due to the fact that we remove "blue fish" twice although we
-//  // added it only once.
-//}
-//
-//BOOST_AUTO_TEST_CASE(bitwise_bloom_filter)
-//{
-//  bitwise<> b({4, 3, 1}, 1);
-//
-//  b.add("foo");
-//  BOOST_CHECK(b.count("foo") == 1);
-//  BOOST_CHECK(to_string(b) == "0011");
-//
-//  b.add("foo");
-//  BOOST_CHECK(b.count("foo") == 2);
-//  BOOST_CHECK(to_string(b) == "11\n0000");
-//
-//  for (unsigned i = 3; i < 9; ++i)
-//  {
-//      b.add("foo");
-//      BOOST_CHECK(b.count("foo") == i);
-//  }
-//
-//  BOOST_CHECK(to_string(b) == "1\n0\n00\n0000");
-//  BOOST_CHECK(b.count("foo") == 8);
-//
-//  b.remove("foo");
-//  BOOST_CHECK(b.count("foo") == 7);
-//  BOOST_CHECK(to_string(b) == "1\n11\n0011");
-//
-//  for (unsigned i = 7; i > 1; --i)
-//  {
-//      BOOST_CHECK(b.count("foo") == i);
-//      b.remove("foo");
-//  }
-//
-//  BOOST_CHECK(b.count("foo") == 1);
-//  BOOST_CHECK(to_string(b) == "0011");
-//
-//  b.remove("foo");
-//  b.remove("foo");
-//  BOOST_CHECK(b.count("foo") == 0);
-//  BOOST_CHECK(to_string(b) == "0000");
-//}
-//
-//// Test with a core that has more than one bit of cell width.
-//BOOST_AUTO_TEST_CASE(bitwise_bloom_filter2)
-//{
-//  bitwise<> b({4, 3, 2}, 1);
-//
-//  b.add("foo");
-//  BOOST_CHECK(b.count("foo") == 1);
-//  BOOST_CHECK(to_string(b) == "00001010");
-//
-//  b.add("foo");
-//  BOOST_CHECK(b.count("foo") == 2);
-//  BOOST_CHECK(to_string(b) == "00000101");
-//
-//  b.add("foo");
-//  BOOST_CHECK(b.count("foo") == 3);
-//  BOOST_CHECK(to_string(b) == "00001111");
-//
-//  b.add("foo");
-//  BOOST_CHECK(b.count("foo") == 4);
-//  BOOST_CHECK(to_string(b) == "1010\n00000000");
-//
-//  b.remove("foo");
-//  BOOST_CHECK(b.count("foo") == 3);
-//  b.remove("foo");
-//  BOOST_CHECK(b.count("foo") == 2);
-//  b.remove("foo");
-//  BOOST_CHECK(b.count("foo") == 1);
-//  BOOST_CHECK(to_string(b) == "00001010");
-//}
-//BOOST_AUTO_TEST_CASE(a2_bloom_filter)
-//{
-//  a2<> b({5, 2, 1}, 1);
-//
-//  b.add("foo");
-//  b.add("foo");
-//  BOOST_CHECK(b.count("foo") == 1);
-//  BOOST_CHECK(to_string(b) == "10100\n00000");
-//
-//  BOOST_CHECK(b.count("bar") == 1);   // FP
-//  b.add("baz"); // Causes core swapping.
-//  BOOST_CHECK(to_string(b) == "01000\n11100");
-//  b.add("qux"); // Swap again.
-//  BOOST_CHECK(to_string(b) == "00001\n01001");
-//}
+BOOST_AUTO_TEST_CASE(bloom_filter_a2)
+{
+  a2_bloom_filter bf(3, 32, 3);
+
+  bf.add("foo");
+  bf.add("foo");  // Duplicate inserts have no effect.
+  bf.add("bar");
+  bf.add("baz");
+
+  // Reaches capacity and causes swapping.
+  bf.add("qux");
+
+  BOOST_CHECK_EQUAL(bf.lookup("foo"), 1);
+  BOOST_CHECK_EQUAL(bf.lookup("bar"), 1);
+  BOOST_CHECK_EQUAL(bf.lookup("baz"), 1);
+  BOOST_CHECK_EQUAL(bf.lookup("qux"), 1);
+}
+

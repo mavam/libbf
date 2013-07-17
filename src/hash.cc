@@ -1,5 +1,7 @@
 #include "hash.h"
 
+#include <cassert>
+
 namespace bf {
 
 default_hash_function::default_hash_function(size_t seed)
@@ -49,6 +51,7 @@ std::vector<digest> double_hasher::operator()(object const& o) const
 
 hasher make_hasher(size_t k, size_t seed, bool double_hashing)
 {
+  assert(k > 0);
   std::minstd_rand0 prng(seed);
   if (double_hashing)
   {
