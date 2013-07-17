@@ -2,5 +2,5 @@
 .*swo
 .DS_Store
 build
-doc/html
+doc/gh-pages
 Makefile

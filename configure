@@ -113,6 +113,9 @@ makefile=$(cat <<'EOT'
 all:
 	@for i in $(DIRS); do $(MAKE) -C $$i $@; done
 
+doc:
+	$(MAKE) -C $@
+
 test:
 	@for i in $(DIRS); do $(MAKE) -C $$i $@; done
 
@@ -128,7 +131,7 @@ clean:
 distclean:
 	rm -rf $(DIRS) Makefile
 
-.PHONY: all test install uninstall clean distclean
+.PHONY: all doc test install uninstall clean distclean
 EOT
 )
 

@@ -1,15 +1,17 @@
-BASE := .
-DOXYFILE := $(BASE)/Doxyfile
-DOC := $(BASE)/html/
-WEB := $(HOME)/code/www/output/libbf/api
+REPO := git@github.com:mavam/libbf.git
 
-doc: FORCE
-	doxygen $(DOXYFILE)
+deploy: doc
+	@cd gh-pages && git commit -a -e -m 'Update Doxygen API documentation.'
 
-www: doc
-	rsync -az --delete $(DOC) $(WEB)
+doc: check
+	doxygen Doxyfile
+
+check: FORCE
+	test -d gh-pages/api || (git clone $(REPO) gh-pages && git checkout gh-pages)
 
 update:
-	doxygen -u $(DOXYFILE)
+	doxygen -u Doxyfile
 
 FORCE:
+
+.PHONY: doc check update FORCE

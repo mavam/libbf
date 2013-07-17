@@ -32,7 +32,8 @@ Synopsis
 
       // Remove all elements.
       b.clear();
-      std::cout << b.lookup("foo") << ' ' << b.lookup(42) << std::endl;
+      std::cout << b.lookup("foo") << std::endl;  // 0
+      std::cout << b.lookup(42) << std::endl;     // 0
 
       return 0;
     }
@@ -58,6 +59,16 @@ Boost installation in the custom prefix `PREFIX`, use the following commands:
     make test
     make install
 
+Documentation
+=============
+
+The most recent version of the Doxygen API documentation exists at:
+
+    http://mavam.github.io/libbf/api/
+
+Alternatively, you can build the documentation locally via `make doc` and then
+browse to `doc/gh-pages/api/index.html`.
+
 Usage
 =====
 
@@ -69,8 +80,8 @@ reside in the namespace `bf` and the following examples assume:
 
 Each Bloom filter inherits from the abstract base class `bloom_filter`, which
 provides addition and lookup via the virtual functions `add` and `lookup`.
-These functions take an `object` as argument, which is a lightweight view over
-sequential data that can be hashed.
+These functions take an *object* as argument, which serves a light-weight view
+over sequential data for hashing.
 
 For example, if you can create a basic Bloom filter with a desired
 false-positive probability and capacity as follows:
@@ -92,21 +103,22 @@ false-positive probability and capacity as follows:
 In this case, libbf computes the optimal number of hash functions needed to
 achieve the desired false-positive rate which holds until the capacity has been
 reached (80% and 100 distinct elements, in the above example). Alternatively,
-you can construct a basic Bloom filter by exactly specifying the number of hash
+you can construct a basic Bloom filter by specifying the number of hash
 functions and the number of cells in the underlying bit vector:
 
     bloom_filter* bf = new basic_bloom_filter(make_hasher(3), 1024);
 
 Since not all Bloom filter implementations come with closed-form solutions
-based on false-positive probabilities, most constructor will use this latter
-form of explicit resource provisioning.
+based on false-positive probabilities, most constructors use this latter form
+of explicit resource provisioning.
 
-In the above example, the free function `make_hasher` constructs a *hasher*,
-an abstraction for hashing objects *k* times. There exist currently two
-different hasher, the `default_hasher` and the `double_hasher`. The latter uses
-a linear combination of two pairwise-independent, universal hash functions to
-produce the *k* digests, whereas the default hasher merely hashes the object
-*k* times.
+In the above example, the free function `make_hasher` constructs a *hasher*-an
+abstraction for hashing objects *k* times. There exist currently two different
+hasher, a `default_hasher` and a
+[`double_hasher`](http://www.eecs.harvard.edu/~kirsch/pubs/bbbf/rsa.pdf). The
+latter uses a linear combination of two pairwise-independent, universal hash
+functions to produce the *k* digests, whereas the former merely hashes the
+object *k* times.
 
 Evaluation
 ----------
