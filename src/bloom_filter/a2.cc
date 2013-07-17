@@ -17,8 +17,8 @@ size_t a2_bloom_filter::capacity(double fp, size_t cells)
 
 a2_bloom_filter::a2_bloom_filter(size_t k, size_t cells, size_t capacity,
                                  size_t seed1, size_t seed2)
-  : first_(k, cells / 2, seed1),
-    second_(k, cells / 2, seed2),
+  : first_(make_hasher(k, seed1), cells / 2),
+    second_(make_hasher(k, seed2), cells / 2),
     capacity_(capacity)
 {
   assert(cells % 2 == 0);

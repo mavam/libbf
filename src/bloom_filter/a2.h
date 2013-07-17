@@ -33,6 +33,8 @@ public:
   /// @param seed1 The initial seed for the first Bloom filter.
   ///
   /// @param seed2 The initial seed for the second Bloom filter.
+  ///
+  /// @pre `cells % 2 == 0`
   a2_bloom_filter(size_t k, size_t cells, size_t capacity,
                   size_t seed1 = 0, size_t seed2 = 0);
 
