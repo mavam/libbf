@@ -62,12 +62,10 @@ Boost installation in the custom prefix `PREFIX`, use the following commands:
 Documentation
 =============
 
-The most recent version of the Doxygen API documentation exists at:
-
-    http://mavam.github.io/libbf/api/
-
-Alternatively, you can build the documentation locally via `make doc` and then
-browse to `doc/gh-pages/api/index.html`.
+The most recent version of the Doxygen API documentation exists at
+<http://mavam.github.io/libbf/api>. Alternatively, you can build the
+documentation locally via `make doc` and then browse to
+`doc/gh-pages/api/index.html`.
 
 Usage
 =====
