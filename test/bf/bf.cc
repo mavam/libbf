@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <memory>
 #include <unordered_map>
 #include "configuration.h"
 #include "bloom_filter/a2.h"
