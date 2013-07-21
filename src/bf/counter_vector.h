@@ -32,7 +32,9 @@ public:
   /// @param value The value that is added to the current cell value.
   ///
   /// @return `true` if the increment succeeded, `false` if all bits in
-  ///     the cell were already 1.
+  /// the cell were already 1.
+  ///
+  /// @pre `cell < size()`
   bool increment(size_t cell, size_t value = 1);
 
   /// Decrements a cell counter.
@@ -41,6 +43,8 @@ public:
   ///
   /// @return `true` if decrementing succeeded, `false` if all bits in the
   /// cell were already 0.
+  ///
+  /// @pre `cell < size()`
   bool decrement(size_t cell, size_t value = 1);
 
   /// Retrieves the counter of a cell.
@@ -48,11 +52,14 @@ public:
   /// @param cell The cell index.
   ///
   /// @return The counter associated with *cell*.
+  ///
+  /// @pre `cell < size()`
   size_t count(size_t cell) const;
 
   /// Sets a cell to a given value.
   /// @param cell The cell whose value changes.
   /// @param value The new value of the cell.
+  /// @pre `cell < size()`
   void set(size_t cell, size_t value);
 
   /// Sets all counter values to 0.
