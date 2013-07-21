@@ -45,18 +45,23 @@ bool counter_vector::increment(size_t cell, size_t value)
 
 bool counter_vector::decrement(size_t cell, size_t value)
 {
-  assert(value == 1); // TODO: adapt function to values > 1.
   assert(cell < size());
   size_t lsb = cell * width_;
-  for (auto i = lsb; i < lsb + width_; ++i)
-    if (bits_[i])
-    {
-      bits_[i] = false;
-      while (i && i > lsb)
-        bits_[--i] = true;
-      return true;
-    }
-  return false;
+  bool success;
+  while (value --> 0)
+  {
+    success = false;
+    for (auto i = lsb; i < lsb + width_; ++i)
+      if (bits_[i])
+      {
+        bits_[i] = false;
+        while (i && i > lsb)
+          bits_[--i] = true;
+        success = true;
+        break;
+      }
+  }
+  return success;
 }
 
 size_t counter_vector::count(size_t cell) const
