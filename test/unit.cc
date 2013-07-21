@@ -7,7 +7,7 @@
 
 using namespace bf;
 
-BOOST_AUTO_TEST_CASE(counter_vector_incrementing)
+BOOST_AUTO_TEST_CASE(counter_vector_incrementing_width2)
 {
   counter_vector v(3, 2);
 
@@ -35,6 +35,63 @@ BOOST_AUTO_TEST_CASE(counter_vector_incrementing)
   BOOST_CHECK(v.increment(2));
   BOOST_CHECK_EQUAL(to_string(v), "111010");
   BOOST_CHECK_EQUAL(v.count(2), 1);
+}
+
+BOOST_AUTO_TEST_CASE(counter_vector_incrementing_width3)
+{
+  counter_vector v(3, 3);
+
+  BOOST_CHECK(v.increment(1));
+  BOOST_CHECK_EQUAL(to_string(v), "000100000");
+  BOOST_CHECK_EQUAL(v.count(1), 1);
+
+  BOOST_CHECK(v.increment(1));
+  BOOST_CHECK_EQUAL(to_string(v), "000010000");
+  BOOST_CHECK_EQUAL(v.count(1), 2);
+
+  BOOST_CHECK(v.increment(1));
+  BOOST_CHECK_EQUAL(to_string(v), "000110000");
+  BOOST_CHECK_EQUAL(v.count(1), 3);
+
+  BOOST_CHECK(v.increment(1));
+  BOOST_CHECK_EQUAL(to_string(v), "000001000");
+  BOOST_CHECK_EQUAL(v.count(1), 4);
+
+  BOOST_CHECK(v.increment(1, 3));
+  BOOST_CHECK_EQUAL(to_string(v), "000111000");
+  BOOST_CHECK_EQUAL(v.count(1), 7);
+
+  v.clear();
+  BOOST_CHECK_EQUAL(to_string(v), "000000000");
+  BOOST_CHECK(v.increment(1, 6));
+  BOOST_CHECK_EQUAL(to_string(v), "000011000");
+  BOOST_CHECK_EQUAL(v.count(1), 6);
+}
+
+BOOST_AUTO_TEST_CASE(counter_vector_decrementing_width3)
+{
+  counter_vector v(3, 3);
+
+  BOOST_CHECK(v.increment(1, 7));
+  BOOST_CHECK_EQUAL(v.count(1), 7);
+  BOOST_CHECK_EQUAL(to_string(v), "000111000");
+
+  BOOST_CHECK(v.decrement(1));
+  BOOST_CHECK_EQUAL(to_string(v), "000011000");
+  BOOST_CHECK_EQUAL(v.count(1), 6);
+
+  BOOST_CHECK(v.decrement(1));
+  BOOST_CHECK_EQUAL(to_string(v), "000101000");
+  BOOST_CHECK_EQUAL(v.count(1), 5);
+
+  BOOST_CHECK(v.decrement(1));
+  BOOST_CHECK_EQUAL(to_string(v), "000001000");
+  BOOST_CHECK_EQUAL(v.count(1), 4);
+
+  BOOST_CHECK(v.increment(1));
+  BOOST_CHECK(v.decrement(1, 3));
+  BOOST_CHECK_EQUAL(to_string(v), "000010000");
+  BOOST_CHECK_EQUAL(v.count(1), 2);
 }
 
 BOOST_AUTO_TEST_CASE(counter_vector_adding)
