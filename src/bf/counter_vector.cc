@@ -16,52 +16,35 @@ bool counter_vector::increment(size_t cell, size_t value)
   assert(cell < size());
   assert(value != 0);
   size_t lsb = cell * width_;
-  if (value >= max())
-  {
-    bool r = false;
-    for (size_t i = 0; i < width_; ++i)
-      if (! bits_[lsb + i])
-      {
-        bits_[lsb + i] = true;
-        if (! r)
-          r = true;
-      }
-    return r;
-  }
   bool carry = false;
   for (size_t i = 0; i < width_; ++i)
   {
     bool b1 = bits_[lsb + i];
     bool b2 = value & (1 << i);
-    bits_[lsb + i] ^= b2 != carry; // bit1 ^ bit2 ^ carry
-    carry = carry ? b1 || b2 : b1 && b2;
+    bits_[lsb + i] = b1 ^ b2 ^ carry;
+    carry = (b1 && b2) || (carry && (b1 != b2));
   }
-  if (! carry)
-    return true;
-  for (size_t i = 0; i < width_; ++i)
-    bits_[lsb + i] = true;
-  return false;
+  if (carry)
+    for (size_t i = 0; i < width_; ++i)
+      bits_[lsb + i] = true;
+  return ! carry;
 }
 
 bool counter_vector::decrement(size_t cell, size_t value)
 {
   assert(cell < size());
+  assert(value != 0);
+  value = ~value + 1; // A - B := A + ~B + 1
+  bool carry = false;
   size_t lsb = cell * width_;
-  bool success;
-  while (value --> 0)
+  for (size_t i = 0; i < width_; ++i)
   {
-    success = false;
-    for (auto i = lsb; i < lsb + width_; ++i)
-      if (bits_[i])
-      {
-        bits_[i] = false;
-        while (i && i > lsb)
-          bits_[--i] = true;
-        success = true;
-        break;
-      }
+    bool b1 = bits_[lsb + i];
+    bool b2 = value & (1 << i);
+    bits_[lsb + i] = b1 ^ b2 ^ carry;
+    carry = (b1 && b2) || (carry && (b1 != b2));
   }
-  return success;
+  return carry;
 }
 
 size_t counter_vector::count(size_t cell) const
