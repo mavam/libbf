@@ -142,6 +142,19 @@ BOOST_AUTO_TEST_CASE(counter_vector_adding_big)
   }
 }
 
+BOOST_AUTO_TEST_CASE(counter_vector_mergin)
+{
+  counter_vector a(5, 2);
+  counter_vector b(5, 2);
+  a.increment(0, 1);
+  a.increment(1, 1);
+  a.increment(2, 2);
+  b.increment(1, 1);
+  b.increment(2, 1);
+  b.increment(3, 3);
+  BOOST_CHECK_EQUAL(to_string(a | b), "1001111100");
+}
+
 BOOST_AUTO_TEST_CASE(bloom_filter_basic)
 {
   basic_bloom_filter bf(0.8, 10);

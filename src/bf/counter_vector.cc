@@ -11,6 +11,34 @@ counter_vector::counter_vector(size_t cells, size_t width)
   assert(width > 0);
 }
 
+counter_vector& counter_vector::operator|=(counter_vector const& other)
+{
+  assert(size() == other.size());
+  assert(width() == other.width());
+  for (size_t cell = 0; cell < size(); ++cell)
+  {
+    bool carry = false;
+    size_t lsb = cell * width_;
+    for (size_t i = 0; i < width_; ++i)
+    {
+      bool b1 = bits_[lsb + i];
+      bool b2 = other.bits_[lsb + i];
+      bits_[lsb + i] = b1 ^ b2 ^ carry;
+      carry = (b1 && b2) || (carry && (b1 != b2));
+    }
+    if (carry)
+      for (size_t i = 0; i < width_; ++i)
+        bits_.set(lsb + i);
+  }
+  return *this;
+}
+
+counter_vector operator|(counter_vector const& x, counter_vector const& y)
+{
+  counter_vector cv(x);
+  return cv |= y;
+}
+
 bool counter_vector::increment(size_t cell, size_t value)
 {
   assert(cell < size());

@@ -11,7 +11,13 @@ namespace bf {
 /// cell represents a counter having a fixed number of bits.
 class counter_vector
 {
-  friend std::string to_string(counter_vector const&, bool, size_t);
+  /// Generates a string representation of a counter vector.
+  /// The arguments have the same meaning as in bf::bitvector.
+  friend std::string to_string(counter_vector const& v, bool all = false,
+                               size_t cut_off = 0);
+
+  friend counter_vector operator|(counter_vector const& x,
+                                  counter_vector const& y);
 
 public:
   /// Construct a counter vector of size @f$O(mw)@f$ where *m is the number of
@@ -23,6 +29,11 @@ public:
   ///
   /// @pre `cells > 0 && width > 0`
   counter_vector(size_t cells, size_t width);
+
+  /// Merges this counter vector with another counter vector.
+  /// @param other The other counter vector.
+  /// @return A reference to `*this`.
+  counter_vector& operator|=(counter_vector const& other);
 
   /// Increments a cell counter by a given value. If the value is larger 
   /// than or equal to max(), all bits are set to 1.
@@ -82,10 +93,6 @@ private:
   size_t width_;
 };
 
-/// Generates a string representation of a counter vector.
-/// The arguments have the same meaning as in bf::bitvector.
-std::string to_string(counter_vector const& v, bool all = false,
-                      size_t cut_off = 0);
 
 } // namespace bf
 
