@@ -41,7 +41,7 @@ Synopsis
 Requirements
 ============
 
-- A C++11 copmiler (GCC >= 4.7 or Clang >= 3.2)
+- A C++11 compiler (GCC >= 4.7 or Clang >= 3.2)
 - CMake (>= 2.8)
 - Boost (>= 1.46) *(optional, for unit testing)*
 
