@@ -1,27 +1,24 @@
-#include <test/bf/hash_table_bloom_filter.h>
+#include "hash_table_bloom_filter.h"
 
-#include <cmath>
-
-namespace bf {
-
-void hash_table_bloom_filter::add(object const& o)
+hash_table_bloom_filter::hash_table_bloom_filter(size_t seed)
+  : hash_function_(seed)
 {
-  if (filter_.count(o) == 0)
-  {
-    filter_[o] = 0;
-  }
-
-  filter_[o]++;
 }
 
-size_t hash_table_bloom_filter::lookup(object const& o)
+void hash_table_bloom_filter::add(bf::object const& o)
 {
-  return filter_[o];
+  filter_[hash_function_(o)]++;
+}
+
+size_t hash_table_bloom_filter::lookup(bf::object const& o) const
+{
+  auto i = filter_.find(hash_function_(o));
+  if (i == filter_.end())
+    return i->second;
+  return 0;
 }
 
 void hash_table_bloom_filter::clear()
 {
   filter_.clear();
 }
-
-} // namespace bf

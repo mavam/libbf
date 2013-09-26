@@ -4,6 +4,7 @@
 #include <iostream>
 #include "test.h"
 #include "bf.h"
+#include "bf/hash_table_bloom_filter.h"
 
 using namespace bf;
 
@@ -350,5 +351,20 @@ BOOST_AUTO_TEST_CASE(bloom_filter_a2)
   BOOST_CHECK_EQUAL(bf.lookup("bar"), 1);
   BOOST_CHECK_EQUAL(bf.lookup("baz"), 1);
   BOOST_CHECK_EQUAL(bf.lookup("qux"), 1);
+}
+
+BOOST_AUTO_TEST_CASE(bloom_filter_hash_table)
+{
+  hash_table_bloom_filter bf;
+
+  bf.add("foo");
+  bf.add("foo");
+  bf.add("bar");
+  bf.add("baz");
+  bf.add("bar");
+
+  BOOST_CHECK_EQUAL(bf.lookup("foo"), 2);
+  BOOST_CHECK_EQUAL(bf.lookup("bar"), 2);
+  BOOST_CHECK_EQUAL(bf.lookup("baz"), 1);
 }
 
