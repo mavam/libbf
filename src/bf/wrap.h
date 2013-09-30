@@ -1,6 +1,7 @@
 #ifndef BF_WRAP_H
 #define BF_WRAP_H
 
+#include <string>
 #include <type_traits>
 #include <vector>
 #include <bf/object.h>
