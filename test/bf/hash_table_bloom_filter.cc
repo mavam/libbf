@@ -13,7 +13,7 @@ void hash_table_bloom_filter::add(bf::object const& o)
 size_t hash_table_bloom_filter::lookup(bf::object const& o) const
 {
   auto i = filter_.find(hash_function_(o));
-  if (i == filter_.end())
+  if (i == filter_.end() )
     return i->second;
   return 0;
 }
