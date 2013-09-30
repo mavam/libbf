@@ -33,6 +33,7 @@ public:
   /// Merges this counter vector with another counter vector.
   /// @param other The other counter vector.
   /// @return A reference to `*this`.
+  /// @pre `size() == other.size() && width() == other.width()`
   counter_vector& operator|=(counter_vector const& other);
 
   /// Increments a cell counter by a given value. If the value is larger 
