@@ -366,5 +366,6 @@ BOOST_AUTO_TEST_CASE(bloom_filter_hash_table)
   BOOST_CHECK_EQUAL(bf.lookup("foo"), 2);
   BOOST_CHECK_EQUAL(bf.lookup("bar"), 2);
   BOOST_CHECK_EQUAL(bf.lookup("baz"), 1);
+  BOOST_CHECK_EQUAL(bf.lookup("blah"), 0);
 }
 
