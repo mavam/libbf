@@ -24,7 +24,7 @@ configuration::configuration()
   bloomfilter.add('c', "capacity", "max number of expected elements").init(0);
   bloomfilter.add('m', "cells", "number of cells").init(0);
   bloomfilter.add('w', "width", "bits per cells").init(1);
-  bloomfilter.add('p', "partitioning", "enable partitioning").init(false);
+  bloomfilter.add('p', "partition", "enable partitioning").init(false);
   bloomfilter.add('e', "evict", "number of cells to evict (stable)").init(0);
   bloomfilter.add('k', "hash-functions", "number of hash functions").init(0);
   bloomfilter.add('d', "double-hashing", "use double-hashing").init(false);

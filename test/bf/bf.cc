@@ -28,6 +28,7 @@ int main(int argc, char* argv[])
     auto fp = config.as<double>("fp-rate");
     auto capacity = config.as<size_t>("capacity");
     auto width = config.as<size_t>("width");
+    auto part = config.as<bool>("partition");
     auto double_hashing = config.as<bool>("double-hashing");
     auto d = config.as<size_t>("evict");
 
@@ -47,12 +48,12 @@ int main(int argc, char* argv[])
         if (k == 0)
           throw std::logic_error("need non-zero k");
         auto h = make_hasher(k, seed, double_hashing);
-        bf.reset(new basic_bloom_filter(std::move(h), cells));
+        bf.reset(new basic_bloom_filter(std::move(h), cells, part));
       }
       else
       {
         assert(fp != 0 && capacity != 0);
-        bf.reset(new basic_bloom_filter(fp, capacity, seed));
+        bf.reset(new basic_bloom_filter(fp, capacity, seed, part));
       }
     }
     else if (type == "counting")
@@ -64,7 +65,7 @@ int main(int argc, char* argv[])
       if (k == 0)
         throw std::logic_error("need non-zero k");
       auto h = make_hasher(k, seed, double_hashing);
-      bf.reset(new counting_bloom_filter(std::move(h), cells, width));
+      bf.reset( new counting_bloom_filter(std::move(h), cells, width, part));
     }
     else if (type == "spectral-mi")
     {
@@ -75,7 +76,7 @@ int main(int argc, char* argv[])
       if (k == 0)
         throw std::logic_error("need non-zero k");
       auto h = make_hasher(k, seed, double_hashing);
-      bf.reset(new spectral_mi_bloom_filter(std::move(h), cells, width));
+      bf.reset(new spectral_mi_bloom_filter(std::move(h), cells, width, part));
     }
     else if (type == "spectral-rm")
     {
@@ -88,7 +89,8 @@ int main(int argc, char* argv[])
       auto h1 = make_hasher(k, seed, double_hashing);
       auto h2 = make_hasher(k2, seed2, double_hashing2);
       bf.reset(new spectral_rm_bloom_filter(std::move(h1), cells, width,
-                                            std::move(h2), cells2, width2));
+                                            std::move(h2), cells2, width2,
+                                            part));
     }
     else if (type == "bitwise")
     {

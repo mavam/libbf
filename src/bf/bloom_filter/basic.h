@@ -39,7 +39,8 @@ public:
   /// Constructs a basic Bloom filter.
   /// @param hasher The hasher to use.
   /// @param cells The number of cells in the bit vector.
-  basic_bloom_filter(hasher h, size_t cells);
+  /// @param partition Whether to partition the bit vector per hash function.
+  basic_bloom_filter(hasher h, size_t cells, bool partition = false);
 
   /// Constructs a basic Bloom filter by given a desired false-positive
   /// probability and an expected number of elements. The implementation
@@ -53,8 +54,10 @@ public:
   ///
   /// @param double_hashing Flag indicating whether to use default or double
   /// hashing.
+  ///
+  /// @param partition Whether to partition the bit vector per hash function.
   basic_bloom_filter(double fp, size_t capacity, size_t seed = 0,
-                     bool double_hashing = true);
+                     bool double_hashing = true, bool partition = true);
 
   basic_bloom_filter(basic_bloom_filter&&);
 
@@ -79,6 +82,7 @@ public:
 private:
   hasher hasher_;
   bitvector bits_;
+  bool partition_;
 };
 
 } // namespace bf

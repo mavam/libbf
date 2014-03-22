@@ -1,5 +1,6 @@
 #include <bf/bloom_filter/basic.h>
 
+#include <cassert>
 #include <cmath>
 
 namespace bf {
@@ -16,14 +17,16 @@ size_t basic_bloom_filter::k(size_t cells, size_t capacity)
   return std::ceil(frac * std::log(2));
 }
 
-basic_bloom_filter::basic_bloom_filter(hasher h, size_t cells)
+basic_bloom_filter::basic_bloom_filter(hasher h, size_t cells, bool partition)
   : hasher_(std::move(h)),
-    bits_(cells)
+    bits_(cells),
+    partition_(partition)
 {
 }
 
 basic_bloom_filter::basic_bloom_filter(double fp, size_t capacity, size_t seed,
-                                       bool double_hashing)
+                                       bool double_hashing, bool partition)
+  : partition_(partition)
 {
   auto required_cells = m(fp, capacity);
   auto optimal_k = k(required_cells, capacity);
@@ -39,15 +42,39 @@ basic_bloom_filter::basic_bloom_filter(basic_bloom_filter&& other)
 
 void basic_bloom_filter::add(object const& o)
 {
-  for (auto d : hasher_(o))
-    bits_.set(d % bits_.size());
+  auto digests = hasher_(o);
+  assert(bits_.size() % digests.size() == 0);
+  if (partition_)
+  {
+    auto parts = bits_.size() / digests.size();
+    for (size_t i = 0; i < digests.size(); ++i)
+      bits_.set(i * parts + (digests[i] % parts));
+  }
+  else
+  {
+    for (auto d : digests)
+      bits_.set(d % bits_.size());
+  }
 }
 
 size_t basic_bloom_filter::lookup(object const& o) const
 {
-  for (auto d : hasher_(o))
-    if (! bits_[d % bits_.size()])
-      return 0;
+  auto digests = hasher_(o);
+  assert(bits_.size() % digests.size() == 0);
+  if (partition_)
+  {
+    auto parts = bits_.size() / digests.size();
+    for (size_t i = 0; i < digests.size(); ++i)
+      if (! bits_[i * parts + (digests[i] % parts)])
+        return 0;
+  }
+  else
+  {
+    for (auto d : digests)
+      if (! bits_[d % bits_.size()])
+        return 0;
+  }
+
   return 1;
 }
 

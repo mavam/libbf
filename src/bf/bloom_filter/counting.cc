@@ -6,9 +6,10 @@
 namespace bf {
 
 counting_bloom_filter::counting_bloom_filter(hasher h, size_t cells,
-                                             size_t width)
+                                             size_t width, bool partition)
   : hasher_(std::move(h)),
-    cells_(cells, width)
+    cells_(cells, width),
+    partition_(partition)
 {
 }
 
@@ -40,16 +41,16 @@ void counting_bloom_filter::remove(object const& o)
 }
 
 std::vector<size_t>
-counting_bloom_filter::find_indices(object const& o, bool part) const
+counting_bloom_filter::find_indices(object const& o) const
 {
   auto digests = hasher_(o);
   std::vector<size_t> indices(digests.size());
-  if (part)
+  if (partition_)
   {
     assert(cells_.size() % digests.size() == 0);
-    size_t const parts = cells_.size() / digests.size();
+    auto const parts = cells_.size() / digests.size();
     for (size_t i = 0; i < indices.size(); ++i)
-      indices[i] = digests[i] % parts + (i * parts);
+      indices[i] = (i * parts) + digests[i] % parts;
   }
   else
   {
@@ -121,9 +122,9 @@ size_t counting_bloom_filter::count(size_t index) const
   return cells_.count(index);
 }
 
-spectral_mi_bloom_filter::spectral_mi_bloom_filter(hasher h, size_t cells,
-                                                   size_t width)
-  : counting_bloom_filter(std::move(h), cells, width)
+spectral_mi_bloom_filter::spectral_mi_bloom_filter(
+    hasher h, size_t cells, size_t width, bool partition)
+  : counting_bloom_filter(std::move(h), cells, width, partition)
 {
 }
 
@@ -135,9 +136,10 @@ void spectral_mi_bloom_filter::add(object const& o)
 
 spectral_rm_bloom_filter::spectral_rm_bloom_filter(
     hasher h1, size_t cells1, size_t width1,
-    hasher h2, size_t cells2, size_t width2)
-  : first_(std::move(h1), cells1, width1),
-    second_(std::move(h2), cells2, width2)
+    hasher h2, size_t cells2, size_t width2,
+    bool partition)
+  : first_(std::move(h1), cells1, width1, partition),
+    second_(std::move(h2), cells2, width2, partition)
 {
 }
 

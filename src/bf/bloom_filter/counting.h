@@ -21,7 +21,9 @@ public:
   /// @param h The hasher.
   /// @param cells The number of cells.
   /// @param width The number of bits per cell.
-  counting_bloom_filter(hasher h, size_t cells, size_t width);
+  /// @param partition Whether to partition the bit vector per hash function.
+  counting_bloom_filter(hasher h, size_t cells, size_t width,
+                        bool partition = false);
 
   /// Move-constructs a counting Bloom filter.
   counting_bloom_filter(counting_bloom_filter&&) = default;
@@ -45,16 +47,9 @@ public:
 
 protected:
   /// Maps an object to the indices in the underlying counter vector.
-  ///
   /// @param o The object to map.
-  ///
-  /// @param part If `false`, the function maps *o* uniformly into the counter
-  /// vector modding each digest with the number of available cells. If
-  /// `true`, the function partitions the counter vector into *k* distinct
-  /// sub-vectors and mods each digest into one sub-vector.
-  ///
   /// @return The indices corresponding to the digests of *o*.
-  std::vector<size_t> find_indices(object const& o, bool part = false) const;
+  std::vector<size_t> find_indices(object const& o) const;
 
   /// Finds the minimum value in a list of arbitrary indices.
   /// @param indices The indices over which to compute the minimum.
@@ -83,6 +78,7 @@ protected:
 
   hasher hasher_;
   counter_vector cells_;
+  bool partition_;
 };
 
 /// A spectral Bloom filter with minimum increase (MI) policy.
@@ -93,7 +89,9 @@ public:
   /// @param h The hasher.
   /// @param cells The number of cells.
   /// @param width The number of bits per cell.
-  spectral_mi_bloom_filter(hasher h, size_t cells, size_t width);
+  /// @param partition Whether to partition the bit vector per hash function.
+  spectral_mi_bloom_filter(hasher h, size_t cells, size_t width,
+                           bool partition = false);
 
   using bloom_filter::add;
   using bloom_filter::lookup;
@@ -112,8 +110,10 @@ public:
   /// @param h2 The second hasher.
   /// @param cells2 The number of cells in the second Bloom filter.
   /// @param width2 The number of bits per cell in the second Bloom filter.
+  /// @param partition Whether to partition the bit vector per hash function.
   spectral_rm_bloom_filter(hasher h1, size_t cells1, size_t width1,
-                           hasher h2, size_t cells2, size_t width2);
+                           hasher h2, size_t cells2, size_t width2,
+                           bool partition = false);
 
   using bloom_filter::add;
   using bloom_filter::lookup;
