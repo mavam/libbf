@@ -43,7 +43,7 @@ public:
     auto *p = static_cast<unsigned char const*>(data);
     T result = 0;
     // Duff's Device.
-    register auto n = (size + 7) / 8;
+    auto n = (size + 7) / 8;
     switch (size % 8) 
     {
       case 0:	do { result ^= bytes_[offset++][*p++];

@@ -117,9 +117,4 @@ size_t counter_vector::width() const
   return width_;
 }
 
-std::string to_string(counter_vector const& v, bool all, size_t cut_off)
-{
-  return to_string(v.bits_, false, all, cut_off);
-}
-
 } // namespace bf

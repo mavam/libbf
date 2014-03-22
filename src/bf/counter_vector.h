@@ -14,7 +14,10 @@ class counter_vector
   /// Generates a string representation of a counter vector.
   /// The arguments have the same meaning as in bf::bitvector.
   friend std::string to_string(counter_vector const& v, bool all = false,
-                               size_t cut_off = 0);
+                               size_t cut_off = 0)
+  {
+    return to_string(v.bits_, false, all, cut_off);
+  }
 
   friend counter_vector operator|(counter_vector const& x,
                                   counter_vector const& y);
