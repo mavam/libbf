@@ -110,7 +110,7 @@ int main(int argc, char* argv[])
         throw std::logic_error("need non-zero k");
       bf.reset(new a2_bloom_filter(k, cells, capacity, seed, seed2));
     }
-    else if (type == "bitwise")
+    else if (type == "stable")
     {
       if (cells == 0)
         throw std::logic_error("need non-zero cells");
