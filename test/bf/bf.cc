@@ -78,10 +78,18 @@ trial<nothing> run(config const& cfg)
   {
     if (cells == 0)
       return error{"need non-zero cells"};
+    if (cells2 == 0)
+      return error{"need non-zero cells for 2nd bloom filter"};
+
     if (width == 0)
       return error{"need non-zero cell width"};
+    if (width2 == 0)
+      return error{"need non-zero cell width for 2nd bloom filter"};
+
     if (k == 0)
       return error{"need non-zero k"};
+    if (k2 == 0)
+      return error{"need non-zero k for second bloom filter"};
 
     auto h1 = make_hasher(k, seed, double_hashing);
     auto h2 = make_hasher(k2, seed2, double_hashing2);
