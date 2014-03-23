@@ -7,8 +7,6 @@ class configuration : public util::configuration
 {
 public:
   configuration();
-protected:
-  virtual void verify() override;
 };
 
 #endif

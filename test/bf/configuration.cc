@@ -37,13 +37,3 @@ configuration::configuration()
   second.add('D', "double-hashing-2nd", "use double-hashing").init(false);
   second.add('S', "seed-2nd", "specify a custom seed").init(0);
 }
-
-void configuration::verify()
-{
-  if (! check("type"))
-    throw util::config_error("missing bloom filter type", "type");
-  if (! check("input"))
-    throw util::config_error("missing input file", "input");
-  if (! check("query"))
-    throw util::config_error("missing query file", "query");
-}

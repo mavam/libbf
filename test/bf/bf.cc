@@ -22,6 +22,15 @@ int main(int argc, char* argv[])
       return 0;
     }
 
+    if (! config.check("type"))
+      throw util::config_error("missing bloom filter type", "type");
+
+    if (! config.check("input"))
+      throw util::config_error("missing input file", "input");
+
+    if (! config.check("query"))
+      throw util::config_error("missing query file", "query");
+
     auto k = config.as<size_t>("hash-functions");
     auto cells = config.as<size_t>("cells");
     auto seed = config.as<size_t>("seed");
