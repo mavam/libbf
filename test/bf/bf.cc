@@ -144,32 +144,28 @@ trial<nothing> run(config const& cfg)
       else
         ++p;
 
-    bf->add(line);
+    if (numeric)
+      bf->add(std::strtod(line.c_str(), nullptr));
+    else
+      bf->add(line);
   }
 
   size_t tn = 0, tp = 0, fp = 0, fn = 0;
   size_t ground_truth;
-  std::string str;
-  double num;
+  std::string element;
   auto query_file = *cfg.as<std::string>("query");
   std::ifstream query{query_file};
   if (! query)
     return error{"cannot read " + query_file};
 
   std::cout << "TN TP FP FN G C E" << std::endl;
-  while (query >> ground_truth)  // uniq -c
+  while (query >> ground_truth >> element)  // uniq -c
   {
     size_t count;
     if (numeric)
-    {
-      query >> num;
-      count = bf->lookup(num);
-    }
+      count = bf->lookup(std::strtod(element.c_str(), nullptr));
     else
-    {
-      query >> str;
-      count = bf->lookup(str);
-    }
+      count = bf->lookup(element);
 
     if (! query)
       return error{"failed to parse element"};
@@ -188,9 +184,9 @@ trial<nothing> run(config const& cfg)
       << ground_truth << ' ' << count << ' ';
 
     if (numeric)
-      std::cout << num;
+      std::cout << std::strtod(element.c_str(), nullptr);
     else
-      std::cout << str;
+      std::cout << element;
 
     std::cout << std::endl;
   }
