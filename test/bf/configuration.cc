@@ -20,6 +20,7 @@ void config::initialize()
   general.add('i', "input", "input file").single();
   general.add('q', "query", "query file").single();
   general.add('h', "help", "display this help");
+  general.add('n', "numeric", "interpret input as numeric values");
 
   auto& bloomfilter = create_block("bloom filter options");
   bloomfilter.add(

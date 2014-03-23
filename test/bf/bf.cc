@@ -12,21 +12,22 @@ using namespace bf;
 
 trial<nothing> run(config const& cfg)
 {
+  auto numeric = cfg.check("numeric");
   auto k = *cfg.as<size_t>("hash-functions");
   auto cells = *cfg.as<size_t>("cells");
   auto seed = *cfg.as<size_t>("seed");
   auto fpr = *cfg.as<double>("fp-rate");
   auto capacity = *cfg.as<size_t>("capacity");
   auto width = *cfg.as<size_t>("width");
-  auto part = *cfg.as<bool>("partition");
-  auto double_hashing = *cfg.as<bool>("double-hashing");
+  auto part = cfg.check("partition");
+  auto double_hashing = cfg.check("double-hashing");
   auto d = *cfg.as<size_t>("evict");
 
   auto k2 = *cfg.as<size_t>("hash-functions-2nd");
   auto cells2 = *cfg.as<size_t>("cells-2nd");
   auto seed2 = *cfg.as<size_t>("seed-2nd");
   auto width2 = *cfg.as<size_t>("width-2nd");
-  auto double_hashing2 = *cfg.as<bool>("double-hashing-2nd");
+  auto double_hashing2 = cfg.check("double-hashing-2nd");
 
   auto const& type = *cfg.as<std::string>("type");
   std::unique_ptr<bloom_filter> bf;
@@ -148,16 +149,31 @@ trial<nothing> run(config const& cfg)
 
   size_t tn = 0, tp = 0, fp = 0, fn = 0;
   size_t ground_truth;
-  std::string element;
+  std::string str;
+  double num;
   auto query_file = *cfg.as<std::string>("query");
   std::ifstream query{query_file};
   if (! query)
     return error{"cannot read " + query_file};
 
   std::cout << "TN TP FP FN G C E" << std::endl;
-  while (query >> ground_truth >> element)  // uniq -c
+  while (query >> ground_truth)  // uniq -c
   {
-    auto count = bf->lookup(element);
+    size_t count;
+    if (numeric)
+    {
+      query >> num;
+      count = bf->lookup(num);
+    }
+    else
+    {
+      query >> str;
+      count = bf->lookup(str);
+    }
+
+    if (! query)
+      return error{"failed to parse element"};
+
     if (count == 0 && ground_truth == 0)
       ++tn;
     else if (count == ground_truth)
@@ -169,7 +185,14 @@ trial<nothing> run(config const& cfg)
 
     std::cout
       << tn << ' ' << tp << ' ' << fp << ' ' << fn << ' '
-      << ground_truth << ' ' << count << ' ' << element << std::endl;
+      << ground_truth << ' ' << count << ' ';
+
+    if (numeric)
+      std::cout << num;
+    else
+      std::cout << str;
+
+    std::cout << std::endl;
   }
 
   return nil;
