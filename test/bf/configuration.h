@@ -3,10 +3,13 @@
 
 #include "util/configuration.h"
 
-class configuration : public util::configuration
+class config : public util::configuration<config>
 {
 public:
-  configuration();
+  config() = default;
+
+  void initialize();
+  std::string banner() const;
 };
 
 #endif

@@ -1,6 +1,5 @@
 include_directories(BEFORE .)
 set(bf_sources
-  util/configuration.cc
   bf.cc
   configuration.cc
   )
