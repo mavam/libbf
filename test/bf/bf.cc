@@ -157,7 +157,7 @@ trial<nothing> run(config const& cfg)
   std::cout << "TN TP FP FN G C E" << std::endl;
   while (query >> ground_truth >> element)  // uniq -c
   {
-    auto count = bf->lookup(line);
+    auto count = bf->lookup(element);
     if (count == 0 && ground_truth == 0)
       ++tn;
     else if (count == ground_truth)
