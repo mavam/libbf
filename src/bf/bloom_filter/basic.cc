@@ -83,6 +83,11 @@ void basic_bloom_filter::clear()
   bits_.reset();
 }
 
+std::string basic_bloom_filter::bitstring() const
+{
+  return to_string(bits_);
+}
+
 void basic_bloom_filter::remove(object const& o)
 {
   for (auto d : hasher_(o))

@@ -2,6 +2,7 @@
 #define BF_BLOOM_FILTER_BASIC_H
 
 #include <random>
+#include <string>
 #include <bf/bitvector.h>
 #include <bf/bloom_filter.h>
 #include <bf/hash.h>
@@ -78,6 +79,9 @@ public:
   /// Swaps two basic Bloom filters.
   /// @param other The other basic Bloom filter.
   void swap(basic_bloom_filter& other);
+
+  /// Retrieves the stored bit string representation
+  std::string bitstring() const;
 
 private:
   hasher hasher_;
