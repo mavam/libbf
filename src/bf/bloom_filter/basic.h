@@ -79,6 +79,9 @@ public:
   /// @param other The other basic Bloom filter.
   void swap(basic_bloom_filter& other);
 
+  /// Returns the underlying storage of the Bloom filter.
+  bitvector const& storage() const;
+
 private:
   hasher hasher_;
   bitvector bits_;

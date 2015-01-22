@@ -96,4 +96,9 @@ void basic_bloom_filter::swap(basic_bloom_filter& other)
   swap(bits_, other.bits_);
 }
 
+bitvector const& basic_bloom_filter::storage() const
+{
+	return bits_;
+}
+
 } // namespace bf
