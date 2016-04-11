@@ -9,7 +9,7 @@ default_hash_function::default_hash_function(size_t seed)
 {
 }
 
-size_t default_hash_function::operator()(object const& o) const
+digest default_hash_function::operator()(object const& o) const
 {
   // FIXME: fall back to a generic universal hash function (e.g., HMAC/MD5) for
   // too large objects.
