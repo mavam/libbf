@@ -8,7 +8,7 @@
 namespace bf {
 
 /// The hash digest type.
-typedef size_t digest;
+typedef uint64_t digest;
 
 /// The hash function type.
 typedef std::function<digest(object const&)> hash_function;
