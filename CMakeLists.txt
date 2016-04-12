@@ -44,13 +44,6 @@ else ()
   message(FATAL_ERROR "Your C++ compiler does not support C++11.")
 endif ()
 
-find_package(Boost 1.46 COMPONENTS unit_test_framework)
-if (NOT Boost_FOUND)
-  message("Could not find Boost unit testing library")
-else ()
-  include_directories(${Boost_INCLUDE_DIRS})
-endif ()
-
 include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 add_subdirectory(src)
 add_subdirectory(test)

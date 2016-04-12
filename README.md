@@ -43,18 +43,16 @@ Requirements
 
 - A C++11 compiler (GCC >= 4.7 or Clang >= 3.2)
 - CMake (>= 2.8)
-- Boost (>= 1.46) *(optional, for unit testing)*
 
 Installation
 ============
 
 The build process uses CMake, wrapped in autotools-like scripts. The configure
 script honors the `CXX` environment variable to select a specific C++compiler.
-For example, to compile libbf with Clang, install it under `PREFIX`,  and use a
-Boost installation in the custom prefix `PREFIX`, use the following commands:
+For example, the following steps compile libbf with Clang and install it under
+`PREFIX`:
 
-    export CXX=clang++
-    ./configure --prefix=PREFIX --with-boost=PREFIX
+    CXX=clang++ ./configure --prefix=PREFIX
     make
     make test
     make install
