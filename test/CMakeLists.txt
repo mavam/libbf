@@ -1,6 +1,6 @@
 add_subdirectory(bf)
 
+enable_testing()
 add_executable(bf-test tests.cpp)
-target_link_libraries(bf-test libbf)
-add_custom_target(test 
-  ${CMAKE_CURRENT_BINARY_DIR}/bf-test DEPENDS bf-test libbf)
+target_link_libraries(bf-test libbf ${CMAKE_THREAD_LIBS_INIT})
+add_test(unit ${CMAKE_CURRENT_BINARY_DIR}/bf-test)

@@ -2,6 +2,12 @@ project(libbf CXX)
 
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+include(CTest)
+
+# Silence warning CMP0042
+if (APPLE AND NOT DEFINED CMAKE_MACOSX_RPATH)
+  set(CMAKE_MACOSX_RPATH true)
+endif()
 
 # Prohibit in-source builds.
 if ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
@@ -42,6 +48,11 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
 else ()
   message(FATAL_ERROR "Your C++ compiler does not support C++11.")
+endif ()
+
+find_package(Threads)
+if (NOT Threads_FOUND)
+  message(FATAL_ERROR "Could not find system threading libraries")
 endif ()
 
 include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/src)
