@@ -1,8 +1,8 @@
-#ifndef BF_BLOOM_FILTER_STABLE_H
-#define BF_BLOOM_FILTER_STABLE_H
+#ifndef BF_BLOOM_FILTER_STABLE_HPP
+#define BF_BLOOM_FILTER_STABLE_HPP
 
 #include <random>
-#include <bf/bloom_filter/counting.h>
+#include <bf/bloom_filter/counting.hpp>
 
 namespace bf {
 

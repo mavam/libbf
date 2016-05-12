@@ -1,5 +1,5 @@
-#ifndef BF_H3_H
-#define BF_H3_H
+#ifndef BF_H3_HPP
+#define BF_H3_HPP
 
 #include <limits>
 #include <random>

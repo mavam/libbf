@@ -1,4 +1,4 @@
-#include <bf/bloom_filter/a2.h>
+#include <bf/bloom_filter/a2.hpp>
 
 #include <cassert>
 

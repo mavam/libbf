@@ -7,7 +7,7 @@
 
 #include "configuration.h"
 
-#include "bf/all.h"
+#include "bf/all.hpp"
 
 using namespace util;
 using namespace bf;

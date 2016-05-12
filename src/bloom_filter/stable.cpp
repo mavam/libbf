@@ -1,4 +1,4 @@
-#include <bf/bloom_filter/stable.h>
+#include <bf/bloom_filter/stable.hpp>
 
 #include <cassert>
 

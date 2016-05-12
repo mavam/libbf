@@ -1,5 +1,5 @@
-#ifndef BF_OBJECT_H
-#define BF_OBJECT_H
+#ifndef BF_OBJECT_HPP
+#define BF_OBJECT_HPP
 
 #include <type_traits>
 

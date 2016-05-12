@@ -1,10 +1,10 @@
-#ifndef BF_WRAP_H
-#define BF_WRAP_H
+#ifndef BF_WRAP_HPP
+#define BF_WRAP_HPP
 
 #include <string>
 #include <type_traits>
 #include <vector>
-#include <bf/object.h>
+#include <bf/object.hpp>
 
 namespace bf {
 

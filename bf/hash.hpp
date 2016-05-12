@@ -1,9 +1,9 @@
-#ifndef BF_HASH_POLICY_H
-#define BF_HASH_POLICY_H
+#ifndef BF_HASH_POLICY_HPP
+#define BF_HASH_POLICY_HPP
 
 #include <functional>
-#include <bf/h3.h>
-#include <bf/object.h>
+#include <bf/h3.hpp>
+#include <bf/object.hpp>
 
 namespace bf {
 

@@ -1,9 +1,9 @@
-#ifndef BF_COUNTER_VECTOR_H
-#define BF_COUNTER_VECTOR_H
+#ifndef BF_COUNTER_VECTOR_HPP
+#define BF_COUNTER_VECTOR_HPP
 
 #include <cstdint>
 #include <vector>
-#include <bf/bitvector.h>
+#include <bf/bitvector.hpp>
 
 namespace bf {
 

@@ -1,7 +1,7 @@
-#ifndef BF_BLOOM_FILTER_H
-#define BF_BLOOM_FILTER_H
+#ifndef BF_BLOOM_FILTER_HPP
+#define BF_BLOOM_FILTER_HPP
 
-#include <bf/wrap.h>
+#include <bf/wrap.hpp>
 
 namespace bf {
 

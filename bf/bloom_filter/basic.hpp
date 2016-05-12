@@ -1,10 +1,10 @@
-#ifndef BF_BLOOM_FILTER_BASIC_H
-#define BF_BLOOM_FILTER_BASIC_H
+#ifndef BF_BLOOM_FILTER_BASIC_HPP
+#define BF_BLOOM_FILTER_BASIC_HPP
 
 #include <random>
-#include <bf/bitvector.h>
-#include <bf/bloom_filter.h>
-#include <bf/hash.h>
+#include <bf/bitvector.hpp>
+#include <bf/bloom_filter.hpp>
+#include <bf/hash.hpp>
 
 namespace bf {
 

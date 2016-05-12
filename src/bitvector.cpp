@@ -1,4 +1,4 @@
-#include <bf/bitvector.h>
+#include <bf/bitvector.hpp>
 
 #include <cassert>
 

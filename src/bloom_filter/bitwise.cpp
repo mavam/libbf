@@ -1,4 +1,4 @@
-#include <bf/bloom_filter/bitwise.h>
+#include <bf/bloom_filter/bitwise.hpp>
 
 namespace bf {
 

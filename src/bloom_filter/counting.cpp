@@ -1,4 +1,4 @@
-#include <bf/bloom_filter/counting.h>
+#include <bf/bloom_filter/counting.hpp>
 
 #include <algorithm>
 #include <cassert>

@@ -1,7 +1,7 @@
-#ifndef BF_BLOOM_FILTER_BITWISE_H
-#define BF_BLOOM_FILTER_BITWISE_H
+#ifndef BF_BLOOM_FILTER_BITWISE_HPP
+#define BF_BLOOM_FILTER_BITWISE_HPP
 
-#include <bf/bloom_filter/basic.h>
+#include <bf/bloom_filter/basic.hpp>
 
 namespace bf {
 

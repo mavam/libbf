@@ -71,14 +71,14 @@ endif ()
 include_directories(${CMAKE_SOURCE_DIR})
 
 set(libbf_sources
-  src/bitvector.cc
-  src/counter_vector.cc
-  src/hash.cc
-  src/bloom_filter/a2.cc
-  src/bloom_filter/basic.cc
-  src/bloom_filter/bitwise.cc
-  src/bloom_filter/counting.cc
-  src/bloom_filter/stable.cc
+  src/bitvector.cpp
+  src/counter_vector.cpp
+  src/hash.cpp
+  src/bloom_filter/a2.cpp
+  src/bloom_filter/basic.cpp
+  src/bloom_filter/bitwise.cpp
+  src/bloom_filter/counting.cpp
+  src/bloom_filter/stable.cpp
 )
 
 add_library(libbf SHARED ${libbf_sources})

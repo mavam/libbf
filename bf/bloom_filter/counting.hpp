@@ -1,9 +1,9 @@
-#ifndef BF_BLOOM_FILTER_COUNTING_H
-#define BF_BLOOM_FILTER_COUNTING_H
+#ifndef BF_BLOOM_FILTER_COUNTING_HPP
+#define BF_BLOOM_FILTER_COUNTING_HPP
 
-#include <bf/counter_vector.h>
-#include <bf/bloom_filter.h>
-#include <bf/hash.h>
+#include <bf/counter_vector.hpp>
+#include <bf/bloom_filter.hpp>
+#include <bf/hash.hpp>
 
 namespace bf {
 

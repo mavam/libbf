@@ -1,6 +1,6 @@
 #include "test.hpp"
 
-#include "bf/all.h"
+#include "bf/all.hpp"
 
 using namespace bf;
 

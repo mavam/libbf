@@ -1,5 +1,5 @@
-#ifndef BF_BITVECTOR_H
-#define BF_BITVECTOR_H
+#ifndef BF_BITVECTOR_HPP
+#define BF_BITVECTOR_HPP
 
 #include <iterator>
 #include <limits>

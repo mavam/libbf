@@ -1,4 +1,4 @@
-#include <bf/counter_vector.h>
+#include <bf/counter_vector.hpp>
 
 #include <cassert>
 
