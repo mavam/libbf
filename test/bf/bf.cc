@@ -4,8 +4,10 @@
 #include <iostream>
 #include <memory>
 #include <unordered_map>
+
 #include "configuration.h"
-#include "bf.h"
+
+#include "bf/all.h"
 
 using namespace util;
 using namespace bf;

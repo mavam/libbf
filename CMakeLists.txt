@@ -1,21 +1,12 @@
+# -- Project Setup ------------------------------------------------------------
+
 project(libbf CXX)
 
-cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(CTest)
 
-# Silence warning CMP0042
-if (APPLE AND NOT DEFINED CMAKE_MACOSX_RPATH)
-  set(CMAKE_MACOSX_RPATH true)
-endif()
+cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 
-# Prohibit in-source builds.
-if ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
-  message(FATAL_ERROR "In-source builds are not allowed. Please use "
-                      "./configure to choose a build directory and "
-                      "initialize the build configuration.")
-endif ()
-
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 # Support 'make uninstall'.
 if ("${PROJECT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
@@ -24,6 +15,31 @@ if ("${PROJECT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
                   @ONLY)
   add_custom_target(uninstall COMMAND
       ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
+endif ()
+
+# Prohibit in-source builds.
+if ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
+  message(FATAL_ERROR "In-source builds are not allowed. Please use "
+                      "./configure to choose a build directory and "
+                      "initialize the build configuration.")
+endif ()
+
+# Silence warning CMP0042
+if (APPLE AND NOT DEFINED CMAKE_MACOSX_RPATH)
+  set(CMAKE_MACOSX_RPATH true)
+endif()
+
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/bin
+  CACHE PATH "Single directory for all executables")
+
+set (LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/lib
+  CACHE PATH "Single directory for all libraries")
+
+# -- Dependencies -------------------------------------------------------------
+
+find_package(Threads)
+if (NOT Threads_FOUND)
+  message(FATAL_ERROR "Could not find system threading libraries")
 endif ()
 
 set(CMAKE_CXX_FLAGS                "-Wall -Wextra -std=c++11")
@@ -50,11 +66,24 @@ else ()
   message(FATAL_ERROR "Your C++ compiler does not support C++11.")
 endif ()
 
-find_package(Threads)
-if (NOT Threads_FOUND)
-  message(FATAL_ERROR "Could not find system threading libraries")
-endif ()
+# -- libbf -------------------------------------------------------------------
 
-include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/src)
-add_subdirectory(src)
+include_directories(${CMAKE_SOURCE_DIR})
+
+set(libbf_sources
+  src/bitvector.cc
+  src/counter_vector.cc
+  src/hash.cc
+  src/bloom_filter/a2.cc
+  src/bloom_filter/basic.cc
+  src/bloom_filter/bitwise.cc
+  src/bloom_filter/counting.cc
+  src/bloom_filter/stable.cc
+)
+
+add_library(libbf SHARED ${libbf_sources})
+set_target_properties(libbf PROPERTIES OUTPUT_NAME bf)
+install(TARGETS libbf DESTINATION lib)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bf DESTINATION include)
+
 add_subdirectory(test)

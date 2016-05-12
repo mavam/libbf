@@ -1,5 +1,6 @@
 #include "test.hpp"
-#include "bf.h"
+
+#include "bf/all.h"
 
 using namespace bf;
 
@@ -308,4 +309,3 @@ TEST(bloom_filter_a2) {
   CHECK_EQUAL(bf.lookup("baz"), 1u);
   CHECK_EQUAL(bf.lookup("qux"), 1u);
 }
-
