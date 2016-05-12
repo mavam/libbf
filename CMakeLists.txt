@@ -42,7 +42,7 @@ if (NOT Threads_FOUND)
   message(FATAL_ERROR "Could not find system threading libraries")
 endif ()
 
-set(CMAKE_CXX_FLAGS                "-Wall -Wextra -std=c++11")
+set(CMAKE_CXX_FLAGS                "-Wall -Wextra -std=c++14")
 set(CMAKE_CXX_FLAGS_DEBUG          "-O0 -g")
 set(CMAKE_CXX_FLAGS_MINSIZEREL     "-Os -DNDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE        "-O3 -DNDEBUG")
@@ -57,13 +57,13 @@ endif ()
 if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
   execute_process(
     COMMAND ${CMAKE_CXX_COMPILER} -dumpversion OUTPUT_VARIABLE GCC_VERSION)
-  if (NOT (GCC_VERSION VERSION_GREATER 4.7 OR GCC_VERSION VERSION_EQUAL 4.7))
-    message(FATAL_ERROR "${PROJECT_NAME} requires g++ 4.7 or greater.")
+  if (NOT (GCC_VERSION VERSION_GREATER 5.0 OR GCC_VERSION VERSION_EQUAL 5.0))
+    message(FATAL_ERROR "${PROJECT_NAME} requires g++ 4.9 or greater.")
   endif ()
 elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
 else ()
-  message(FATAL_ERROR "Your C++ compiler does not support C++11.")
+  message(FATAL_ERROR "Your C++ compiler does not support C++14.")
 endif ()
 
 # -- libbf -------------------------------------------------------------------
@@ -86,4 +86,18 @@ set_target_properties(libbf PROPERTIES OUTPUT_NAME bf)
 install(TARGETS libbf DESTINATION lib)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bf DESTINATION include)
 
-add_subdirectory(test)
+set(libbf_tests
+  test/test.cpp
+  test/tests.cpp  # TODO: refactor
+  test/hash_append.cpp
+)
+
+add_executable(bf-test ${libbf_tests})
+target_link_libraries(bf-test libbf ${CMAKE_THREAD_LIBS_INIT})
+
+enable_testing()
+add_test(unit ${EXECUTABLE_OUTPUT_PATH}/bf-test)
+
+# -- extras ------------------------------------------------------------------
+
+add_subdirectory(test/bf)

@@ -1,9 +1,19 @@
-#ifndef BF_HASH_POLICY_HPP
-#define BF_HASH_POLICY_HPP
+#ifndef BF_HASH_HPP
+#define BF_HASH_HPP
 
+#include <array>
+#include <memory>
+#include <string>
+#include <tuple>
+#include <vector>
 #include <functional>
-#include <bf/h3.hpp>
-#include <bf/object.hpp>
+
+#include "bf/detail/type_traits.hpp"
+
+#include "bf/h3.hpp"
+#include "bf/object.hpp"
+
+#include "bf/endian.hpp"
 
 namespace bf {
 
@@ -16,8 +26,7 @@ typedef std::function<digest(object const&)> hash_function;
 /// A function that hashes an object *k* times.
 typedef std::function<std::vector<digest>(object const&)> hasher;
 
-class default_hash_function
-{
+class default_hash_function {
 public:
   constexpr static size_t max_obj_size = 36;
 
@@ -30,8 +39,7 @@ private:
 };
 
 /// A hasher which hashes an object *k* times.
-class default_hasher
-{
+class default_hasher {
 public:
   default_hasher(std::vector<hash_function> fns);
 
@@ -43,8 +51,7 @@ private:
 
 /// A hasher which hashes an object two times and generates *k* digests through
 /// a linear combinations of the two digests.
-class double_hasher
-{
+class double_hasher {
 public:
   double_hasher(size_t k, hash_function h1, hash_function h2);
 
@@ -74,3 +81,4 @@ hasher make_hasher(size_t k, size_t seed = 0, bool double_hashing = false);
 } // namespace bf
 
 #endif
+

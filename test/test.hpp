@@ -5,7 +5,7 @@
 #define CAF_SUITE SUITE
 #endif
 
-#include "unit_test_impl.hpp"
+#include "unit_test.hpp"
 
 // Logging
 #define ERROR CAF_TEST_ERROR
