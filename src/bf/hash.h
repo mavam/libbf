@@ -8,7 +8,7 @@
 namespace bf {
 
 /// The hash digest type.
-typedef size_t digest;
+typedef uint64_t digest;
 
 /// The hash function type.
 typedef std::function<digest(object const&)> hash_function;
@@ -23,10 +23,10 @@ public:
 
   default_hash_function(size_t seed);
 
-  size_t operator()(object const& o) const;
+  digest operator()(object const& o) const;
 
 private:
-  h3<size_t, max_obj_size> h3_;
+  h3<digest, max_obj_size> h3_;
 };
 
 /// A hasher which hashes an object *k* times.
