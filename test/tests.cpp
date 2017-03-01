@@ -165,6 +165,12 @@ TEST(bloom_filter_basic) {
   // False-positives
   CHECK_EQUAL(bf.lookup("corge"), 1u);
   CHECK_EQUAL(bf.lookup('a'), 1u);
+
+  // another filter
+  basic_bloom_filter obf(0.8, 10);
+  obf.swap(bf);
+
+  CHECK_EQUAL(obf.lookup("foo"), 1u);
 }
 
 TEST(bloom_filter_counting) {

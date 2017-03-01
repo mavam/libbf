@@ -127,7 +127,7 @@ bitvector& bitvector::operator=(bitvector other)
   return *this;
 }
 
-void swap(bitvector x, bitvector y)
+void swap(bitvector& x, bitvector& y)
 {
   using std::swap;
   swap(x.bits_, y.bits_);
