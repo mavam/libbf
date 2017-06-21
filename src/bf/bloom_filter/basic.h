@@ -82,6 +82,21 @@ public:
   /// Returns the underlying storage of the Bloom filter.
   bitvector const& storage() const;
 
+  /// Makes a new basic_bloom_filter given a hasher and a bitvector.
+  ///
+  /// @param hasher The hasher to use.
+  /// @param bitvector the underlying bitvector of the bf.
+  ///
+  /// @return A basic_bloom_filter built from the given hasher and bitvector.
+  template<typename B>
+  static basic_bloom_filter make(hasher h, B&& b)
+  {
+    basic_bloom_filter bf(make_hasher(0), 0);
+    bf.hasher_ = h;
+    bf.bits_ = std::forward<B>(b);
+    return bf;
+  }
+
 private:
   hasher hasher_;
   bitvector bits_;
