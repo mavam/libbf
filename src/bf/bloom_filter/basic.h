@@ -59,6 +59,12 @@ public:
   basic_bloom_filter(double fp, size_t capacity, size_t seed = 0,
                      bool double_hashing = true, bool partition = true);
 
+  /// Constructs a basic Bloom filter given a hasher and a bitvector.
+  ///
+  /// @param hasher The hasher to use.
+  /// @param bitvector the underlying bitvector of the bf.
+  basic_bloom_filter(hasher h, bitvector b);
+
   basic_bloom_filter(basic_bloom_filter&&);
 
   using bloom_filter::add;
@@ -81,6 +87,9 @@ public:
 
   /// Returns the underlying storage of the Bloom filter.
   bitvector const& storage() const;
+
+  /// Returns the hasher of the Bloom filter.
+  hasher const& hasher_function() const;
 
 private:
   hasher hasher_;
