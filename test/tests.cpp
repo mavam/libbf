@@ -171,6 +171,14 @@ TEST(bloom_filter_basic) {
   obf.swap(bf);
 
   CHECK_EQUAL(obf.lookup("foo"), 1u);
+
+  // Make bf using another filter's storage
+  hasher h = obf.hasher_function();
+  bitvector b = obf.storage();
+  basic_bloom_filter obfc(h, b);
+  CHECK_EQUAL(obfc.storage(), b);
+  CHECK_EQUAL(obfc.lookup("foo"), 1u);
+
 }
 
 TEST(bloom_filter_counting) {
