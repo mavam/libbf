@@ -28,7 +28,7 @@
 #include <cstring>
 #include <algorithm>
 #include <condition_variable>
-
+#include <boost/algorithm/string/split.hpp>
 #include "unit_test.hpp"
 
 namespace caf {
@@ -333,7 +333,7 @@ bool engine::run(bool colorize,
     // psv == pipe-separated-values
     strvec result;
     if (psv != ".*") {
-      split(result, psv, "|", token_compress_on);
+      boost::algorithm::split(result, psv, "|", boost::token_compress_on);
       std::sort(result.begin(), result.end());
     }
     return result;
@@ -552,7 +552,7 @@ int main(int argc, char** argv) {
       break;
     }
   }
-  // TODO: convert CAF implementation details to generic ones 
+  // TODO: convert CAF implementation details to generic ones
   // our simple command line parser.
   //auto res = message_builder(cli_argv, cli_argv + divider - 1).extract_opts({
   //  {"no-colors,n", "disable coloring"},
