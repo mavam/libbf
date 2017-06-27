@@ -1,0 +1,17 @@
+sudo: false
+dist: trusty
+
+language: cpp
+
+cache:
+  apt: true
+
+addons:
+  apt:
+    packages:
+    - g++
+compiler:
+  - g++
+
+script: mkdir build && cd build && cmake .. && make && ctest --verbose && cd ..
+
