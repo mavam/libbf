@@ -81,7 +81,7 @@ public:
   bitvector& operator=(bitvector other);
 
   /// Swaps two bit vectors.
-  friend void swap(bitvector x, bitvector y);
+  friend void swap(bitvector& x, bitvector& y);
 
   //
   // Bitwise operations

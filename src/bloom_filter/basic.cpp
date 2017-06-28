@@ -34,6 +34,12 @@ basic_bloom_filter::basic_bloom_filter(double fp, size_t capacity, size_t seed,
   hasher_ = make_hasher(optimal_k, seed, double_hashing);
 }
 
+basic_bloom_filter::basic_bloom_filter(hasher h, bitvector b)
+  : hasher_(std::move(h))
+  , bits_(std::move(b))
+{
+}
+
 basic_bloom_filter::basic_bloom_filter(basic_bloom_filter&& other)
   : hasher_(std::move(other.hasher_)),
     bits_(std::move(other.bits_))
@@ -100,5 +106,10 @@ bitvector const& basic_bloom_filter::storage() const
 {
   return bits_;
 }
+hasher const& basic_bloom_filter::hasher_function() const
+{
+  return hasher_;
+}
+
 
 } // namespace bf
