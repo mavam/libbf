@@ -12,8 +12,7 @@
 using namespace util;
 using namespace bf;
 
-trial<nothing> run(config const& cfg)
-{
+trial<nothing> run(config const& cfg) {
   auto numeric = cfg.check("numeric");
   auto k = *cfg.as<size_t>("hash-functions");
   auto cells = *cfg.as<size_t>("cells");
@@ -34,10 +33,8 @@ trial<nothing> run(config const& cfg)
   auto const& type = *cfg.as<std::string>("type");
   std::unique_ptr<bloom_filter> bf;
 
-  if (type == "basic")
-  {
-    if (fpr == 0 || capacity == 0)
-    {
+  if (type == "basic") {
+    if (fpr == 0 || capacity == 0) {
       if (cells == 0)
         return error{"need non-zero cells"};
       if (k == 0)
@@ -45,15 +42,11 @@ trial<nothing> run(config const& cfg)
 
       auto h = make_hasher(k, seed, double_hashing);
       bf.reset(new basic_bloom_filter(std::move(h), cells, part));
-    }
-    else
-    {
+    } else {
       assert(fpr != 0 && capacity != 0);
       bf.reset(new basic_bloom_filter(fpr, capacity, seed, part));
     }
-  }
-  else if (type == "counting")
-  {
+  } else if (type == "counting") {
     if (cells == 0)
       return error{"need non-zero cells"};
     if (width == 0)
@@ -63,9 +56,7 @@ trial<nothing> run(config const& cfg)
 
     auto h = make_hasher(k, seed, double_hashing);
     bf.reset(new counting_bloom_filter(std::move(h), cells, width, part));
-  }
-  else if (type == "spectral-mi")
-  {
+  } else if (type == "spectral-mi") {
     if (cells == 0)
       return error{"need non-zero cells"};
     if (width == 0)
@@ -75,9 +66,7 @@ trial<nothing> run(config const& cfg)
 
     auto h = make_hasher(k, seed, double_hashing);
     bf.reset(new spectral_mi_bloom_filter(std::move(h), cells, width, part));
-  }
-  else if (type == "spectral-rm")
-  {
+  } else if (type == "spectral-rm") {
     if (cells == 0)
       return error{"need non-zero cells"};
     if (cells2 == 0)
@@ -96,20 +85,15 @@ trial<nothing> run(config const& cfg)
     auto h1 = make_hasher(k, seed, double_hashing);
     auto h2 = make_hasher(k2, seed2, double_hashing2);
     bf.reset(new spectral_rm_bloom_filter(std::move(h1), cells, width,
-                                          std::move(h2), cells2, width2,
-                                          part));
-  }
-  else if (type == "bitwise")
-  {
+                                          std::move(h2), cells2, width2, part));
+  } else if (type == "bitwise") {
     if (cells == 0)
       return error{"need non-zero cells"};
     if (k == 0)
       return error{"need non-zero k"};
 
     bf.reset(new bitwise_bloom_filter(k, cells, seed));
-  }
-  else if (type == "a2")
-  {
+  } else if (type == "a2") {
     if (cells == 0)
       return error{"need non-zero cells"};
     if (capacity == 0)
@@ -118,9 +102,7 @@ trial<nothing> run(config const& cfg)
       return error{"need non-zero k"};
 
     bf.reset(new a2_bloom_filter(k, cells, capacity, seed, seed2));
-  }
-  else if (type == "stable")
-  {
+  } else if (type == "stable") {
     if (cells == 0)
       return error{"need non-zero cells"};
     if (k == 0)
@@ -128,22 +110,19 @@ trial<nothing> run(config const& cfg)
 
     auto h = make_hasher(k, seed, double_hashing);
     bf.reset(new stable_bloom_filter(std::move(h), cells, seed, d));
-  }
-  else
-  {
+  } else {
     return error{"invalid bloom filter type"};
   }
 
   std::string line;
   auto input_file = *cfg.as<std::string>("input");
   std::ifstream in{input_file};
-  if (! in)
+  if (!in)
     return error{"cannot read " + input_file};
 
   in >> std::noskipws;
 
-  while (std::getline(in, line))
-  {
+  while (std::getline(in, line)) {
     if (line.empty())
       continue;
 
@@ -165,11 +144,11 @@ trial<nothing> run(config const& cfg)
   std::string element;
   auto query_file = *cfg.as<std::string>("query");
   std::ifstream query{query_file};
-  if (! query)
+  if (!query)
     return error{"cannot read " + query_file};
 
   std::cout << "TN TP FP FN G C E" << std::endl;
-  while (query >> ground_truth >> element)  // uniq -c
+  while (query >> ground_truth >> element) // uniq -c
   {
     size_t count;
     if (numeric)
@@ -177,7 +156,7 @@ trial<nothing> run(config const& cfg)
     else
       count = bf->lookup(element);
 
-    if (! query)
+    if (!query)
       return error{"failed to parse element"};
 
     if (count == 0 && ground_truth == 0)
@@ -189,9 +168,8 @@ trial<nothing> run(config const& cfg)
     else
       ++fn;
 
-    std::cout
-      << tn << ' ' << tp << ' ' << fp << ' ' << fn << ' '
-      << ground_truth << ' ' << count << ' ';
+    std::cout << tn << ' ' << tp << ' ' << fp << ' ' << fn << ' '
+              << ground_truth << ' ' << count << ' ';
 
     if (numeric)
       std::cout << std::strtod(element.c_str(), nullptr);
@@ -204,42 +182,35 @@ trial<nothing> run(config const& cfg)
   return nil;
 }
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
   auto cfg = config::parse(argc, argv);
-  if (! cfg)
-  {
+  if (!cfg) {
     std::cerr << cfg.failure().msg() << ", try -h or --help" << std::endl;
     return 1;
   }
 
-  if (argc < 2 || cfg->check("help") || cfg->check("advanced"))
-  {
+  if (argc < 2 || cfg->check("help") || cfg->check("advanced")) {
     cfg->usage(std::cerr, cfg->check("advanced"));
     return 0;
   }
 
-  if (! cfg->check("type"))
-  {
+  if (!cfg->check("type")) {
     std::cerr << "missing bloom filter type" << std::endl;
     return 1;
   }
 
-  if (! cfg->check("input"))
-  {
+  if (!cfg->check("input")) {
     std::cerr << "missing input file" << std::endl;
     return 1;
   }
 
-  if (! cfg->check("query"))
-  {
+  if (!cfg->check("query")) {
     std::cerr << "missing query file" << std::endl;
     return 1;
   }
 
   auto t = run(*cfg);
-  if (! t)
-  {
+  if (!t) {
     std::cerr << t.failure().msg() << std::endl;
     return 1;
   }

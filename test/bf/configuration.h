@@ -3,8 +3,7 @@
 
 #include "util/configuration.h"
 
-class config : public util::configuration<config>
-{
+class config : public util::configuration<config> {
 public:
   config() = default;
 

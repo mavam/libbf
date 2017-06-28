@@ -20,14 +20,14 @@
 #ifndef CAF_TEST_UNIT_TEST_IMPL_HPP
 #define CAF_TEST_UNIT_TEST_IMPL_HPP
 
-#include <regex>
-#include <cctype>
-#include <thread>
+#include <algorithm>
 #include <cassert>
+#include <cctype>
+#include <condition_variable>
 #include <cstdlib>
 #include <cstring>
-#include <algorithm>
-#include <condition_variable>
+#include <regex>
+#include <thread>
 
 #include "unit_test.hpp"
 
@@ -36,23 +36,23 @@ namespace test {
 
 class watchdog {
 public:
-   static void start(int secs);
-   static void stop();
+  static void start(int secs);
+  static void stop();
 
 private:
   watchdog(int secs) {
     thread_ = std::thread{[=] {
       auto tp =
         std::chrono::high_resolution_clock::now() + std::chrono::seconds(secs);
-        std::unique_lock<std::mutex> guard{mtx_};
-      while (! canceled_
+      std::unique_lock<std::mutex> guard{mtx_};
+      while (!canceled_
              && cv_.wait_until(guard, tp) != std::cv_status::timeout) {
         // spin
       }
-      if (! canceled_) {
+      if (!canceled_) {
         logger::instance().error()
-          << "WATCHDOG: unit test did not finish within "
-          << secs << "s, abort\n";
+          << "WATCHDOG: unit test did not finish within " << secs
+          << "s, abort\n";
         abort();
       }
     }};
@@ -72,7 +72,9 @@ private:
   std::thread thread_;
 };
 
-namespace { watchdog* s_watchdog; }
+namespace {
+watchdog* s_watchdog;
+}
 
 void watchdog::start(int secs) {
   s_watchdog = new watchdog(secs);
@@ -83,10 +85,7 @@ void watchdog::stop() {
 }
 
 test::test(std::string test_name)
-    : expected_failures_(0),
-      name_(std::move(test_name)),
-      good_(0),
-      bad_(0) {
+    : expected_failures_(0), name_(std::move(test_name)), good_(0), bad_(0) {
   // nop
 }
 
@@ -141,20 +140,18 @@ void remove_trailing_spaces(std::string& x) {
   x.erase(std::find_if_not(x.rbegin(), x.rend(), ::isspace).base(), x.end());
 }
 
-bool check(test* parent, const char *file, size_t line,
-           const char *expr, bool should_fail, bool result) {
+bool check(test* parent, const char* file, size_t line, const char* expr,
+           bool should_fail, bool result) {
   std::stringstream ss;
   if (result) {
-    ss << engine::color(green) << "** "
-       << engine::color(blue) << file << engine::color(yellow) << ":"
-       << engine::color(blue) << line << fill(line) << engine::color(reset)
-       << expr;
+    ss << engine::color(green) << "** " << engine::color(blue) << file
+       << engine::color(yellow) << ":" << engine::color(blue) << line
+       << fill(line) << engine::color(reset) << expr;
     parent->pass(ss.str());
   } else {
-    ss << engine::color(red) << "!! "
-       << engine::color(blue) << file << engine::color(yellow) << ":"
-       << engine::color(blue) << line << fill(line) << engine::color(reset)
-       << expr;
+    ss << engine::color(red) << "!! " << engine::color(blue) << file
+       << engine::color(yellow) << ":" << engine::color(blue) << line
+       << fill(line) << engine::color(reset) << expr;
     parent->fail(ss.str(), should_fail);
   }
   return result;
@@ -167,8 +164,7 @@ logger::stream::stream(logger& l, level lvl) : logger_(l), level_(lvl) {
 }
 
 logger::stream::stream(stream&& other)
-    : logger_(other.logger_)
-    , level_(other.level_) {
+    : logger_(other.logger_), level_(other.level_) {
   // ostringstream does have swap since C++11... but not in GCC 4.8.4
   buf_.str(other.buf_.str());
 }
@@ -217,9 +213,9 @@ void logger::stream::flush() {
 bool logger::init(int lvl_cons, int lvl_file, const std::string& logfile) {
   instance().level_console_ = static_cast<level>(lvl_cons);
   instance().level_file_ = static_cast<level>(lvl_file);
-  if (! logfile.empty()) {
+  if (!logfile.empty()) {
     instance().file_.open(logfile, std::ofstream::out | std::ofstream::app);
-    return !! instance().file_;
+    return !!instance().file_;
   }
   return true;
 }
@@ -293,10 +289,8 @@ void engine::add(const char* cstr_name, std::unique_ptr<test> ptr) {
   suite.emplace_back(std::move(ptr));
 }
 
-bool engine::run(bool colorize,
-                 const std::string& log_file,
-                 int verbosity_console,
-                 int verbosity_file,
+bool engine::run(bool colorize, const std::string& log_file,
+                 int verbosity_console, int verbosity_file,
                  const std::string& suites_str,
                  const std::string& not_suites_str,
                  const std::string& tests_str,
@@ -305,14 +299,14 @@ bool engine::run(bool colorize,
     // nothing to do
     return true;
   }
-  if (! colorize) {
+  if (!colorize) {
     for (size_t i = 0; i <= static_cast<size_t>(white); ++i) {
       for (size_t j = 0; j <= static_cast<size_t>(bold); ++j) {
         instance().colors_[i][j] = "";
       }
     }
   }
-  if (! logger::init(verbosity_console, verbosity_file, log_file)) {
+  if (!logger::init(verbosity_console, verbosity_file, log_file)) {
     return false;
   }
   auto& log = logger::instance();
@@ -324,16 +318,21 @@ bool engine::run(bool colorize,
   size_t total_bad_expected = 0;
   auto bar = '+' + std::string(70, '-') + '+';
   auto failed_require = false;
-# if (! defined(__clang__) && defined(__GNUC__)                                 \
-      && __GNUC__ == 4 && __GNUC_MINOR__ < 9)                                  \
-     || (defined(__clang__) && ! defined(_LIBCPP_VERSION))
+#if (!defined(__clang__) && defined(__GNUC__) && __GNUC__ == 4                 \
+     && __GNUC_MINOR__ < 9)                                                    \
+  || (defined(__clang__) && !defined(_LIBCPP_VERSION))
   // regex implementation is broken prior to 4.9
   using strvec = std::vector<std::string>;
   auto from_psv = [](const std::string& psv) -> strvec {
     // psv == pipe-separated-values
     strvec result;
     if (psv != ".*") {
-      split(result, psv, "|", token_compress_on);
+      std::istringstream ss(psv);
+      std::string token;
+      while (std::getline(ss, token, ',')) {
+        if (token.size())
+          result.push_back(token);
+      }
       std::sort(result.begin(), result.end());
     }
     return result;
@@ -342,50 +341,48 @@ bool engine::run(bool colorize,
   auto not_suites = from_psv(not_suites_str);
   auto tests = from_psv(tests_str);
   auto not_tests = from_psv(not_tests_str);
-  auto enabled = [](const strvec& whitelist,
-                    const strvec& blacklist,
+  auto enabled = [](const strvec& whitelist, const strvec& blacklist,
                     const std::string& x) {
     // an empty whitelist means original input was ".*", i.e., enable all
-    return ! std::binary_search(blacklist.begin(), blacklist.end(), x)
+    return !std::binary_search(blacklist.begin(), blacklist.end(), x)
            && (whitelist.empty()
                || std::binary_search(whitelist.begin(), whitelist.end(), x));
   };
-# else
+#else
   std::regex suites{suites_str};
   std::regex tests{tests_str};
   std::regex not_suites;
   std::regex not_tests;
   // a default constructored regex matches is not equal to an "empty" regex
-  if (! not_suites_str.empty()) {
+  if (!not_suites_str.empty()) {
     not_suites.assign(not_suites_str);
   }
-  if (! not_tests_str.empty()) {
+  if (!not_tests_str.empty()) {
     not_tests.assign(not_tests_str);
   }
-  auto enabled = [](const std::regex& whitelist,
-                    const std::regex& blacklist,
+  auto enabled = [](const std::regex& whitelist, const std::regex& blacklist,
                     const std::string& x) {
     // an empty whitelist means original input was "*", i.e., enable all
-    return std::regex_search(x, whitelist)
-           && ! std::regex_search(x, blacklist);
+    return std::regex_search(x, whitelist) && !std::regex_search(x, blacklist);
   };
-# endif
+#endif
   std::vector<std::string> failed_tests;
   for (auto& p : instance().suites_) {
-    if (! enabled(suites, not_suites, p.first))
+    if (!enabled(suites, not_suites, p.first))
       continue;
     auto suite_name = p.first.empty() ? "<unnamed>" : p.first;
     auto pad = std::string((bar.size() - suite_name.size()) / 2, ' ');
     bool displayed_header = false;
     size_t tests_ran = 0;
     for (auto& t : p.second) {
-      if (! enabled(tests, not_tests, t->name()))
+      if (!enabled(tests, not_tests, t->name()))
         continue;
       instance().current_test_ = t.get();
       ++tests_ran;
-      if (! displayed_header) {
-        log.verbose() << color(yellow) << bar << '\n' << pad << suite_name
-                      << '\n' << bar << color(reset) << "\n\n";
+      if (!displayed_header) {
+        log.verbose() << color(yellow) << bar << '\n'
+                      << pad << suite_name << '\n'
+                      << bar << color(reset) << "\n\n";
         displayed_header = true;
       }
       log.verbose() << color(yellow) << "- " << color(reset) << t->name()
@@ -417,8 +414,8 @@ bool engine::run(bool colorize,
       total_bad_expected += t->expected_failures();
       log.verbose() << color(yellow) << "  -> " << color(cyan) << good + bad
                     << color(reset) << " check" << (good + bad > 1 ? "s " : " ")
-                    << "took " << color(cyan) << render(elapsed)
-                    << color(reset) << '\n';
+                    << "took " << color(cyan) << render(elapsed) << color(reset)
+                    << '\n';
       if (bad > 0) {
         // concat suite name + test name
         failed_tests.emplace_back(p.first);
@@ -446,35 +443,38 @@ bool engine::run(bool colorize,
   }
   unsigned percent_good = 100;
   if (total_bad > 0) {
-    auto tmp = (100000.0 * static_cast<double>(total_good))
-               / static_cast<double>(total_good + total_bad
-                                     - total_bad_expected);
+    auto tmp =
+      (100000.0 * static_cast<double>(total_good))
+      / static_cast<double>(total_good + total_bad - total_bad_expected);
     percent_good = static_cast<unsigned>(tmp / 1000.0);
   }
   auto title = std::string{"summary"};
   auto pad = std::string((bar.size() - title.size()) / 2, ' ');
   auto indent = std::string(24, ' ');
-  log.info() << color(cyan) << bar << '\n' << pad << title << '\n' << bar
-             << color(reset) << "\n\n" << indent << "suites:  " << color(yellow)
-             << total_suites << color(reset) << '\n' << indent
-             << "tests:   " << color(yellow) << total_tests << color(reset)
-             << '\n' << indent << "checks:  " << color(yellow)
-             << total_good + total_bad << color(reset);
+  log.info() << color(cyan) << bar << '\n'
+             << pad << title << '\n'
+             << bar << color(reset) << "\n\n"
+             << indent << "suites:  " << color(yellow) << total_suites
+             << color(reset) << '\n'
+             << indent << "tests:   " << color(yellow) << total_tests
+             << color(reset) << '\n'
+             << indent << "checks:  " << color(yellow) << total_good + total_bad
+             << color(reset);
   if (total_bad > 0) {
     log.info() << " (" << color(green) << total_good << color(reset) << '/'
                << color(red) << total_bad << color(reset) << ")";
     if (total_bad_expected > 0) {
-      log.info()
-        << ' ' << color(cyan) << total_bad_expected << color(reset)
-        << " failures expected";
+      log.info() << ' ' << color(cyan) << total_bad_expected << color(reset)
+                 << " failures expected";
     }
   }
-  log.info() << '\n' << indent << "time:    " << color(yellow)
-             << render(runtime) << '\n' << color(reset) << indent
-             << "success: "
+  log.info() << '\n'
+             << indent << "time:    " << color(yellow) << render(runtime)
+             << '\n'
+             << color(reset) << indent << "success: "
              << (total_bad == total_bad_expected ? color(green) : color(red))
              << percent_good << "%" << color(reset) << "\n\n";
-  if (! failed_tests.empty()) {
+  if (!failed_tests.empty()) {
     log.info() << indent << "failed tests:" << '\n';
     for (auto& name : failed_tests)
       log.info() << indent << "- " << name << '\n';
@@ -522,12 +522,11 @@ engine& engine::instance() {
 }
 
 std::string engine::render(std::chrono::microseconds t) {
-  return t.count() > 1000000
-    ? (std::to_string(t.count() / 1000000) + '.'
-       + std::to_string((t.count() % 1000000) / 10000) + " s")
-    : t.count() > 1000
-      ? (std::to_string(t.count() / 1000) + " ms")
-      : (std::to_string(t.count()) + " us");
+  return t.count() > 1000000 ?
+           (std::to_string(t.count() / 1000000) + '.'
+            + std::to_string((t.count() % 1000000) / 10000) + " s") :
+           t.count() > 1000 ? (std::to_string(t.count() / 1000) + " ms") :
+                              (std::to_string(t.count()) + " us");
 }
 
 int main(int argc, char** argv) {
@@ -536,7 +535,7 @@ int main(int argc, char** argv) {
   // default values.
   int verbosity_console = 3;
   int verbosity_file = 3;
-  //int max_runtime = 0;
+  // int max_runtime = 0;
   std::string log_file;
   std::string suites = ".*";
   std::string not_suites;
@@ -545,16 +544,16 @@ int main(int argc, char** argv) {
   // use all arguments after '--' for the test engine.
   std::string delimiter = "--";
   auto divider = argc;
-  //auto cli_argv = argv + 1;
+  // auto cli_argv = argv + 1;
   for (auto i = 1; i < argc; ++i) {
     if (delimiter == argv[i]) {
       divider = i;
       break;
     }
   }
-  // TODO: convert CAF implementation details to generic ones 
+  // TODO: convert CAF implementation details to generic ones
   // our simple command line parser.
-  //auto res = message_builder(cli_argv, cli_argv + divider - 1).extract_opts({
+  // auto res = message_builder(cli_argv, cli_argv + divider - 1).extract_opts({
   //  {"no-colors,n", "disable coloring"},
   //  {"log-file,l", "set output file", log_file},
   //  {"console-verbosity,v", "set verbosity level of console (1-5)",
@@ -569,23 +568,23 @@ int main(int argc, char** argv) {
   //  {"not-tests,T", "exclude tests", not_tests},
   //  {"available-suites,a", "print available suites"}
   //});
-  //if (res.opts.count("help") > 0) {
+  // if (res.opts.count("help") > 0) {
   //  std::cout << res.helptext << std::endl;
   //  return 0;
   //}
-  //if (res.opts.count("available-suites") > 0) {
+  // if (res.opts.count("available-suites") > 0) {
   //  std::cout << "available suites:" << std::endl;
   //  for (auto& s : engine::available_suites()) {
   //    std::cout << "  - " << s << std::endl;
   //  }
   //  return 0;
   //}
-  //if (! res.remainder.empty()) {
+  // if (! res.remainder.empty()) {
   //  std::cerr << "*** invalid command line options" << std::endl
   //            << res.helptext << std::endl;
   //  return 1;
   //}
-  //auto colorize = res.opts.count("no-colors") == 0;
+  // auto colorize = res.opts.count("no-colors") == 0;
   std::vector<char*> args;
   if (divider < argc) {
     // make a new args vector that contains argv[0] and all remaining args
@@ -596,11 +595,11 @@ int main(int argc, char** argv) {
   } else {
     engine::args(1, argv);
   }
-  //if (res.opts.count("max-runtime") > 0)
+  // if (res.opts.count("max-runtime") > 0)
   //  engine::max_runtime(max_runtime);
-  auto result = engine::run(true /* colorize */, log_file, verbosity_console,
-                            verbosity_file, suites,
-                            not_suites, tests, not_tests);
+  auto result =
+    engine::run(true /* colorize */, log_file, verbosity_console,
+                verbosity_file, suites, not_suites, tests, not_tests);
   return result ? 0 : 1;
 }
 
@@ -612,8 +611,8 @@ int main(int argc, char** argv) {
   try {
     return caf::test::main(argc, argv);
   } catch (std::exception& e) {
-    std::cerr << "exception " << typeid(e).name() << ": "
-              << e.what() << std::endl;
+    std::cerr << "exception " << typeid(e).name() << ": " << e.what()
+              << std::endl;
   }
   return 1;
 }

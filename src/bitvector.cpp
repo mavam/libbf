@@ -9,150 +9,120 @@ typedef bitvector::block_type block_type;
 
 namespace {
 
-uint8_t count_table[] =
-{
-  0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4, 1, 2, 2, 3, 2, 3, 3, 4, 2,
-  3, 3, 4, 3, 4, 4, 5, 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 2, 3,
-  3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3,
-  4, 3, 4, 4, 5, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 2, 3, 3, 4,
-  3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5,
-  6, 6, 7, 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 2, 3, 3, 4, 3, 4,
-  4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5,
-  6, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7, 2, 3, 3, 4, 3, 4, 4, 5,
-  3, 4, 4, 5, 4, 5, 5, 6, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7, 3,
-  4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7, 4, 5, 5, 6, 5, 6, 6, 7, 5, 6,
-  6, 7, 6, 7, 7, 8
-};
+uint8_t count_table[] = {
+  0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4, 1, 2, 2, 3, 2, 3, 3, 4, 2, 3,
+  3, 4, 3, 4, 4, 5, 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 2, 3, 3, 4,
+  3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4,
+  4, 5, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 2, 3, 3, 4, 3, 4, 4, 5,
+  3, 4, 4, 5, 4, 5, 5, 6, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7, 1, 2,
+  2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5,
+  4, 5, 5, 6, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 3, 4, 4, 5, 4, 5,
+  5, 6, 4, 5, 5, 6, 5, 6, 6, 7, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+  3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5,
+  5, 6, 5, 6, 6, 7, 4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8};
 
 } // namespace <anonymous>
 
 bitvector::reference::reference(block_type& block, block_type i)
-  : block_(block)
-  , mask_(block_type(1) << i)
-{
+    : block_(block), mask_(block_type(1) << i) {
   assert(i < bits_per_block);
 }
 
-bitvector::reference& bitvector::reference::flip()
-{
+bitvector::reference& bitvector::reference::flip() {
   block_ ^= mask_;
   return *this;
 }
 
-bitvector::reference::operator bool() const
-{
+bitvector::reference::operator bool() const {
   return (block_ & mask_) != 0;
 }
 
-bool bitvector::reference::operator~() const
-{
+bool bitvector::reference::operator~() const {
   return (block_ & mask_) == 0;
 }
 
-bitvector::reference& bitvector::reference::operator=(bool x)
-{
+bitvector::reference& bitvector::reference::operator=(bool x) {
   x ? block_ |= mask_ : block_ &= ~mask_;
   return *this;
 }
 
-bitvector::reference& bitvector::reference::operator=(reference const& other)
-{
+bitvector::reference& bitvector::reference::operator=(reference const& other) {
   other ? block_ |= mask_ : block_ &= ~mask_;
   return *this;
 }
 
-bitvector::reference& bitvector::reference::operator|=(bool x)
-{
-  if (x) 
+bitvector::reference& bitvector::reference::operator|=(bool x) {
+  if (x)
     block_ |= mask_;
   return *this;
 }
 
-bitvector::reference& bitvector::reference::operator&=(bool x)
-{
-  if (! x)
+bitvector::reference& bitvector::reference::operator&=(bool x) {
+  if (!x)
     block_ &= ~mask_;
   return *this;
 }
-    
-bitvector::reference& bitvector::reference::operator^=(bool x)
-{
+
+bitvector::reference& bitvector::reference::operator^=(bool x) {
   if (x)
     block_ ^= mask_;
   return *this;
 }
 
-bitvector::reference& bitvector::reference::operator-=(bool x)
-{
+bitvector::reference& bitvector::reference::operator-=(bool x) {
   if (x)
     block_ &= ~mask_;
   return *this;
 }
 
-
-bitvector::bitvector()
-  : num_bits_(0)
-{
+bitvector::bitvector() : num_bits_(0) {
 }
 
 bitvector::bitvector(size_type size, bool value)
-  : bits_(bits_to_blocks(size), value ? ~block_type(0) : 0)
-  , num_bits_(size)
-{
+    : bits_(bits_to_blocks(size), value ? ~block_type(0) : 0), num_bits_(size) {
 }
 
 bitvector::bitvector(bitvector const& other)
-  : bits_(other.bits_)
-  , num_bits_(other.num_bits_)
-{
+    : bits_(other.bits_), num_bits_(other.num_bits_) {
 }
 
 bitvector::bitvector(bitvector&& other)
-  : bits_(std::move(other.bits_))
-  , num_bits_(other.num_bits_)
-{
+    : bits_(std::move(other.bits_)), num_bits_(other.num_bits_) {
   other.num_bits_ = 0;
 }
 
-bitvector bitvector::operator~() const
-{
+bitvector bitvector::operator~() const {
   bitvector b(*this);
   b.flip();
   return b;
 }
 
-bitvector& bitvector::operator=(bitvector other)
-{
+bitvector& bitvector::operator=(bitvector other) {
   swap(*this, other);
   return *this;
 }
 
-void swap(bitvector& x, bitvector& y)
-{
+void swap(bitvector& x, bitvector& y) {
   using std::swap;
   swap(x.bits_, y.bits_);
   swap(x.num_bits_, y.num_bits_);
 }
 
-bitvector bitvector::operator<<(size_type n) const
-{
+bitvector bitvector::operator<<(size_type n) const {
   bitvector b(*this);
   return b <<= n;
 }
 
-bitvector bitvector::operator>>(size_type n) const
-{
+bitvector bitvector::operator>>(size_type n) const {
   bitvector b(*this);
   return b >>= n;
 }
 
-bitvector& bitvector::operator<<=(size_type n)
-{
+bitvector& bitvector::operator<<=(size_type n) {
   if (n >= num_bits_)
     return reset();
 
-  if (n > 0)
-  {
+  if (n > 0) {
     auto last = blocks() - 1;
     auto div = n / bits_per_block;
     auto r = bit_index(n);
@@ -160,15 +130,12 @@ bitvector& bitvector::operator<<=(size_type n)
     assert(blocks() >= 1);
     assert(div <= last);
 
-    if (r != 0)
-    {
+    if (r != 0) {
       for (size_type i = last - div; i > 0; --i)
         b[i + div] = (b[i] << r) | (b[i - 1] >> (bits_per_block - r));
       b[div] = b[0] << r;
-    }
-    else
-    {
-      for (size_type i = last-div; i > 0; --i)
+    } else {
+      for (size_type i = last - div; i > 0; --i)
         b[i + div] = b[i];
       b[div] = b[0];
     }
@@ -180,13 +147,11 @@ bitvector& bitvector::operator<<=(size_type n)
   return *this;
 }
 
-bitvector& bitvector::operator>>=(size_type n)
-{
+bitvector& bitvector::operator>>=(size_type n) {
   if (n >= num_bits_)
-      return reset();
+    return reset();
 
-  if (n > 0)
-  {
+  if (n > 0) {
     auto last = blocks() - 1;
     auto div = n / bits_per_block;
     auto r = bit_index(n);
@@ -194,16 +159,13 @@ bitvector& bitvector::operator>>=(size_type n)
     assert(blocks() >= 1);
     assert(div <= last);
 
-    if (r != 0)
-    {
+    if (r != 0) {
       for (size_type i = last - div; i > 0; --i)
         b[i - div] = (b[i] >> r) | (b[i + 1] << (bits_per_block - r));
       b[last - div] = b[last] >> r;
-    }
-    else
-    {
+    } else {
       for (size_type i = div; i <= last; ++i)
-        b[i-div] = b[i];
+        b[i - div] = b[i];
     }
 
     std::fill_n(b + (blocks() - div), div, block_type(0));
@@ -212,77 +174,65 @@ bitvector& bitvector::operator>>=(size_type n)
   return *this;
 }
 
-bitvector& bitvector::operator&=(bitvector const& other)
-{
+bitvector& bitvector::operator&=(bitvector const& other) {
   assert(size() >= other.size());
   for (size_type i = 0; i < blocks(); ++i)
     bits_[i] &= other.bits_[i];
   return *this;
 }
 
-bitvector& bitvector::operator|=(bitvector const& other)
-{
+bitvector& bitvector::operator|=(bitvector const& other) {
   assert(size() >= other.size());
   for (size_type i = 0; i < blocks(); ++i)
     bits_[i] |= other.bits_[i];
   return *this;
 }
 
-bitvector& bitvector::operator^=(bitvector const& other)
-{
+bitvector& bitvector::operator^=(bitvector const& other) {
   assert(size() >= other.size());
   for (size_type i = 0; i < blocks(); ++i)
     bits_[i] ^= other.bits_[i];
   return *this;
 }
 
-bitvector& bitvector::operator-=(bitvector const& other)
-{
+bitvector& bitvector::operator-=(bitvector const& other) {
   assert(size() >= other.size());
   for (size_type i = 0; i < blocks(); ++i)
     bits_[i] &= ~other.bits_[i];
   return *this;
 }
 
-bitvector operator&(bitvector const& x, bitvector const& y)
-{
+bitvector operator&(bitvector const& x, bitvector const& y) {
   bitvector b(x);
   return b &= y;
 }
 
-bitvector operator|(bitvector const& x, bitvector const& y)
-{
+bitvector operator|(bitvector const& x, bitvector const& y) {
   bitvector b(x);
   return b |= y;
 }
 
-bitvector operator^(bitvector const& x, bitvector const& y)
-{
+bitvector operator^(bitvector const& x, bitvector const& y) {
   bitvector b(x);
   return b ^= y;
 }
 
-bitvector operator-(bitvector const& x, bitvector const& y)
-{
+bitvector operator-(bitvector const& x, bitvector const& y) {
   bitvector b(x);
   return b -= y;
 }
 
-bool operator==(bitvector const& x, bitvector const& y)
-{
+bool operator==(bitvector const& x, bitvector const& y) {
   return x.num_bits_ == y.num_bits_ && x.bits_ == y.bits_;
 }
 
-bool operator!=(bitvector const& x, bitvector const& y)
-{
-  return ! (x == y);
+bool operator!=(bitvector const& x, bitvector const& y) {
+  return !(x == y);
 }
 
-bool operator<(bitvector const& x, bitvector const& y)
-{
+bool operator<(bitvector const& x, bitvector const& y) {
   assert(x.size() == y.size());
-  for (size_type r = x.blocks(); r > 0; --r)
-  {
+  for (size_type r = x.blocks(); r > 0; --r) {
     auto i = r - 1;
     if (x.bits_[i] < y.bits_[i])
       return true;
@@ -292,8 +242,7 @@ bool operator<(bitvector const& x, bitvector const& y)
   return false;
 }
 
-void bitvector::resize(size_type n, bool value)
-{
+void bitvector::resize(size_type n, bool value) {
   auto old = blocks();
   auto required = bits_to_blocks(n);
   auto block_value = value ? ~block_type(0) : block_type(0);
@@ -308,104 +257,87 @@ void bitvector::resize(size_type n, bool value)
   zero_unused_bits();
 }
 
-void bitvector::clear() noexcept
-{
+void bitvector::clear() noexcept {
   bits_.clear();
   num_bits_ = 0;
 }
 
-void bitvector::push_back(bool bit)
-{
+void bitvector::push_back(bool bit) {
   auto s = size();
   resize(s + 1);
   set(s, bit);
 }
 
-void bitvector::append(block_type block)
-{
+void bitvector::append(block_type block) {
   auto excess = extra_bits();
-  if (excess)
-  {
-    assert(! bits_.empty());
+  if (excess) {
+    assert(!bits_.empty());
     bits_.push_back(block >> (bits_per_block - excess));
     bits_[bits_.size() - 2] |= (block << excess);
-  }
-  else
-  {
+  } else {
     bits_.push_back(block);
   }
   num_bits_ += bits_per_block;
 }
 
-bitvector& bitvector::set(size_type i, bool bit)
-{
+bitvector& bitvector::set(size_type i, bool bit) {
   assert(i < num_bits_);
 
   if (bit)
-      bits_[block_index(i)] |= bit_mask(i);
+    bits_[block_index(i)] |= bit_mask(i);
   else
-      reset(i);
+    reset(i);
 
   return *this;
 }
 
-bitvector& bitvector::set()
-{
+bitvector& bitvector::set() {
   std::fill(bits_.begin(), bits_.end(), ~block_type(0));
   zero_unused_bits();
   return *this;
 }
 
-bitvector& bitvector::reset(size_type i)
-{
+bitvector& bitvector::reset(size_type i) {
   assert(i < num_bits_);
   bits_[block_index(i)] &= ~bit_mask(i);
   return *this;
 }
 
-bitvector& bitvector::reset()
-{
+bitvector& bitvector::reset() {
   std::fill(bits_.begin(), bits_.end(), block_type(0));
   return *this;
 }
 
-bitvector& bitvector::flip(size_type i)
-{
+bitvector& bitvector::flip(size_type i) {
   assert(i < num_bits_);
   bits_[block_index(i)] ^= bit_mask(i);
   return *this;
 }
 
-bitvector& bitvector::flip()
-{
+bitvector& bitvector::flip() {
   for (size_type i = 0; i < blocks(); ++i)
-      bits_[i] = ~bits_[i];
+    bits_[i] = ~bits_[i];
   zero_unused_bits();
   return *this;
 }
 
-bool bitvector::operator[](size_type i) const
-{
+bool bitvector::operator[](size_type i) const {
   assert(i < num_bits_);
   return (bits_[block_index(i)] & bit_mask(i)) != 0;
 }
 
-bitvector::reference bitvector::operator[](size_type i)
-{
+bitvector::reference bitvector::operator[](size_type i) {
   assert(i < num_bits_);
   return {bits_[block_index(i)], bit_index(i)};
 }
 
-size_type bitvector::count() const
-{
+size_type bitvector::count() const {
   auto first = bits_.begin();
   size_t n = 0;
   auto length = blocks();
-  while (length)
-  {
+  while (length) {
     auto block = *first;
-    while (block)
-    {
+    while (block) {
       // TODO: use __popcnt if available.
       n += count_table[block & ((1u << 8) - 1)];
       block >>= 8;
@@ -416,28 +348,23 @@ size_type bitvector::count() const
   return n;
 }
 
-size_type bitvector::blocks() const
-{
+size_type bitvector::blocks() const {
   return bits_.size();
 }
 
-size_type bitvector::size() const
-{
+size_type bitvector::size() const {
   return num_bits_;
 }
 
-bool bitvector::empty() const
-{
+bool bitvector::empty() const {
   return bits_.empty();
 }
 
-size_type bitvector::find_first() const
-{
+size_type bitvector::find_first() const {
   return find_from(0);
 }
 
-size_type bitvector::find_next(size_type i) const
-{
+size_type bitvector::find_next(size_type i) const {
   if (i >= (size() - 1) || size() == 0)
     return npos;
   ++i;
@@ -446,8 +373,7 @@ size_type bitvector::find_next(size_type i) const
   return block ? bi * bits_per_block + lowest_bit(block) : find_from(bi + 1);
 }
 
-size_type bitvector::lowest_bit(block_type block)
-{
+size_type bitvector::lowest_bit(block_type block) {
   auto x = block - (block & (block - 1)); // Extract right-most 1-bit.
   size_type log = 0;
   while (x >>= 1)
@@ -455,19 +381,16 @@ size_type bitvector::lowest_bit(block_type block)
   return log;
 }
 
-block_type bitvector::extra_bits() const
-{
+block_type bitvector::extra_bits() const {
   return bit_index(size());
 }
 
-void bitvector::zero_unused_bits()
-{
+void bitvector::zero_unused_bits() {
   if (extra_bits())
     bits_.back() &= ~(~block_type(0) << extra_bits());
 }
 
-size_type bitvector::find_from(size_type i) const
-{
+size_type bitvector::find_from(size_type i) const {
   while (i < blocks() && bits_[i] == 0)
     ++i;
   if (i >= blocks())
@@ -475,19 +398,13 @@ size_type bitvector::find_from(size_type i) const
   return i * bits_per_block + lowest_bit(bits_[i]);
 }
 
-std::string to_string(bitvector const& b,
-                      bool msb_to_lsb,
-                      bool all,
-                      size_t cut_off)
-{
+std::string to_string(bitvector const& b, bool msb_to_lsb, bool all,
+                      size_t cut_off) {
   std::string str;
   auto str_size = all ? bitvector::bits_per_block * b.blocks() : b.size();
-  if (cut_off == 0 || str_size <= cut_off)
-  {
+  if (cut_off == 0 || str_size <= cut_off) {
     str.assign(str_size, '0');
-  }
-  else
-  {
+  } else {
     str.assign(cut_off + 2, '0');
     str[cut_off + 0] = '.';
     str[cut_off + 1] = '.';

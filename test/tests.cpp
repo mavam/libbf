@@ -19,7 +19,7 @@ TEST(counter_vector_incrementing_width2) {
   CHECK_EQUAL(to_string(v), "110000");
   CHECK_EQUAL(v.count(0), 3u);
   // Already reached maximum counter value 3 with 2 bits.
-  CHECK(! v.increment(0));
+  CHECK(!v.increment(0));
   CHECK_EQUAL(to_string(v), "110000");
   CHECK_EQUAL(v.count(0), 3u);
   // Increment adjacent value.
@@ -102,7 +102,7 @@ TEST(counter_vector_adding) {
   CHECK_EQUAL(v.count(0), 5u);
   CHECK_EQUAL(to_string(v), "101000");
   // Increment to 7.
-  CHECK(! v.increment(0, 3));
+  CHECK(!v.increment(0, 3));
   CHECK_EQUAL(to_string(v), "111000");
   CHECK_EQUAL(v.count(0), 7u);
   // Go to 2nd cell, repeat.
@@ -113,8 +113,8 @@ TEST(counter_vector_adding) {
   CHECK(v.increment(1, 3));
   CHECK_EQUAL(to_string(v), "111111");
   // Cannot increment at max cell value.
-  CHECK(! v.increment(1));
-  CHECK(! v.increment(1, 42));
+  CHECK(!v.increment(1));
+  CHECK(!v.increment(1, 42));
 }
 
 TEST(counter_vector_adding_big) {
@@ -179,7 +179,6 @@ TEST(bloom_filter_basic) {
   basic_bloom_filter obfc(h, b);
   CHECK_EQUAL(obfc.storage(), b);
   CHECK_EQUAL(obfc.lookup("foo"), 1u);
-
 }
 
 TEST(bloom_filter_counting) {
@@ -226,41 +225,41 @@ TEST(bloom_filter_spectral_rm) {
   //// For "bar", all hash functions return the same position, the we have
   //// necessarily a recurring minimum (RM). Thus we do not look in the second
   //// core and return 2, although the correct count would be 1.
-  //b.add("bar"); // 2 0 1 0 0 and 0 0
-  //CHECK(b.count("bar") == 2);
-  //CHECK(to_string(b) == "010000100000000\n0000");
+  // b.add("bar"); // 2 0 1 0 0 and 0 0
+  // CHECK(b.count("bar") == 2);
+  // CHECK(to_string(b) == "010000100000000\n0000");
   //// For "foo", we encounter a unique minimum in the first core, but since
   //// all positions for "foo" are zero in the second core, we return the
   //// mimimum of the first, which is 1.
-  //CHECK(b.count("foo") == 1);
+  // CHECK(b.count("foo") == 1);
   //// After increasing the counters for "foo", we find that it (still) has a
   //// unique minimum in in the first core. Hence we add its minimum to the
   //// second core.
-  //b.add("foo"); // 3 0 2 0 0 and 2 2
-  //CHECK(b.count("foo") == 2);
-  //CHECK(to_string(b) == "110000010000000\n0101");
+  // b.add("foo"); // 3 0 2 0 0 and 2 2
+  // CHECK(b.count("foo") == 2);
+  // CHECK(to_string(b) == "110000010000000\n0101");
   //// The "blue fish" causes some trouble: because its insertion yields a
   //// unique minimum, we go into the second bitvector. There, we find that it
   //// hashes to the same positions as foo, wich has a counter of 2. Because it
   //// appears to exist there, we have to increment its counters. This falsely
   //// bumps up the counter of "blue fish" to 3.
-  //b.add("blue fish"); // 3 0 3 0 1 and 3 3
-  //CHECK(b.count("blue fish") == 3);
-  //CHECK(to_string(b) == "110000110000100\n1111");
+  // b.add("blue fish"); // 3 0 3 0 1 and 3 3
+  // CHECK(b.count("blue fish") == 3);
+  // CHECK(to_string(b) == "110000110000100\n1111");
   //// Since the "blue fish" has (still) a unique minimum after removing it one
   //// time, we look in the second core and find it to be present there.
   //// Hence we decrement the counters in the second core.
-  //b.remove("blue fish"); // 3 0 2 0 0 and 2 2
-  //CHECK(b.count("blue fish") == 2);
-  //CHECK(to_string(b) == "110000010000000\n0101");
-  //b.remove("blue fish");
-  //CHECK(b.count("blue fish") == 1); // 3 0 1 0 0 and 1 1
+  // b.remove("blue fish"); // 3 0 2 0 0 and 2 2
+  // CHECK(b.count("blue fish") == 2);
+  // CHECK(to_string(b) == "110000010000000\n0101");
+  // b.remove("blue fish");
+  // CHECK(b.count("blue fish") == 1); // 3 0 1 0 0 and 1 1
   //// Let's look at "foo". This fellow has now a unique minimum. Since it has
   //// a unique minimum after the removal, we also decrement the counter in the
   //// second core.
-  //b.remove("foo"); // 2 0 0 0 0 and 0 0
-  //CHECK(b.count("foo") == 0);
-  //CHECK(to_string(b) == "010000000000000\n0000");
+  // b.remove("foo"); // 2 0 0 0 0 and 0 0
+  // CHECK(b.count("foo") == 0);
+  // CHECK(to_string(b) == "010000000000000\n0000");
   //// Alas, we violated Claim 1 in Section 2.2 in the paper! The spectral
   //// Bloom filter returns a count of 0 for "foo", although it should be 1.
   //// Thus, the frequency estimate is no longer a lower bound. This occurs
@@ -313,7 +312,7 @@ TEST(bloom_filter_stable) {
 TEST(bloom_filter_a2) {
   a2_bloom_filter bf(3, 32, 3);
   bf.add("foo");
-  bf.add("foo");  // Duplicate inserts have no effect.
+  bf.add("foo"); // Duplicate inserts have no effect.
   bf.add("bar");
   bf.add("baz");
   // Reaches capacity and causes swapping.

@@ -1,8 +1,8 @@
 #ifndef UTIL_TRIAL_H
 #define UTIL_TRIAL_H
 
-#include <cassert>
 #include "util/error.h"
+#include <cassert>
 
 namespace util {
 
@@ -11,51 +11,42 @@ namespace util {
 ///
 /// @tparam The type of the result.
 template <typename T>
-class trial
-{
+class trial {
 public:
   /// Constructs a trial by forwarding arguments to the underlying type.
   /// @param args The arguments to pass to `T`'s constructor.
   /// @post The trial is *engaged*, i.e., `*this == true`.
-  trial(T x)
-    : engaged_{true}
-  {
+  trial(T x) : engaged_{true} {
     new (&value_) T(std::move(x));
   }
 
   /// Constructs a trial from an error.
   /// @param e The error.
   /// @post The trial is *disengaged*, i.e., `*this == false`.
-  trial(error e)
-    : engaged_{false}
-  {
+  trial(error e) : engaged_{false} {
     new (&error_) error{std::move(e)};
   }
 
   /// Copy-constructs a trial.
   /// @param other The other trial.
-  trial(trial const& other)
-  {
+  trial(trial const& other) {
     construct(other);
   }
 
   /// Move-constructs a trial.
   /// @param other The other trial.
-  trial(trial&& other)
-  {
+  trial(trial&& other) {
     construct(std::move(other));
   }
 
-  ~trial()
-  {
+  ~trial() {
     destroy();
   }
 
   /// Assigns another trial to this instance.
   /// @param other The RHS of the assignment.
   /// @returns A reference to `*this`.
-  trial& operator=(trial other)
-  {
+  trial& operator=(trial other) {
     construct(std::move(other));
     return *this;
   }
@@ -65,8 +56,7 @@ public:
   ///
   /// @param args The arguments to forward to `T`'s constructor.
   /// @returns A reference to `*this`.
-  trial& operator=(T x)
-  {
+  trial& operator=(T x) {
     destroy();
     engaged_ = true;
     new (&value_) T(std::move(x));
@@ -77,8 +67,7 @@ public:
   /// @param e The error.
   /// @returns A reference to `*this`.
   /// @post The trial is *disengaged*, i.e., `*this == false`.
-  trial& operator=(error e)
-  {
+  trial& operator=(error e) {
     destroy();
     engaged_ = false;
     new (&value_) error{std::move(e)};
@@ -87,40 +76,34 @@ public:
 
   /// Checks whether the trial is engaged.
   /// @returns `true` iff the trial is engaged.
-  explicit operator bool() const
-  {
+  explicit operator bool() const {
     return engaged_;
   }
 
   /// Shorthand for ::value.
-  T& operator*()
-  {
+  T& operator*() {
     return value();
   }
 
   /// Shorthand for ::value.
-  T const& operator*() const
-  {
+  T const& operator*() const {
     return value();
   }
 
   /// Shorthand for ::value.
-  T* operator->()
-  {
+  T* operator->() {
     return &value();
   }
 
   /// Shorthand for ::value.
-  T const* operator->() const
-  {
+  T const* operator->() const {
     return &value();
   }
 
   /// Retrieves the value of the trial.
   /// @returns A mutable reference to the contained value.
   /// @pre `*this == true`.
-  T& value()
-  {
+  T& value() {
     assert(engaged_);
     return value_;
   }
@@ -128,8 +111,7 @@ public:
   /// Retrieves the value of the trial.
   /// @returns The contained value.
   /// @pre `*this == true`.
-  T const& value() const
-  {
+  T const& value() const {
     assert(engaged_);
     return value_;
   }
@@ -137,51 +119,40 @@ public:
   /// Retrieves the error of the trial.
   /// @returns The contained error.
   /// @pre `*this == false`.
-  error const& failure() const
-  {
-    assert(! engaged_);
+  error const& failure() const {
+    assert(!engaged_);
     return error_;
   }
 
 private:
-  void construct(trial const& other)
-  {
-    if (other.engaged_)
-    {
+  void construct(trial const& other) {
+    if (other.engaged_) {
       engaged_ = true;
       new (&value_) T(other.value_);
-    }
-    else
-    {
+    } else {
       engaged_ = false;
       new (&error_) error{other.error_};
     }
   }
 
-  void construct(trial&& other)
-  {
-    if (other.engaged_)
-    {
+  void construct(trial&& other) {
+    if (other.engaged_) {
       engaged_ = true;
       new (&value_) T(std::move(other.value_));
-    }
-    else
-    {
+    } else {
       engaged_ = false;
       new (&error_) error{std::move(other.error_)};
     }
   }
 
-  void destroy()
-  {
+  void destroy() {
     if (engaged_)
       value_.~T();
     else
       error_.~error();
   }
 
-  union
-  {
+  union {
     T value_;
     error error_;
   };
@@ -192,7 +163,7 @@ private:
 /// An empty struct that represents a `void` ::trial. The pattern
 /// `trial<nothing>` shall be used for functions that may generate an error but
 /// would otherwise return `void`.
-struct nothing { };
+struct nothing {};
 
 static constexpr auto nil = nothing{};
 

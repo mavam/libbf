@@ -3,22 +3,17 @@
 namespace bf {
 
 bitwise_bloom_filter::bitwise_bloom_filter(size_t k, size_t cells, size_t seed)
-  : k_(k), cells_(cells), seed_(seed)
-{
+    : k_(k), cells_(cells), seed_(seed) {
   grow();
 }
 
-void bitwise_bloom_filter::add(object const& o)
-{
+void bitwise_bloom_filter::add(object const& o) {
   size_t l = 0;
   // FIXME: do not hash element more than once for better performance.
   while (l < levels_.size())
-    if (levels_[l].lookup(o))
-    {
+    if (levels_[l].lookup(o)) {
       levels_[l++].remove(o);
-    }
-    else
-    {
+    } else {
       levels_[l].add(o);
       return;
     }
@@ -27,22 +22,19 @@ void bitwise_bloom_filter::add(object const& o)
   levels_.back().add(o);
 }
 
-size_t bitwise_bloom_filter::lookup(object const& o) const
-{
+size_t bitwise_bloom_filter::lookup(object const& o) const {
   size_t result = 0;
   for (size_t l = 0; l < levels_.size(); ++l)
     result += levels_[l].lookup(o) << l;
   return result;
 }
 
-void bitwise_bloom_filter::clear()
-{
+void bitwise_bloom_filter::clear() {
   levels_.clear();
   grow();
 }
 
-void bitwise_bloom_filter::grow()
-{
+void bitwise_bloom_filter::grow() {
   auto l = levels_.size();
 
   // TODO: come up with a reasonable growth scheme.
