@@ -2,8 +2,7 @@
 
 #include <sstream>
 
-std::string config::banner() const
-{
+std::string config::banner() const {
   std::stringstream ss;
   ss << "    __    ____\n"
         "   / /_  / __/\n"
@@ -14,8 +13,7 @@ std::string config::banner() const
   return ss.str();
 }
 
-void config::initialize()
-{
+void config::initialize() {
   auto& general = create_block("general options");
   general.add('i', "input", "input file").single();
   general.add('q', "query", "query file").single();
@@ -23,9 +21,9 @@ void config::initialize()
   general.add('n', "numeric", "interpret input as numeric values");
 
   auto& bloomfilter = create_block("bloom filter options");
-  bloomfilter.add(
-      't', "type",
-      "basic|counting|spectral-mi|spectral-rm|bitwise|stable").single();
+  bloomfilter
+    .add('t', "type", "basic|counting|spectral-mi|spectral-rm|bitwise|stable")
+    .single();
   bloomfilter.add('f', "fp-rate", "desired false-positive rate").init(0);
   bloomfilter.add('c', "capacity", "max number of expected elements").init(0);
   bloomfilter.add('m', "cells", "number of cells").init(0);
