@@ -44,6 +44,8 @@ public:
     T result = 0;
     // Duff's Device.
     auto n = (size + 7) / 8;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
     switch (size % 8) 
     {
       case 0:	do { result ^= bytes_[offset++][*p++];
@@ -56,6 +58,7 @@ public:
       case 1:      result ^= bytes_[offset++][*p++];
               } while ( --n > 0 );
     }
+#pragma GCC diagnostic pop
     return result;
   }
 
