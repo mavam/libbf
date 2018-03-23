@@ -1,6 +1,6 @@
 # -- Project Setup ------------------------------------------------------------
 
-project(libbf CXX)
+project(libbf CXX C)
 
 include(CTest)
 
@@ -47,6 +47,7 @@ set(CMAKE_CXX_FLAGS_DEBUG          "-O0 -g")
 set(CMAKE_CXX_FLAGS_MINSIZEREL     "-Os -DNDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE        "-O3 -DNDEBUG")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
+set(CMAKE_EXE_LINKER_FLAGS         "-pthread")
 
 if (ENABLE_DEBUG)
   set(CMAKE_BUILD_TYPE Debug)
