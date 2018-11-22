@@ -37,11 +37,6 @@ set (LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/lib
 
 # -- Dependencies -------------------------------------------------------------
 
-find_package(Threads)
-if (NOT Threads_FOUND)
-  message(FATAL_ERROR "Could not find system threading libraries")
-endif ()
-
 set(CMAKE_CXX_FLAGS                "-Wall -Wextra -std=c++11")
 set(CMAKE_CXX_FLAGS_DEBUG          "-O0 -g")
 set(CMAKE_CXX_FLAGS_MINSIZEREL     "-Os -DNDEBUG")

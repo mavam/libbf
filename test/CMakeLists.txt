@@ -1,3 +1,8 @@
+find_package(Threads)
+if (NOT Threads_FOUND)
+  message(FATAL_ERROR "Could not find system threading libraries")
+endif ()
+
 add_subdirectory(bf)
 
 enable_testing()
