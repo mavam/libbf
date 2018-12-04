@@ -4,3 +4,5 @@
 build
 doc/gh-pages
 Makefile
+.idea
+cmake-build-debug/
