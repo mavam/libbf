@@ -19,7 +19,7 @@ size_t counting_bloom_filter::lookup(object const& o) const {
   for (auto i : find_indices(o)) {
     auto cnt = cells_.count(i);
     if (cnt < min)
-      return min = cnt;
+      min = cnt;
   }
   return min;
 }
