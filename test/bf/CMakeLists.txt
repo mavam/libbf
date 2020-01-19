@@ -5,4 +5,4 @@ set(bf_sources
   )
 
 add_executable(bf ${bf_sources})
-target_link_libraries(bf libbf)
+target_link_libraries(bf libbf_shared)
