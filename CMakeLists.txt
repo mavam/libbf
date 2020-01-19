@@ -82,11 +82,11 @@ set(libbf_sources
 )
 
 add_library(libbf_static STATIC ${libbf_sources})
-set_target_properties(libbf_static PROPERTIES OUTPUT_NAME "libbf")
+set_target_properties(libbf_static PROPERTIES OUTPUT_NAME "bf")
 set_target_properties(libbf_static PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 
 add_library(libbf_shared SHARED ${libbf_sources})
-set_target_properties(libbf_shared PROPERTIES OUTPUT_NAME "libbf")
+set_target_properties(libbf_shared PROPERTIES OUTPUT_NAME "bf")
 set_target_properties(libbf_shared PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 
 install(TARGETS libbf_static DESTINATION lib)
