@@ -81,9 +81,16 @@ set(libbf_sources
   src/bloom_filter/stable.cpp
 )
 
-add_library(libbf SHARED ${libbf_sources})
-set_target_properties(libbf PROPERTIES OUTPUT_NAME bf)
-install(TARGETS libbf DESTINATION lib)
+add_library(libbf_static STATIC ${libbf_sources})
+set_target_properties(libbf_static PROPERTIES OUTPUT_NAME "libbf")
+set_target_properties(libbf_static PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+
+add_library(libbf_shared SHARED ${libbf_sources})
+set_target_properties(libbf_shared PROPERTIES OUTPUT_NAME "libbf")
+set_target_properties(libbf_shared PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+
+install(TARGETS libbf_static DESTINATION lib)
+install(TARGETS libbf_shared DESTINATION lib)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bf DESTINATION include)
 
 add_subdirectory(test)
