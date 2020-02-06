@@ -1,5 +1,6 @@
 #include <bf/bitvector.hpp>
 
+#include <algorithm>
 #include <cassert>
 
 namespace bf {
