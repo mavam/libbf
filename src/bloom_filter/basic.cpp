@@ -40,8 +40,8 @@ basic_bloom_filter::basic_bloom_filter(basic_bloom_filter&& other)
 
 void basic_bloom_filter::add(object const& o) {
   auto digests = hasher_(o);
-  assert(bits_.size() % digests.size() == 0);
   if (partition_) {
+    assert(bits_.size() % digests.size() == 0);
     auto parts = bits_.size() / digests.size();
     for (size_t i = 0; i < digests.size(); ++i)
       bits_.set(i * parts + (digests[i] % parts));
@@ -53,8 +53,8 @@ void basic_bloom_filter::add(object const& o) {
 
 size_t basic_bloom_filter::lookup(object const& o) const {
   auto digests = hasher_(o);
-  assert(bits_.size() % digests.size() == 0);
   if (partition_) {
+    assert(bits_.size() % digests.size() == 0);
     auto parts = bits_.size() / digests.size();
     for (size_t i = 0; i < digests.size(); ++i)
       if (!bits_[i * parts + (digests[i] % parts)])
