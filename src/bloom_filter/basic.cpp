@@ -24,6 +24,8 @@ basic_bloom_filter::basic_bloom_filter(double fp, size_t capacity, size_t seed,
     : partition_(partition) {
   auto required_cells = m(fp, capacity);
   auto optimal_k = k(required_cells, capacity);
+  if (partition_)
+    required_cells += optimal_k - required_cells % optimal_k;
   bits_.resize(required_cells);
   hasher_ = make_hasher(optimal_k, seed, double_hashing);
 }
