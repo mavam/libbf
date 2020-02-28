@@ -24,6 +24,8 @@ basic_bloom_filter::basic_bloom_filter(double fp, size_t capacity, size_t seed,
     : partition_(partition) {
   auto required_cells = m(fp, capacity);
   auto optimal_k = k(required_cells, capacity);
+  if (partition_)
+    required_cells += optimal_k - required_cells % optimal_k;
   bits_.resize(required_cells);
   hasher_ = make_hasher(optimal_k, seed, double_hashing);
 }
@@ -38,8 +40,8 @@ basic_bloom_filter::basic_bloom_filter(basic_bloom_filter&& other)
 
 void basic_bloom_filter::add(object const& o) {
   auto digests = hasher_(o);
-  assert(bits_.size() % digests.size() == 0);
   if (partition_) {
+    assert(bits_.size() % digests.size() == 0);
     auto parts = bits_.size() / digests.size();
     for (size_t i = 0; i < digests.size(); ++i)
       bits_.set(i * parts + (digests[i] % parts));
@@ -51,8 +53,8 @@ void basic_bloom_filter::add(object const& o) {
 
 size_t basic_bloom_filter::lookup(object const& o) const {
   auto digests = hasher_(o);
-  assert(bits_.size() % digests.size() == 0);
   if (partition_) {
+    assert(bits_.size() % digests.size() == 0);
     auto parts = bits_.size() / digests.size();
     for (size_t i = 0; i < digests.size(); ++i)
       if (!bits_[i * parts + (digests[i] % parts)])
