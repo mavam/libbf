@@ -1,3 +1,6 @@
+⚠️  **Maintainer needed**: unfortunately I lack the cycles to maintain this
+project. I would gladly support anyone who is willing to step in.
+
 **libbf** is a C++11 library which implements [various Bloom
 filters][blog-post], including:
 
