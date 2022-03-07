@@ -6,6 +6,8 @@ include(CTest)
 
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 
+option(BUILD_TESTS "Build unit tests" OFF)
+
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 # Support 'make uninstall'.
@@ -36,11 +38,6 @@ set (LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/lib
   CACHE PATH "Single directory for all libraries")
 
 # -- Dependencies -------------------------------------------------------------
-
-find_package(Threads)
-if (NOT Threads_FOUND)
-  message(FATAL_ERROR "Could not find system threading libraries")
-endif ()
 
 set(CMAKE_CXX_FLAGS                "-Wall -Wextra -std=c++11")
 set(CMAKE_CXX_FLAGS_DEBUG          "-O0 -g")
@@ -93,4 +90,13 @@ install(TARGETS libbf_static DESTINATION lib)
 install(TARGETS libbf_shared DESTINATION lib)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bf DESTINATION include)
 
-add_subdirectory(test)
+# -- Tests -------------------------------------------------------------------
+
+if (BUILD_TESTS)
+  find_package(Threads)
+  if (NOT Threads_FOUND)
+    message(FATAL_ERROR "Could not find system threading libraries")
+  endif ()
+
+  add_subdirectory(test)
+endif (BUILD_TESTS)

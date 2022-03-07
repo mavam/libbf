@@ -50,23 +50,32 @@ Requirements
 Installation
 ============
 
-The build process uses CMake, wrapped in autotools-like scripts. The configure
-script honors the `CXX` environment variable to select a specific C++compiler.
-For example, the following steps compile libbf with Clang and install it under
-`PREFIX`:
+The build process uses CMake. For example, the following steps compile libbf
+with Clang and install it under `PREFIX`:
 
-    CXX=clang++ ./configure --prefix=PREFIX
-    make
-    make test
-    make install
+```bash
+cd {path to the cloned repository}
+mkdir build
+cd build
+CXX=clang++ cmake .. -DCMAKE_INSTALL_PREFIX:PATH=${PREFIX} -DBUILD_TESTS=OFF
+make
+make install
+```
 
 Documentation
 =============
 
 The most recent version of the Doxygen API documentation exists at
 <http://mavam.github.io/libbf/api>. Alternatively, you can build the
-documentation locally via `make doc` and then browse to
-`doc/gh-pages/api/index.html`.
+documentation locally via:
+
+```
+cd {path to the cloned repository}
+cd doc
+make doc
+```
+
+and then browse to `{repo}/doc/gh-pages/api/index.html`.
 
 Usage
 =====
