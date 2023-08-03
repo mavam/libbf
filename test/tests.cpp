@@ -268,7 +268,7 @@ TEST(bloom_filter_spectral_rm) {
 }
 
 TEST(bloom_filter_bitwise) {
-  bitwise_bloom_filter bf(3, 8);
+  bitwise_bloom_filter bf(4, 8);
   CHECK_EQUAL(bf.lookup("foo"), 0u);
   bf.add("foo");
   CHECK_EQUAL(bf.lookup("foo"), 1u);
